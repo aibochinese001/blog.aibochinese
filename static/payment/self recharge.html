@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+             <style>
+
+        /* 悬浮微信图标样式 */
+        .wechat-float {
+            width: 60px;
+            height: 60px;
+            background-color: hsl(148, 45%, 88%); /* 微信绿色 */
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .wechat-float:hover {
+            transform: scale(1.1);
+        }
+
+        .wechat-icon {
+            width: 40px;
+            height: 40px;
+            background-image: url('https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/wechaticon.png'); /* 用户提供的微信图标URL */
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* 弹出窗样式 */
+        /* 悬浮图标容器 */
+        .float-icons-container {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .wechat-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 悬浮搜索按钮 */
+        .search-float {
+            width: 60px;
+            height: 60px;
+            background-color: #3B82F6; /* 蓝色 */
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .search-float:hover {
+            transform: scale(1.1);
+        }
+
+        /* 搜索弹出窗 */
+        .search-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-popup {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .search-popup h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .wechat-popup {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+            width: 90%;
+        }
+
+        .wechat-qr {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 10px;
+            display: block; /* 二维码图片，用户替换src */
+        }
+
+        .close-btn {
+            background-color: #ff4d4f;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .close-btn:hover {
+            background-color: #ff7875;
+        }
+
+        /* ==================== 全新 Pagefind 搜索样式（搜索框水平居中版） ==================== */
+.search-container {
+    position: relative;
+    /* 删除 margin-right，改为自动左右 margin 实现居中 */
+    margin: 0 auto;           /* 关键：水平居中 */
+    z-index: 1001;
+    min-width: 200px;
+    max-width: 380px;         /* 建议加上最大宽度，和下拉结果保持一致 */
+    width: 100%;
+    display: flex;
+    justify-content: center;  /* 内部元素水平居中 */
+    align-items: center;
+}
+
+/* 输入框：去掉宽度 100% + focus 扩展的左右晃动问题 */
+#pagefind-search .pagefind-ui__search-input {
+    padding: 10px 16px;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    font-size: 16px;
+    /* 固定宽度，或者使用 min-width + max-width 防止晃动 */
+    width: 300px;                     /* 固定一个舒适的宽度 */
+    max-width: 100%;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background: white;
+    color: #333;
+    box-sizing: border-box;
+    outline: none;
+}
+
+#pagefind-search .pagefind-ui__search-input:focus {
+    border-color: #4a6fa5;
+    box-shadow: 0 0 0 4px rgba(74, 111, 165, 0.2);
+    /* focus 时不再改变宽度，避免整个搜索框左右晃动 */
+}
+
+/* 下拉结果：从右对齐改为居中对齐 */
+#pagefind-search .pagefind-ui__results {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    position: absolute;
+    top: 100%;
+    left: 50%;                        /* 关键：左边 50% */
+    transform: translateX(-50%);      /* 关键：向左偏移自身宽度的一半 → 完全居中 */
+    right: auto;                      /* 取消原来的 right: 0 */
+    width: 380px;
+    max-height: 70vh;
+    overflow-y: auto;
+    margin-top: 8px;
+    z-index: 1000;
+    padding: 8px 0;
+}
+
+/* 其余样式保持不变 */
+#pagefind-search .pagefind-ui__result {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s;
+}
+#pagefind-search .pagefind-ui__result:last-child { border-bottom: none; }
+#pagefind-search .pagefind-ui__result:hover { background-color: #f8f9ff; }
+#pagefind-search .pagefind-ui__result-title { font-size: 15px; font-weight: 600; color: #1f2937; margin-bottom: 4px; }
+#pagefind-search .pagefind-ui__result-link { 
+    color: #3B82F6; 
+    text-decoration: none; 
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    z-index: 10;
+}
+#pagefind-search .pagefind-ui__result-link:hover { text-decoration: underline; }
+#pagefind-search .pagefind-ui__result-excerpt { font-size: 13.5px; color: #666; line-height: 1.5; margin-top: 4px; }
+.pagefind-ui__result-excerpt mark { background: #dbeafe; color: #1e40af; padding: 1px 3px; border-radius: 3px; }
+#pagefind-search .pagefind-ui__message { padding: 20px; text-align: center; color: #666; font-size: 14px; }
+</style>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="虚拟信用卡充值教程 - USDT/USDC充值指南">
+    <title>虚拟信用卡充值(加密货币转账）指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "Segoe UI", Tahoma, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 120px 20px 80px; /* 添加顶部和底部padding，避免被固定导航遮挡 */
+        }
+/* 导航栏样式 */
+        .navbar {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;  /* 使用 left 和 right 代替 width: 100% */
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 20px;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+            display: block;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 0.3rem;
+            margin: 0;
+            padding: 0;  /* 添加 padding: 0 以移除默认内边距 */
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 12px 20px;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-link:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .nav-link:hover::before {
+            left: 100%;
+        }
+
+        /* 为每个菜单项设置不同的渐变颜色 */
+        .nav-menu li:nth-child(1) .nav-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .nav-menu li:nth-child(2) .nav-link {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .nav-menu li:nth-child(3) .nav-link {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .nav-menu li:nth-child(4) .nav-link {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .nav-menu li:nth-child(5) .nav-link {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .nav-menu li:nth-child(6) .nav-link {
+            background: linear-gradient(135deg, #ffa751 0%, #ffe259 100%);
+        }
+
+        .nav-menu li:nth-child(7) .nav-link {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+
+        .nav-menu li:nth-child(8) .nav-link {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        }
+
+        .nav-menu li:nth-child(9) .nav-link {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+
+        /* 为每个菜单项添加悬停渐变效果 */
+        .nav-menu li:nth-child(1) .nav-link:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .nav-menu li:nth-child(2) .nav-link:hover {
+            background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+        }
+
+        .nav-menu li:nth-child(3) .nav-link:hover {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+        }
+
+        .nav-menu li:nth-child(4) .nav-link:hover {
+            background: linear-gradient(135deg, #38f9d7 0%, #43e97b 100%);
+        }
+
+        .nav-menu li:nth-child(5) .nav-link:hover {
+            background: linear-gradient(135deg, #fee140 0%, #fa709a 100%);
+        }
+
+        .nav-menu li:nth-child(6) .nav-link:hover {
+            background: linear-gradient(135deg, #ffe259 0%, #ffa751 100%);
+        }
+
+        .nav-menu li:nth-child(7) .nav-link:hover {
+            background: linear-gradient(135deg, #fed6e3 0%, #a8edea 100%);
+        }
+
+        .nav-menu li:nth-child(8) .nav-link:hover {
+            background: linear-gradient(135deg, #fecfef 0%, #ff9a9e 100%);
+        }
+
+        .nav-menu li:nth-child(9) .nav-link:hover {
+            background: linear-gradient(135deg, #fcb69f 0%, #ffecd2 100%);
+        }
+
+        /* 汉堡菜单样式 */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .bar {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* 响应式设计 - 汉堡菜单 */
+        @media (max-width: 1024px) {
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 60px;
+                flex-direction: column;
+                background: rgba(0, 0, 0, 0.9);
+                width: 100%;
+                text-align: center;
+                transition: left 0.3s ease-in-out;
+                box-shadow: 0 10px 27px rgba(0, 0, 0, 0.3);
+                padding: 20px 0;
+                z-index: 999;
+                gap: 0rem;
+            }
+
+            .nav-menu li {
+                padding: 5px 0;
+            }
+
+            .nav-link {
+                display: inline-block;
+                width: auto;
+                min-width: 120px;
+                margin: 0 auto;
+                padding: 12px 24px;
+                border-radius: 25px;
+                font-size: 1rem;
+                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+                text-align: center;
+            }
+
+            .nav-link:hover {
+                transform: scale(1.05);
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hamburger.active .bar:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+
+            .hamburger.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active .bar:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 70px;
+            }
+
+            .nav-container {
+                padding: 0 20px;
+                height: 60px;
+            }
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .main-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+
+        .header p {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .info-section {
+            margin-bottom: 40px;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 25px 30px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s ease;
+            border-left: 5px solid #667eea;
+        }
+
+        .info-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .info-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .info-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .info-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 20px;
+            background: #fff;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-link:hover {
+            background: #667eea;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+            border: 2px solid #667eea;
+            border-radius: 20px;
+            padding: 40px 30px;
+            margin: 40px auto;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .highlight-box p {
+            font-size: 18px;
+            line-height: 2;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .highlight-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 700;
+            padding: 4px 12px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .highlight-link:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+        }
+
+        .video-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            padding-left: 20px;
+            border-left: 5px solid #667eea;
+        }
+
+        .video-container {
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-top: 56.25%;
+        }
+
+        .video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 15px;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: #fff;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .main-card {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .info-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .highlight-box {
+                padding: 20px;
+            }
+
+            .highlight-box p {
+                font-size: 16px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .info-title {
+                font-size: 16px;
+            }
+
+            .info-link {
+                font-size: 14px;
+                padding: 6px 15px;
+            }
+
+            .section-title {
+                font-size: 18px;
+                padding-left: 15px;
+            }
+            
+            /* 底部导航激活状态样式 */
+            .nav-item-active {
+                color: #3b82f6;
+                font-weight: bold;
+            }
+        }
+
+        /* 视频播放区域响应式设计 */
+        @media (max-width: 1024px) {
+            /* 调整容器宽度 */
+            .container {
+                max-width: 95%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* 单列布局 */
+            .container {
+                flex-direction: column;
+            }
+            
+            /* 视频容器垂直堆叠布局 */
+            .video-container {
+                flex-direction: column;
+                height: auto;
+                min-height: 600px;
+            }
+            
+            /* 视频区域和播放列表都占满宽度 */
+            .video-section,
+            .playlist-section {
+                width: 100%;
+                border-right: none;
+            }
+            
+            /* 播放列表调整 */
+            .playlist-section {
+                border-top: 2px solid #2196F3;
+                max-height: 300px;
+            }
+            
+            /* 视频播放器最小高度调整 */
+            .video-player {
+                min-height: 400px;
+            }
+            
+            /* 调整body padding */
+            body {
+                padding: 100px 10px 80px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* 更小屏幕的视频高度 - 增加以适应竖版视频 */
+            .video-player {
+                min-height: 400px;
+            }
+            
+            /* 调整视频容器高度 */
+            .video-container {
+                min-height: 700px;
+            }
+            
+            /* 调整高亮框 */
+            .highlight-box {
+                padding: 25px 15px;
+                margin: 20px auto;
+            }
+            
+            /* 调整视频标题 */
+            .video-title {
+                font-size: 16px;
+                padding-left: 10px;
+            }
+        }
+        
+        /* 页脚样式 */
+        footer {
+            margin-top: 50px;
+        }
+        
+        .footer {
+            background: rgba(238, 195, 56, 0.8);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 10px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .footer p {
+            margin: 0 0 15px 0;
+        }
+        
+        .footer a {
+            display: inline-block;
+            margin: 0 10px;
+        }
+        
+        .footer img {
+            vertical-align: middle;
+        }
+            /* 课程列表 */
+        .video-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            border: 3px solid #2196F3;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 80vh;
+        }
+               .video-section {
+            width: 70%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 3px solid #2196F3;
+        }
+
+        .video-title {
+            color: #2196F3;
+            font-size: 15px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .video-player {
+            width: 100%;
+            background-color: #000;
+            border: 2px solid #2196F3;
+            border-radius: 4px;
+        }
+
+        .playlist-section {
+            width: 30%;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .playlist-section::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .playlist-section::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .playlist-section::-webkit-scrollbar-thumb {
+            background: #2196F3;
+            border-radius: 4px;
+        }
+
+        .playlist-section::-webkit-scrollbar-thumb:hover {
+            background: #1976D2;
+        }
+
+        .playlist-header {
+            color: #2196F3;
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            border-bottom: 2px solid #2196F3;
+            padding-bottom: 10px;
+        }
+
+        .video-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+            border: 2px solid #e3f2fd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .video-item:hover {
+            background-color: #e3f2fd;
+            border-color: #2196F3;
+            transform: translateX(5px);
+        }
+
+        .video-item.active {
+            background-color: #2196F3;
+            color: white;
+            border-color: #2196F3;
+        }
+
+        .video-item-title {
+            font-size: 10px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .video-item-duration {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .video-item.active .video-item-duration {
+            color: #e3f2fd;
+        }
+
+        .chapter-title {
+            color: #2196F3;
+            font-size: 15px;
+            font-weight: bold;
+            margin: 15px 0 10px 0;
+            padding: 8px 10px;
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            border-radius: 4px;
+        }
+
+        .video-section {
+            width: 70%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 3px solid #2196F3;
+        }
+
+        .video-player-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .video-player {
+            width: 100%;
+            flex: 1;
+            max-height: calc(100% - 60px);
+            background-color: #000;
+            border: 2px solid #2196F3;
+            border-radius: 4px;
+            object-fit: contain;
+        }
+
+        .document-button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            align-self: center;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        .document-button:hover {
+            background-color: #1976D2;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+    </style>
+    <!-- Tailwind CSS 框架 -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Font Awesome 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<!-- 标准导航菜单 -->
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="logo">
+            <h2><a href="https://blog.aibochinese.com/" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/aibologo%20460%20100.png" alt="网站Logo"></a></h2>
+        </div>
+        <ul class="nav-menu">
+              <li class="nav-item"><a href="https://blog.aibochinese.com/mooc" class="nav-link">公开课</a></li>   
+             <li class="nav-item">
+                <a href="https://blog.aibochinese.com/Rescous/free%20rs" class="nav-link">免费资源</a>
+            </li>
+            <li class="nav-item">
+                <a href="https://blog.aibochinese.com/education/tutor%20guide" class="nav-link">汉语教学</a>
+            </li>
+            <li class="nav-item">
+                <a href="https://blog.aibochinese.com/sitesbuild" class="nav-link">建站</a>
+            </li>
+            <li class="nav-item">
+                <a href="https://blog.aibochinese.com/payment/pay" class="nav-link">跨境收付</a>
+            </li>
+            <li class="nav-item">
+                <a href="https://blog.aibochinese.com/SMC/sm%20maketing" class="nav-link">自媒体营销</a>
+            </li>
+             <li class="nav-item">
+                <a href="https://blog.aibochinese.com/earn%20online" class="nav-link">项目推荐</a>
+            </li>
+             <li class="nav-item">
+                <a href="https://blog.aibochinese.com/tools/drive" class="nav-link">商务网盘</a>
+            </li>
+            <li class="nav-item">
+                <a href="https://blog.aibochinese.com/client" class="nav-link">客户端</a>
+            </li>
+        </ul>
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </div>
+</nav>
+    <div class="container">
+        <div class="main-card">
+            <div class="header">
+                <p>_</p>
+                <h1>💳 虚拟信用卡充值「加密货币转账」指南</h1>
+                <p>使用 USDT / USDC 稳定币轻松充值</p>
+            </div>
+
+            <div class="info-section">
+                <div class="info-card">
+                    <div class="info-icon">💳</div>
+                    <div class="info-content">
+                        <div class="info-title">0开卡费，无年费<span class="badge">推荐</span></div>
+                        <a href="apply V-cards.html" target="_blank" rel="noopener" class="info-link">
+                            立即开卡 →
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <p>
+                    <strong>「免费<a href="https://dedicatedlines.top/free-trial/" target="_blank" rel="noopener" class="highlight-link">海外网络流量</a>」</strong>
+                    +访问
+                    <strong>「<a href="https://accounts.bmwweb.ac/zh-CN/register?ref=569491541" target="_blank" rel="noopener" class="highlight-link">币安 Web3</a>」</strong>
+                </p>
+                <p style="margin-top: 10px;">使用 <strong>USDT / USDC</strong> 稳定币进行充值</p>
+            </div>
+        </div>
+    </div>
+       <div class="video-container">
+        <div class="video-section">
+            <div class="video-title" id="currentTitle">📺 充值教程视频</div>
+            <div class="video-player-container">
+                <video class="video-player" id="videoPlayer" controls playsinline muted preload="metadata" controlslist="nodownload">
+                    <source src="https://cf.aibochinese.com/%E8%A7%86%E9%A2%91%E7%A8%BF%E4%BB%B6/%E6%89%8B%E6%8A%8A%E6%89%8B%E7%BB%99%E6%82%A8%E6%BC%94%E7%A4%BA%EF%BC%9A%E8%99%9A%E6%8B%9F%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%85%85%E5%80%BCUSDT.mp4" type="video/mp4" />
+                </video>
+                <button class="document-button">查看相应文档说明</button>
+            </div>
+        </div>
+
+        <div class="playlist-section">
+            <div class="playlist-header">视频列表</div>
+            <div id="playlist"></div>
+        </div>
+    </div>
+<footer>
+<div class="footer">
+        <p>🙏感谢关注:<a href="https://www.youtube.com/@blog.aibochinese" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/youtube%20logo%2030.png" 
+         alt="YouTube" /></a>  <a href="https://x.com/i/communities/1988635370549096727" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%E6%B1%89%E8%AF%AD%E5%AE%A2%E6%88%B7%E7%AB%AF/icons8-x-30.png" 
+         alt="X" /></a>  <a href="https://www.facebook.com/blog.aibochinese" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/facebook%20log0%2030.png" 
+         alt="Facebook" /></a>  <a href="https://wa.me/message/QXYAFEGTDWIBE1" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/whatsapp-48.png" 
+         alt="WhatsApp" /></a> <a href="https://space.bilibili.com/3690971141245681?spm_id_from=333.788.0.0" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/icons8-%E8%83%86%E6%B1%81-30.png" 
+         alt="B站" /></a>  <a href="https://github.com/blogaibochinese" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/icons8-github-30.png" 
+         alt="GitHub" /></a>  <a href="https://xhslink.com/m/5it26wH34Zd" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/rednote.png" 
+         alt="小红书" /></a>
+        </p>
+        <p>© 2025 <a href="https://blog.aibochinese.com/" style="color:red " target="_blank" rel="noopener noreferrer">爱博·客</a> - 所有权利保留</p>
+    </div>
+    </footer>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            if (hamburger && navMenu) {
+                hamburger.addEventListener('click', function() {
+                    hamburger.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                });
+
+                navLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        hamburger.classList.remove('active');
+                        navMenu.classList.remove('active');
+                    });
+                });
+            }
+        });
+    </script>
+
+    <!-- 移动端底部按钮 -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white shadow-lg md:hidden border-t border-gray-200 z-50">
+      <div class="flex justify-around items-center py-2">
+        <!-- 首页按钮 -->
+        <a href="https://blog.aibochinese.com/" class="flex flex-col items-center nav-item-active transition-all duration-300">
+          <i class="fa fa-home text-xl mb-1"></i>
+          <span class="text-xs">首页</span>
+        </a>
+
+        <!-- 资源按钮 -->
+        <a href="https://blog.aibochinese.com/Resources/free%20rs" class="flex flex-col items-center transition-all duration-300">
+          <i class="fa fa-cloud-download text-xl mb-1"></i>
+          <span class="text-xs">资源</span>
+        </a>
+
+        <!-- 最新按钮 - 突出显示 -->
+        <a href="https://blog.aibochinese.com/newest" class="flex flex-col items-center">
+          <div class="bg-blue-600 text-white rounded-full w-12 h-12 flex items-center justify-center -mt-6 shadow-lg hover:bg-blue-700 transition-all duration-300">
+            <i class="fa fa-refresh text-xl"></i>
+          </div>
+          <span class="text-xs text-blue-600 mt-1">最新</span>
+        </a>
+
+        <!-- 建站按钮 -->
+        <a href="https://blog.aibochinese.com/sitesbuild" class="flex flex-col items-center transition-all duration-300">
+          <i class="fa fa-code text-xl mb-1"></i>
+          <span class="text-xs">建站</span>
+        </a>
+
+        <!-- 淘金按钮 -->
+        <a href="https://blog.aibochinese.com/earn%20online" class="flex flex-col items-center transition-all duration-300">
+          <i class="fa fa-usd text-xl mb-1"></i>
+          <span class="text-xs">淘金</span>
+        </a>
+      </div>
+    </div>
+
+    <script>
+      // 移动端底部导航交互效果
+      document.addEventListener('DOMContentLoaded', () => {
+        const navItems = document.querySelectorAll('.fixed.bottom-0 a:not(:nth-child(3))');
+
+        navItems.forEach(item => {
+          item.addEventListener('click', (e) => {
+            // 移除所有激活状态
+            navItems.forEach(i => i.classList.remove('nav-item-active'));
+            // 给当前点击项添加激活状态
+            e.currentTarget.classList.add('nav-item-active');
+          });
+        });
+      });
+    </script>
+   <!-- 悬浮图标容器 -->
+    <div class="float-icons-container">
+        <!-- 悬浮微信客服图标 -->
+        <div class="wechat-float" onclick="toggleWechatModal()">
+            <div class="wechat-icon"></div>
+        </div>
+        
+        <!-- 悬浮搜索按钮 -->
+        <div class="search-float" onclick="toggleSearchModal()">
+            <i class="fa fa-search text-white text-2xl"></i>
+        </div>
+    </div>
+
+    <!-- 搜索弹出窗 -->
+    <div id="searchModal" class="search-modal" onclick="closeSearchModal(event)">
+        <div class="search-popup" onclick="event.stopPropagation()">
+            <h3>搜索内容</h3>
+            <div id="pagefind-search-popup"></div>
+            <button class="close-btn" onclick="closeSearchModal()">关闭</button>
+        </div>
+    </div>
+
+    <!-- 微信弹出窗 -->
+    <div id="wechatModal" class="wechat-modal" onclick="closeWechatModal(event)">
+        <div class="wechat-popup" onclick="event.stopPropagation()">
+            <h3>微信客服</h3>
+            <img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E6%B7%BB%E5%8A%A0%E5%BE%AE%E4%BF%A1.png" alt="微信二维码" class="wechat-qr">
+            <p>扫描添加客服微信</p>
+            <button class="close-btn" onclick="closeWechatModal()">关闭</button>
+        </div>
+    </div>
+
+    <script>
+        // 搜索弹窗控制函数
+        function toggleSearchModal() {
+            const modal = document.getElementById('searchModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function closeSearchModal(event) {
+            document.getElementById('searchModal').style.display = 'none';
+        }
+
+        // 微信弹窗控制函数
+        function toggleWechatModal() {
+            const modal = document.getElementById('wechatModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function closeWechatModal(event) {
+            document.getElementById('wechatModal').style.display = 'none';
+        }
+
+        // 点击模态背景关闭
+        window.onclick = function(event) {
+            const searchModal = document.getElementById('searchModal');
+            const wechatModal = document.getElementById('wechatModal');
+            
+            if (event.target === searchModal) {
+                closeSearchModal();
+            } else if (event.target === wechatModal) {
+                closeWechatModal();
+            }
+        };
+    </script>
+       <!-- Pagefind 搜索（已完美修复） -->
+    <script src="/post/pagefind/pagefind-ui.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            console.log("Initializing Pagefind search...");
+            try {
+                // 初始化页面顶部搜索框
+                new PagefindUI({
+                    element: "#pagefind-search",
+                    showImages: false,
+                    showSubResults: true,
+                    resetStyles: false,
+                    translations: {
+                        placeholder: "🔍资源、教程、工具..."
+                    }
+                });
+                
+                // 初始化右侧悬浮搜索弹窗
+                new PagefindUI({
+                    element: "#pagefind-search-popup",
+                    showImages: false,
+                    showSubResults: true,
+                    resetStyles: false,
+                    translations: {
+                        placeholder: "🔍资源、教程、工具..."
+                    }
+                });
+                
+                console.log("Pagefind search initialized successfully");
+            } catch (error) {
+                console.error("Pagefind search initialization failed:", error);
+            }
+        });
+    </script>
+         <script>
+        const videos = [
+            {
+                chapter: "充值流程",
+                title: "1.🎬 手把手给您演示：虚拟信用卡充值 USDT",
+                url: "https://cf.aibochinese.com/%E8%A7%86%E9%A2%91%E7%A8%BF%E4%BB%B6/%E6%89%8B%E6%8A%8A%E6%89%8B%E7%BB%99%E6%82%A8%E6%BC%94%E7%A4%BA%EF%BC%9A%E8%99%9A%E6%8B%9F%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%85%85%E5%80%BCUSDT.mp4",
+                duration: "10:34",
+                document: "https://blog.aibochinese.com/payment/self%20recharge"
+            },
+            {
+                chapter: "渠道优化",
+                title: "1.💰 省钱有招：USDT 链上转账怎么选择网络？",
+                url: "https://cf.aibochinese.com/%E8%A7%86%E9%A2%91%E7%A8%BF%E4%BB%B6/%E7%9C%81%E9%92%B1%E6%9C%89%E6%8B%9B%EF%BC%9AUSDT%E9%93%BE%E4%B8%8A%E8%BD%AC%E8%B4%A6%E6%80%8E%E4%B9%88%E9%80%89%E6%8B%A9%E7%BD%91%E7%BB%9C%EF%BC%9F/%E7%9C%81%E9%92%B1%E6%9C%89%E6%8B%9B%EF%BC%9AUSDT%E9%93%BE%E4%B8%8A%E8%BD%AC%E8%B4%A6%E6%80%8E%E4%B9%88%E9%80%89%E6%8B%A9%E7%BD%91%E7%BB%9C%EF%BC%9F.mp4",
+                duration: "6:20",
+                document: "https://blog.aibochinese.com/payment/self%20recharge"
+            }
+
+        ];
+
+        const playlist = document.getElementById('playlist');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const currentTitle = document.getElementById('currentTitle');
+        let currentVideoDocument = ''; // 存储当前视频的文档链接
+
+        // 按章节分组视频
+        const videosByChapter = videos.reduce((acc, video) => {
+            if (!acc[video.chapter]) {
+                acc[video.chapter] = [];
+            }
+            acc[video.chapter].push(video);
+            return acc;
+        }, {});
+
+        // 设置初始视频的文档链接（默认第一个视频）
+        if (videos.length > 0) {
+            currentVideoDocument = videos[0].document;
+        }
+
+        // 渲染视频列表
+        Object.entries(videosByChapter).forEach(([chapter, chapterVideos]) => {
+            // 创建章节标题
+            const chapterTitle = document.createElement('div');
+            chapterTitle.className = 'chapter-title';
+            chapterTitle.textContent = chapter;
+            playlist.appendChild(chapterTitle);
+
+            // 创建该章节下的视频项
+            chapterVideos.forEach((video, index) => {
+                const item = document.createElement('div');
+                item.className = 'video-item';
+                item.innerHTML = `
+                    <div class="video-item-title">${video.title}</div>
+                    <div class="video-item-duration">时长: ${video.duration}</div>
+                `;
+                
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.video-item').forEach(el => {
+                        el.classList.remove('active');
+                    });
+                    item.classList.add('active');
+                    
+                    // 重置视频播放器状态
+                    videoPlayer.pause();
+                    videoPlayer.currentTime = 0;
+                    
+                    // 更新视频源和标题
+                    videoPlayer.src = video.url;
+                    currentTitle.textContent = video.title;
+                    currentVideoDocument = video.document; // 更新当前视频的文档链接
+                    
+                    // 处理视频加载和播放
+                    videoPlayer.load();
+                    
+                    // 尝试播放视频，处理可能的错误
+                    try {
+                        // 移动端自动播放策略
+                        const playPromise = videoPlayer.play();
+                        if (playPromise !== undefined) {
+                            playPromise.then(() => {
+                                // 播放成功
+                            }).catch(error => {
+                                console.log('自动播放被阻止，等待用户交互:', error);
+                                // 不做任何操作，让用户点击播放按钮
+                            });
+                        }
+                    } catch (error) {
+                        console.error('播放视频时出错:', error);
+                    }
+                });
+                
+                playlist.appendChild(item);
+            });
+        });
+
+        // 添加查看文档按钮点击事件
+        const documentButton = document.querySelector('.document-button');
+        documentButton.addEventListener('click', () => {
+            if (currentVideoDocument) {
+                // 使用新窗口打开文档链接
+                window.open(currentVideoDocument, '_blank');
+            } else {
+                alert('当前视频暂无相关文档');
+            }
+        });
+    </script>
+     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6203499194676961"
+     crossorigin="anonymous"></script>  
+</body>
+</html>
