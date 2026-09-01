@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API适配层设计与实现 - 中国Tokens出海 - 爱博·客</title>
+    <meta name="description" content="构建兼容OpenAI格式的API转发层">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .course-container {{
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 20px 50px;
+        }}
+        
+        .course-header {{
+            text-align: center;
+            margin-bottom: 40px;
+        }}
+        
+        .course-title {{
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }}
+        
+        .lesson-nav {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }}
+        
+        .nav-btn {{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }}
+        
+        .nav-btn:hover {{
+            background: #667eea;
+            color: white;
+        }}
+        
+        .lesson-content {{
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            line-height: 1.8;
+        }}
+        
+        .section {{
+            margin-bottom: 40px;
+        }}
+        
+        .section-title {{
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+            padding-left: 20px;
+        }}
+        
+        @media (max-width: 768px) {{
+            .course-title {{
+                font-size: 2rem;
+            }}
+            
+            .lesson-content {{
+                padding: 20px;
+            }}
+        }}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="/"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/logo.png" alt="爱博·客"></a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/index.html" class="nav-link">首页</a></li>
+                <li><a href="../mooc.html" class="nav-link">公开课</a></li>
+                <li><a href="dashboard.html" class="nav-link">课程导航</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="course-container">
+        <div class="course-header">
+            <h1 class="course-title">API适配层设计与实现</h1>
+            <p>构建兼容OpenAI格式的API转发层</p>
+        </div>
+
+        <div class="lesson-nav">
+            <a href="bt-panel.html" class="nav-btn">
+                <i class="fas fa-arrow-left"></i> 上一课：宝塔面板
+            </a>
+            <a href="key-management.html" class="nav-btn">
+                下一课：密钥管理 <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="lesson-content">
+            <div class="section">
+            <h2 class="section-title">API适配层设计与实现</h2>
+            <p>
+<div class="section">
+    <h2 class="section-title">API适配层架构设计</h2>
+    
+    <p>API适配层的核心功能是<strong>标准化不同AI厂商的API接口</strong>，为前端应用提供统一的OpenAI兼容接口。</p>
+    
+    <div style="background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%); color: white; padding: 30px; border-radius: 15px; margin: 20px 0;">
+        <h3 style="color: white;">🎯 设计目标</h3>
+        <ul style="color: white;">
+            <li><strong>100%兼容OpenAI API格式</strong>：用户无需修改现有代码</li>
+            <li><strong>智能路由</strong>：自动选择最优的上游服务</li>
+            <li><strong>故障转移</strong>：主服务故障时自动切换</li>
+            <li><strong>性能监控</strong>：实时监控各服务的响应时间</li>
+        </ul>
+    </div>
+</div>
+
+<div class="section">
+    <h2 class="section-title">模型映射和参数转换</h2>
+    
+    <h3>模型映射配置</h3>
+    <pre style="background: #f8f9fa; padding: 15px; border-radius: 8px; overflow-x: auto;">
+// models.config.js
+export const MODEL_MAPPING = {
+    // OpenAI格式模型名称 -> 中国厂商模型配置
+    'gpt-3.5-turbo': {
+        provider: 'deepseek',
+        model: 'deepseek-chat',
+        endpoint: 'https://api.deepseek.com/v1/chat/completions',
+        costPerToken: 0.00000014, // $0.14/百万token
+        maxTokens: 32000,
+        supportsStreaming: true,
+        rateLimit: {
+            requestsPerMinute: 60,
+            tokensPerMinute: 60000
+        },
+        fallback: 'gpt-3.5-turbo-baidu'
+    },
+    
+    'gpt-4': {
+        provider: 'deepseek',
+        model: 'deepseek-reasoner',
+        endpoint: 'https://api.deepseek.com/v1/chat/completions',
+        costPerToken: 0.00000028, // $0.28/百万token
+        maxTokens: 128000,
+        supportsStreaming: true,
+        rateLimit: {
+            requestsPerMinute: 20,
+            tokensPerMinute: 40000
+        }
+    },
+    
+    'text-davinci-003': {
+        provider: 'baidu',
+        model: 'ernie-bot',
+        endpoint: 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions',
+        costPerToken: 0.00000012, // $0.12/百万token
+        maxTokens: 2000,
+        requiresAuth: true,
+        authType: 'bearer',
+        supportsStreaming: false
+    },
+    
+    'claude-3-sonnet': {
+        provider: 'alibaba',
+        model: 'qwen-plus',
+        endpoint: 'https://dashscope.aliyun.com/api/v1/services/aigc/text-generation/generation',
+        costPerToken: 0.00000020, // $0.20/百万token
+        maxTokens: 6000,
+        headers: {
+            'X-DashScope-Async': 'enable'
+        }
+    }
+};
+    </pre>
+</div>
+
+<div class="section">
+    <h2 class="section-title">请求适配器核心实现</h2>
+    
+    <h3>OpenAI适配器类</h3>
+    <pre style="background: #f8f9fa; padding: 15px; border-radius: 8px; overflow-x: auto;">
+// openai-adapter.js
+export class OpenAIAdapter {
+    static async handleOpenAIRequest(openaiRequest, userApiKey) {
+        try {
+            // 1. 验证API密钥
+            const user = await AuthService.authenticate(userApiKey);
+            if (!user) {
+                throw new Error('Invalid API key');
+            }
+            
+            // 2. 检查使用额度和频率限制
+            await RateLimitService.checkLimit(user.id, openaiRequest);
+            
+            // 3. 验证请求参数
+            this.validateRequest(openaiRequest);
+            
+            // 4. 选择最优的上游服务
+            const providerConfig = await this.selectBestProvider(openaiRequest, user);
+            
+            // 5. 转换请求格式
+            const providerRequest = this.convertToProviderFormat(openaiRequest, providerConfig);
+            
+            // 6. 发送请求到上游服务
+            const providerResponse = await this.sendToProvider(providerRequest, providerConfig);
+            
+            // 7. 转换响应格式
+            const openaiResponse = this.convertToOpenAIFormat(providerResponse, providerConfig);
+            
+            // 8. 记录使用量
+            await UsageService.recordUsage(user.id, openaiRequest, openaiResponse, providerConfig);
+            
+            return openaiResponse;
+            
+        } catch (error) {
+            // 错误处理和故障转移
+            return await this.handleError(error, openaiRequest, userApiKey);
+        }
+    }
+    
+    static async selectBestProvider(openaiRequest, user) {
+        const availableProviders = await ProviderHealthService.getHealthyProviders();
+        
+        // 基于性能、成本、用户偏好选择
+        const scoredProviders = await Promise.all(
+            availableProviders.map(async (provider) => ({
+                provider,
+                score: await this.calculateProviderScore(provider, openaiRequest, user)
+            }))
+        );
+        
+        // 选择分数最高的提供商
+        const bestProvider = scoredProviders.reduce((best, current) => 
+            current.score > best.score ? current : best
+        );
+        
+        return bestProvider.provider;
+    }
+    
+    static convertToProviderFormat(openaiRequest, providerConfig) {
+        const baseRequest = {
+            model: providerConfig.model,
+            messages: openaiRequest.messages,
+            max_tokens: openaiRequest.max_tokens || 2048,
+            temperature: openaiRequest.temperature || 0.7,
+            top_p: openaiRequest.top_p || 1.0
+        };
+        
+        // 厂商特定的参数转换
+        switch (providerConfig.provider) {
+            case 'deepseek':
+                return {
+                    ...baseRequest,
+                    stream: openaiRequest.stream || false,
+                    presence_penalty: openaiRequest.presence_penalty,
+                    frequency_penalty: openaiRequest.frequency_penalty
+                };
+                
+            case 'baidu':
+                return {
+                    messages: openaiRequest.messages.map(msg => ({
+                        role: msg.role,
+                        content: msg.content
+                    })),
+                    stream: false, // 百度暂不支持流式响应
+                    temperature: openaiRequest.temperature
+                };
+                
+            case 'alibaba':
+                return {
+                    model: providerConfig.model,
+                    input: {
+                        messages: openaiRequest.messages
+                    },
+                    parameters: {
+                        max_tokens: openaiRequest.max_tokens,
+                        temperature: openaiRequest.temperature
+                    }
+                };
+                
+            default:
+                return baseRequest;
+        }
+    }
+}
+    </pre>
+</div>
+
+<p>后续课程将深入讲解错误处理和性能优化细节。</p></p>
+            <p>在正式内容发布前，您可以通过课程导航页面查看其他已发布的课程。</p>
+        </div>
+            
+            <div class="lesson-nav" style="margin-top: 40px;">
+                <a href="bt-panel.html" class="nav-btn">
+                    <i class="fas fa-arrow-left"></i> 上一课：宝塔面板
+                </a>
+                <a href="key-management.html" class="nav-btn">
+                    下一课：密钥管理 <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导航菜单脚本 -->
+    <script>
+        const hamburger = document.querySelector(".hamburger");
+        const navMenu = document.querySelector(".nav-menu");
+
+        hamburger.addEventListener("click", () => {{
+            hamburger.classList.toggle("active");
+            navMenu.classList.toggle("active");
+        }});
+    </script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务组合与定价策略 - 中国Tokens出海 - 爱博·客</title>
+    <meta name="description" content="设计多层次的服务套餐">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .course-container {{
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 20px 50px;
+        }}
+        
+        .course-header {{
+            text-align: center;
+            margin-bottom: 40px;
+        }}
+        
+        .course-title {{
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }}
+        
+        .lesson-nav {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }}
+        
+        .nav-btn {{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }}
+        
+        .nav-btn:hover {{
+            background: #667eea;
+            color: white;
+        }}
+        
+        .lesson-content {{
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            line-height: 1.8;
+        }}
+        
+        .section {{
+            margin-bottom: 40px;
+        }}
+        
+        .section-title {{
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+            padding-left: 20px;
+        }}
+        
+        @media (max-width: 768px) {{
+            .course-title {{
+                font-size: 2rem;
+            }}
+            
+            .lesson-content {{
+                padding: 20px;
+            }}
+        }}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="/"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/logo.png" alt="爱博·客"></a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/index.html" class="nav-link">首页</a></li>
+                <li><a href="../mooc.html" class="nav-link">公开课</a></li>
+                <li><a href="dashboard.html" class="nav-link">课程导航</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="course-container">
+        <div class="course-header">
+            <h1 class="course-title">服务组合与定价策略</h1>
+            <p>设计多层次的服务套餐</p>
+        </div>
+
+        <div class="lesson-nav">
+            <a href="model-comparison.html" class="nav-btn">
+                <i class="fas fa-arrow-left"></i> 上一课：模型对比
+            </a>
+            <a href="social-media.html" class="nav-btn">
+                下一课：社交媒体营销 <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="lesson-content">
+            <div class="section">
+            <h2 class="section-title">服务组合与定价策略</h2>
+            <p>
+<div class="section">
+    <h2 class="section-title">服务组合与定价策略</h2>
+    
+    <div style="background: linear-gradient(135deg, #FF9800 0%, #F44336 100%); color: white; padding: 30px; border-radius: 15px; margin: 20px 0;">
+        <h3 style="color: white;">💰 多层次定价策略</h3>
+        <ul style="color: white;">
+            <li><strong>免费试用</strong>：吸引新用户，降低使用门槛</li>
+            <li><strong>按量计费</strong>：灵活付费，适合中小用户</li>
+            <li><strong>套餐订阅</strong>：稳定收入，适合企业用户</li>
+            <li><strong>定制服务</strong>：高附加值，适合大客户</li>
+        </ul>
+    </div>
+</div>
+
+<div class="section">
+    <h2 class="section-title">服务套餐设计</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 20px 0;">
+        <div style="border: 2px solid #e0e0e0; border-radius: 8px; padding: 25px; text-align: center;">
+            <h3>🆓 免费试用</h3>
+            <h4 style="color: #4CAF50;">$0/月</h4>
+            <ul style="text-align: left; font-size: 0.9em;">
+                <li>每月10,000 tokens</li>
+                <li>基础模型访问</li>
+                <li>社区支持</li>
+                <li>7天试用期</li>
+            </ul>
+            <button style="margin-top: 15px; padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                立即试用
+            </button>
+        </div>
+        
+        <div style="border: 2px solid #2196F3; border-radius: 8px; padding: 25px; text-align: center; background: #f5f9ff;">
+            <h3>🚀 开发者版</h3>
+            <h4 style="color: #2196F3;">$49/月</h4>
+            <ul style="text-align: left; font-size: 0.9em;">
+                <li>每月500,000 tokens</li>
+                <li>所有模型访问</li>
+                <li>优先技术支持</li>
+                <li>API访问日志</li>
+            </ul>
+            <button style="margin-top: 15px; padding: 10px 20px; background: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                立即订阅
+            </button>
+        </div>
+        
+        <div style="border: 2px solid #FF9800; border-radius: 8px; padding: 25px; text-align: center; background: #fff8e1;">
+            <h3>🏢 企业版</h3>
+            <h4 style="color: #FF9800;">$299/月</h4>
+            <ul style="text-align: left; font-size: 0.9em;">
+                <li>每月5,000,000 tokens</li>
+                <li>专属模型优化</li>
+                <li>24/7技术支持</li>
+                <li>SLA服务保障</li>
+            </ul>
+            <button style="margin-top: 15px; padding: 10px 20px; background: #FF9800; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                联系销售
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <h2 class="section-title">定价策略分析</h2>
+    
+    <h3>成本效益计算示例</h3>
+    <table style="width: 100%; border-collapse: collapse; margin: 20px 0;" border="1">
+        <thead>
+            <tr style="background: #f8f9fa;">
+                <th style="padding: 12px; text-align: left;">套餐类型</th>
+                <th style="padding: 12px; text-align: left;">用户成本</th>
+                <th style="padding: 12px; text-align: left;">平台成本</th>
+                <th style="padding: 12px; text-align: left;">毛利率</th>
+                <th style="padding: 12px; text-align: left;">目标用户</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="padding: 12px;"><strong>免费试用</strong></td>
+                <td style="padding: 12px;">$0</td>
+                <td style="padding: 12px;">$0.14</td>
+                <td style="padding: 12px;">-100%</td>
+                <td style="padding: 12px;">新用户获取</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px;"><strong>开发者版</strong></td>
+                <td style="padding: 12px;">$0.098/token</td>
+                <td style="padding: 12px;">$0.14/token</td>
+                <td style="padding: 12px;">30%</td>
+                <td style="padding: 12px;">个人开发者</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px;"><strong>企业版</strong></td>
+                <td style="padding: 12px;">$0.06/token</td>
+                <td style="padding: 12px;">$0.12/token</td>
+                <td style="padding: 12px;">50%</td>
+                <td style="padding: 12px;">中小企业</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px;"><strong>定制服务</strong></td>
+                <td style="padding: 12px;">协商定价</td>
+                <td style="padding: 12px;">批量优惠</td>
+                <td style="padding: 12px;">60-80%</td>
+                <td style="padding: 12px;">大企业客户</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<p>后续课程将讲解销售策略和客户管理。</p></p>
+            <p>在正式内容发布前，您可以通过课程导航页面查看其他已发布的课程。</p>
+        </div>
+            
+            <div class="lesson-nav" style="margin-top: 40px;">
+                <a href="model-comparison.html" class="nav-btn">
+                    <i class="fas fa-arrow-left"></i> 上一课：模型对比
+                </a>
+                <a href="social-media.html" class="nav-btn">
+                    下一课：社交媒体营销 <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导航菜单脚本 -->
+    <script>
+        const hamburger = document.querySelector(".hamburger");
+        const navMenu = document.querySelector(".nav-menu");
+
+        hamburger.addEventListener("click", () => {{
+            hamburger.classList.toggle("active");
+            navMenu.classList.toggle("active");
+        }});
+    </script>
+</body>
+</html>

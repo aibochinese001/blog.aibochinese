@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户体验设计与最佳实践 - 中国Tokens出海 - 爱博·客</title>
+    <meta name="description" content="优化界面和操作流程">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .course-container {{
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 20px 50px;
+        }}
+        
+        .course-header {{
+            text-align: center;
+            margin-bottom: 40px;
+        }}
+        
+        .course-title {{
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }}
+        
+        .lesson-nav {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }}
+        
+        .nav-btn {{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }}
+        
+        .nav-btn:hover {{
+            background: #667eea;
+            color: white;
+        }}
+        
+        .lesson-content {{
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            line-height: 1.8;
+        }}
+        
+        .section {{
+            margin-bottom: 40px;
+        }}
+        
+        .section-title {{
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+            padding-left: 20px;
+        }}
+        
+        @media (max-width: 768px) {{
+            .course-title {{
+                font-size: 2rem;
+            }}
+            
+            .lesson-content {{
+                padding: 20px;
+            }}
+        }}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="/"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/logo.png" alt="爱博·客"></a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/index.html" class="nav-link">首页</a></li>
+                <li><a href="../mooc.html" class="nav-link">公开课</a></li>
+                <li><a href="dashboard.html" class="nav-link">课程导航</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="course-container">
+        <div class="course-header">
+            <h1 class="course-title">用户体验设计与最佳实践</h1>
+            <p>优化界面和操作流程</p>
+        </div>
+
+        <div class="lesson-nav">
+            <a href="website-optimization.html" class="nav-btn">
+                <i class="fas fa-arrow-left"></i> 上一课：网站优化
+            </a>
+            <a href="brand-building.html" class="nav-btn">
+                下一课：品牌建设 <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="lesson-content">
+            <div class="section">
+            <h2 class="section-title">用户体验设计与最佳实践</h2>
+            <p>
+<div class="section">
+    <h2 class="section-title">用户体验设计与最佳实践</h2>
+    
+    <div style="background: linear-gradient(135deg, #7E57C2 0%, #2196F3 100%); color: white; padding: 30px; border-radius: 15px; margin: 20px 0;">
+        <h3 style="color: white;">🎨 UX设计原则</h3>
+        <ul style="color: white;">
+            <li><strong>简洁直观</strong>：界面简洁，操作直观易懂</li>
+            <li><strong>一致性强</strong>：保持设计语言和交互方式一致</li>
+            <li><strong>响应迅速</strong>：快速响应用户操作，减少等待时间</li>
+            <li><strong>可访问性</strong>：支持不同设备和残障用户访问</li>
+        </ul>
+    </div>
+</div>
+
+<div class="section">
+    <h2 class="section-title">API文档设计最佳实践</h2>
+    
+    <h3>开发者体验优化</h3>
+    <div class="advantage-list">
+        <div class="advantage-item">
+            <div class="advantage-title">📚 清晰的文档</div>
+            <p>提供完整的API参考、教程和示例代码</p>
+        </div>
+        <div class="advantage-item">
+            <div class="advantage-title">🔧 交互式测试</div>
+            <p>在线API测试工具，实时验证接口</p>
+        </div>
+        <div class="advantage-item">
+            <div class="advantage-title">📊 使用统计</div>
+            <p>详细的调用统计和性能监控</p>
+        </div>
+        <div class="advantage-item">
+            <div class="advantage-title">💬 社区支持</div>
+            <p>活跃的开发者社区和技术支持</p>
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <h2 class="section-title">响应式设计实现</h2>
+    
+    <h3>移动端优化CSS</h3>
+    <pre style="background: #f8f9fa; padding: 15px; border-radius: 8px; overflow-x: auto;">
+/* 响应式设计基础 */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* 移动端优先的媒体查询 */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    .header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .nav-menu {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .api-docs {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 平板设备优化 */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        max-width: 90%;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* 无障碍访问支持 */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* 高对比度模式支持 */
+@media (prefers-contrast: high) {
+    :root {
+        --text-color: #000000;
+        --background-color: #ffffff;
+        --primary-color: #0056b3;
+    }
+}
+    </pre>
+</div>
+
+<p>后续课程将深入讲解用户研究和测试方法。</p></p>
+            <p>在正式内容发布前，您可以通过课程导航页面查看其他已发布的课程。</p>
+        </div>
+            
+            <div class="lesson-nav" style="margin-top: 40px;">
+                <a href="website-optimization.html" class="nav-btn">
+                    <i class="fas fa-arrow-left"></i> 上一课：网站优化
+                </a>
+                <a href="brand-building.html" class="nav-btn">
+                    下一课：品牌建设 <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导航菜单脚本 -->
+    <script>
+        const hamburger = document.querySelector(".hamburger");
+        const navMenu = document.querySelector(".nav-menu");
+
+        hamburger.addEventListener("click", () => {{
+            hamburger.classList.toggle("active");
+            navMenu.classList.toggle("active");
+        }});
+    </script>
+</body>
+</html>
