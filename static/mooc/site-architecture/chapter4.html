@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第4章：服务器与部署 — 让网站跑起来 - 网站架构全景课 - 爱博·客公开课</title>
+    <meta name="description" content="Linux/宝塔面板/Nginx/Docker — 从代码到上线的完整流程">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --blue: #2563eb; --bg: #f0f4ff; --card-bg: #ffffff; --text: #1e293b;
+            --text-light: #475569; --border: #e2e8f0; --radius: 12px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.06);
+            --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .navbar { background: linear-gradient(135deg, #991b1b, #dc2626); color: white; padding: 0; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; box-shadow: 0 2px 20px rgba(30,58,95,0.3); }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 20px; }
+        .logo img { height: 40px; width: auto; display: block; }
+        .nav-menu { display: flex; list-style: none; gap: 1.5rem; margin: 0; padding: 0; }
+        .nav-link { color: rgba(255,255,255,0.92); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: 0.3s; }
+        .nav-link:hover, .nav-link.active { color: #93c5fd; }
+        .hamburger { display: none; flex-direction: column; cursor: pointer; }
+        .bar { width: 25px; height: 3px; background: white; margin: 3px 0; transition: 0.3s; }
+        .content-container { max-width: 900px; margin: 0 auto; padding: 90px 20px 100px; }
+        .breadcrumb { margin-bottom: 20px; color: var(--text-light); font-size: 0.9rem; }
+        .breadcrumb a { color: var(--blue); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .chapter-header { text-align: center; padding: 45px 20px; border-radius: var(--radius); color: white; margin-bottom: 30px; background: linear-gradient(135deg, #991b1b, #dc2626); }
+        .chapter-header .chapter-num { font-size: 0.95rem; opacity: 0.85; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 2px; }
+        .chapter-header h1 { font-size: 2rem; margin-bottom: 8px; }
+        .chapter-header .chapter-desc { font-size: 1rem; opacity: 0.85; }
+        .section { background: var(--card-bg); border-radius: var(--radius); padding: 28px 32px; box-shadow: var(--shadow); margin-bottom: 22px; border: 1px solid var(--border); }
+        .section h2 { font-size: 1.25rem; color: var(--blue); margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #eef2ff; display: flex; align-items: center; gap: 10px; }
+        .section h3 { font-size: 1.1rem; color: var(--text); margin: 22px 0 10px; }
+        .section p { margin-bottom: 12px; color: var(--text-light); }
+        .section ul, .section ol { margin: 10px 0 10px 22px; color: var(--text-light); }
+        .section li { margin-bottom: 8px; }
+        .code-block { background: var(--code-bg); color: var(--code-text); padding: 16px 20px; border-radius: 8px; margin: 15px 0; font-family: "SF Mono", "Fira Code", "Consolas", monospace; font-size: 0.88rem; line-height: 1.7; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; }
+        .code-block .prompt { color: #4ade80; }
+        .code-block .comment { color: #64748b; }
+        .tip { padding: 14px 18px; border-radius: 8px; margin: 15px 0; font-size: 0.95rem; display: flex; gap: 10px; align-items: flex-start; }
+        .tip-info { background: #e0f2fe; color: #075985; border-left: 4px solid #0ea5e9; }
+        .tip-success { background: #d1fae5; color: #065f46; border-left: 4px solid #10b981; }
+        .tip-warning { background: #fef3c7; color: #92400e; border-left: 4px solid #f59e0b; }
+        .tip .tip-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+        .info-table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.9rem; }
+        .info-table th { background: #f1f5f9; padding: 10px 14px; text-align: left; font-weight: 600; border-bottom: 2px solid var(--border); color: var(--blue); }
+        .info-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+        .info-table tr:hover { background: #f8fafc; }
+        .chapter-nav { display: flex; justify-content: space-between; margin-top: 40px; gap: 15px; }
+        .chapter-nav a { display: flex; align-items: center; gap: 8px; padding: 12px 20px; background: var(--card-bg); border-radius: 8px; text-decoration: none; color: var(--text); box-shadow: var(--shadow); transition: 0.3s; font-size: 0.9rem; border: 1px solid var(--border); }
+        .chapter-nav a:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); border-color: var(--blue); }
+        footer { background: linear-gradient(135deg, #991b1b, #dc2626); color: white; padding: 24px 0; }
+        .footer { max-width: 1200px; margin: 0 auto; padding: 0 20px; text-align: center; }
+        .footer a { color: #93c5fd; }
+        .mobile-nav { display: none; }
+        @media (max-width: 768px) {
+            .chapter-header h1 { font-size: 1.5rem; }
+            .section { padding: 20px 18px; }
+            .mobile-nav { display: block; position: fixed; bottom: 0; left: 0; right: 0; background: white; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000; }
+            .mobile-nav .nav-container { display: flex; justify-content: space-around; padding: 10px 0; }
+            .mobile-nav .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #666; padding: 6px 10px; font-size: 11px; }
+            .mobile-nav .nav-item .icon { font-size: 16px; margin-bottom: 2px; }
+            .mobile-nav .nav-item.active { color: var(--blue); }
+            .mobile-nav .nav-item.center { background: var(--blue); color: white; border-radius: 50%; width: 46px; height: 46px; justify-content: center; margin-top: -16px; box-shadow: 0 2px 10px rgba(37,99,235,0.4); }
+        }
+        @media (max-width: 1024px) {
+            .nav-menu { position: fixed; left: -100%; top: 60px; flex-direction: column; background: rgba(30,58,95,0.98); width: 100%; text-align: center; transition: left 0.3s; box-shadow: 0 10px 27px rgba(0,0,0,0.3); padding: 20px 0; gap: 0.5rem; }
+            .nav-menu.active { left: 0; }
+            .nav-menu li { padding: 10px 0; }
+            .hamburger { display: flex; }
+            .hamburger.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .hamburger.active .bar:nth-child(2) { opacity: 0; }
+            .hamburger.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo"><a href="https://blog.aibochinese.com/"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/aibologo%20460%20100.png" alt="爱博·客"></a></div>
+            <ul class="nav-menu">
+                <li><a href="https://blog.aibochinese.com/mooc" class="nav-link active">公开课</a></li>
+                <li><a href="https://blog.aibochinese.com/Rescous/free%20rs" class="nav-link">免费资源</a></li>
+                <li><a href="https://blog.aibochinese.com/education/tutor%20guide" class="nav-link">汉语教学</a></li>
+                <li><a href="https://blog.aibochinese.com/sitesbuild" class="nav-link">建站</a></li>
+                <li><a href="https://blog.aibochinese.com/payment/pay" class="nav-link">跨境收付</a></li>
+                <li><a href="https://blog.aibochinese.com/SMC/sm%20maketing" class="nav-link">自媒体营销</a></li>
+                <li><a href="https://blog.aibochinese.com/earn%20online" class="nav-link">项目推荐</a></li>
+            </ul>
+            <div class="hamburger"><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="content-container">
+            <div class="breadcrumb">
+                <a href="https://blog.aibochinese.com/">首页</a> &raquo;
+                <a href="https://blog.aibochinese.com/mooc">公开课</a> &raquo;
+                <a href="dashboard">网站架构全景课</a> &raquo;
+                <strong>第4章</strong>
+            </div>
+
+            <div class="chapter-header">
+                <div class="chapter-num">第 4 章</div>
+                <h1><i class="fa fa-server"></i> 服务器与部署 — 让网站跑起来</h1>
+                <p class="chapter-desc">Linux/宝塔面板/Nginx/Docker — 从代码到上线的完整流程</p>
+            </div>
+
+            <div class="section">
+                <h2>🐧 Linux：服务器的操作系统</h2>
+                <p>大多数网站服务器运行 <strong>Linux</strong>（而不是 Windows）。Linux 没有图形界面，所有操作通过命令行完成。但在 AI 时代，<strong>你不需要亲自敲命令</strong>——告诉 AI 你要做什么，它会帮你执行。</p>
+<p>主流的 Linux 发行版：<strong>Ubuntu</strong>（最流行）、<strong>CentOS</strong>（企业用）、<strong>Debian</strong>（稳定）。</p>
+<div class="tip tip-warning"><span class="tip-icon">⚠️</span><div>不要被「命令行」吓到。在 AI 时代，你只是把命令「转述」给 AI。你：『帮我把网站文件上传到服务器』→ AI：执行 scp/rsync 命令。</div></div>
+            </div>
+            <div class="section">
+                <h2>🏗️ 宝塔面板：服务器的控制台</h2>
+                <p><strong>宝塔面板（BT Panel）</strong>是在 Linux 上的一个<strong>可视化控制台</strong>，让你通过网页来管理服务器：一键安装 Nginx、MySQL、PHP、Redis；可视化创建网站、绑定域名；一键申请和续期 SSL 证书（Let's Encrypt）；文件管理器、数据库管理器（phpMyAdmin）；防火墙、定时任务、日志查看。</p>
+<p>爱博·客的所有网站都通过宝塔面板管理。对非技术用户来说，<strong>宝塔就是你和服务器之间的翻译官</strong>。</p>
+            </div>
+            <div class="section">
+                <h2>🌐 Nginx：网站的守门人</h2>
+                <p><strong>Nginx</strong>（发音 "Engine-X"）是世界上最流行的 Web 服务器软件。它的工作是：</p>
+<ul>
+<li><strong>接收请求：</strong>所有用户访问先到 Nginx</li>
+<li><strong>分发请求：</strong>静态文件（图片/CSS）直接返回；动态请求转发给 PHP/Python 后端</li>
+<li><strong>反向代理：</strong>一个域名可以代理到不同后端服务</li>
+<li><strong>负载均衡：</strong>流量大时，分发到多台服务器</li>
+<li><strong>SSL 终结：</strong>处理 HTTPS 加密解密</li>
+</ul>
+<div class="tip tip-info"><span class="tip-icon">🤖</span><div><strong>AI 能做什么：</strong>「帮我在 Nginx 配置里给 blog.aibochinese.com 添加一个反向代理，把 /api 路径转发到本地的 3000 端口」——AI 会直接修改配置文件并重载 Nginx。</div></div>
+            </div>
+            <div class="section">
+                <h2>🐳 Docker：网站的打包盒</h2>
+                <p><strong>Docker</strong> 把应用和它需要的所有依赖「打包」成一个标准化的容器。好处是：环境一致、一键部署、应用隔离。爱博·客服务器上运行着多个 Docker 容器：Hermes Agent、OpenClaw 数字员工、SearXNG 搜索引擎等等。</p>
+            </div>
+            <div class="section">
+                <h2>🔒 SSL/HTTPS：给网站加一把锁</h2>
+                <p>HTTPS 就是在 HTTP 外面加了一层 <strong>SSL/TLS 加密</strong>。浏览器地址栏显示的小锁图标，表示你和服务器之间的通信是加密的。</p>
+<p>以前 SSL 证书很贵（每年几百美元），现在 <strong>Let's Encrypt</strong> 提供免费证书，宝塔面板一键就能申请和自动续期。</p>
+<div class="tip tip-success"><span class="tip-icon">🔐</span><div>没有 HTTPS 的网站在 Chrome 里会显示「不安全」，严重影响用户信任。用宝塔面板 + Let's Encrypt，5 分钟搞定。</div></div>
+            </div>
+            <div class="section">
+                <h2>📊 结构图：部署流程图</h2>
+                <img src="https://blog.aibochinese.com/uploads/diagram/deploy-flow.png" alt="网站部署流程图" style="width:100%;height:auto;border-radius:8px;border:1px solid var(--border);margin:10px 0;" loading="lazy">
+            </div>
+
+            <div class="chapter-nav">
+                <a href="chapter3"><i class="fa fa-arrow-left"></i> 第三章：数据库与存储</a>
+                <a href="chapter5">第五章：网站安全 <i class="fa fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer">
+            <p style="margin-bottom:10px;">
+                <a href="https://www.youtube.com/@blog.aibochinese" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/youtube%20logo%2030.png" style="width:30px;height:30px;display:inline-block;vertical-align:middle;margin:0 3px;"></a>
+                <a href="https://x.com/i/communities/1988635370549096727" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%E6%B1%89%E8%AF%AD%E5%AE%A2%E6%88%B7%E7%AB%AF/icons8-x-30.png" style="width:30px;height:30px;display:inline-block;vertical-align:middle;margin:0 3px;"></a>
+                <a href="https://www.facebook.com/blog.aibochinese" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/facebook%20log0%2030.png" style="width:30px;height:30px;display:inline-block;vertical-align:middle;margin:0 3px;"></a>
+                <a href="https://github.com/blogaibochinese" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/icons8-github-30.png" style="width:30px;height:30px;display:inline-block;vertical-align:middle;margin:0 3px;"></a>
+            </p>
+            <p style="font-size:13px;color:hsla(0,0%,100%,0.8);">&copy; 2025 <a href="https://blog.aibochinese.com/" style="color:#fff;">爱博·客</a> - 所有权利保留</p>
+        </div>
+    </footer>
+    <div class="mobile-nav">
+        <div class="nav-container">
+            <a href="https://blog.aibochinese.com/" class="nav-item"><i class="fa fa-home icon"></i><span class="text">首页</span></a>
+            <a href="https://blog.aibochinese.com/Rescous/free%20rs" class="nav-item"><i class="fa fa-cloud-download icon"></i><span class="text">资源</span></a>
+            <a href="https://blog.aibochinese.com/newest" class="nav-item center"><i class="fa fa-refresh icon"></i><span class="text">最新</span></a>
+            <a href="https://blog.aibochinese.com/sitesbuild" class="nav-item"><i class="fa fa-code icon"></i><span class="text">建站</span></a>
+            <a href="https://blog.aibochinese.com/earn%20online" class="nav-item"><i class="fa fa-usd icon"></i><span class="text">淘金</span></a>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const h = document.querySelector(".hamburger");
+            const m = document.querySelector(".nav-menu");
+            if(h) h.addEventListener("click", () => { h.classList.toggle("active"); m.classList.toggle("active"); });
+        });
+    </script>
+</body>
+</html>
