@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>国际虚拟信用卡绑定和激活Cloudflare账户指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            padding-top: 80px; /* 为导航栏留出空间 */
+        }
+        /* 悬浮微信图标样式 */
+        .wechat-float {
+            width: 60px;
+            height: 60px;
+            background-color: hsl(148, 45%, 88%); /* 微信绿色 */
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .wechat-float:hover {
+            transform: scale(1.1);
+        }
+
+        .wechat-icon {
+            width: 40px;
+            height: 40px;
+            background-image: url('https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/wechaticon.png'); /* 用户提供的微信图标URL */
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* 弹出窗样式 */
+        /* 悬浮图标容器 */
+        .float-icons-container {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .wechat-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 悬浮搜索按钮 */
+        .search-float {
+            width: 60px;
+            height: 60px;
+            background-color: #3B82F6; /* 蓝色 */
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .search-float:hover {
+            transform: scale(1.1);
+        }
+
+        /* 搜索弹出窗 */
+        .search-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-popup {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .search-popup h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .wechat-popup {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+            width: 90%;
+        }
+
+        .wechat-qr {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 10px;
+            display: block; /* 二维码图片，用户替换src */
+        }
+
+        .close-btn {
+            background-color: #ff4d4f;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .close-btn:hover {
+            background-color: #ff7875;
+        }
+
+        /* ==================== 全新 Pagefind 搜索样式（搜索框水平居中版） ==================== */
+.search-container {
+    position: relative;
+    /* 删除 margin-right，改为自动左右 margin 实现居中 */
+    margin: 0 auto;           /* 关键：水平居中 */
+    z-index: 1001;
+    min-width: 200px;
+    max-width: 380px;         /* 建议加上最大宽度，和下拉结果保持一致 */
+    width: 100%;
+    display: flex;
+    justify-content: center;  /* 内部元素水平居中 */
+    align-items: center;
+}
+
+/* 输入框：去掉宽度 100% + focus 扩展的左右晃动问题 */
+#pagefind-search .pagefind-ui__search-input {
+    padding: 10px 16px;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    font-size: 16px;
+    /* 固定宽度，或者使用 min-width + max-width 防止晃动 */
+    width: 300px;                     /* 固定一个舒适的宽度 */
+    max-width: 100%;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background: white;
+    color: #333;
+    box-sizing: border-box;
+    outline: none;
+}
+
+#pagefind-search .pagefind-ui__search-input:focus {
+    border-color: #4a6fa5;
+    box-shadow: 0 0 0 4px rgba(74, 111, 165, 0.2);
+    /* focus 时不再改变宽度，避免整个搜索框左右晃动 */
+}
+
+/* 下拉结果：从右对齐改为居中对齐 */
+#pagefind-search .pagefind-ui__results {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    position: absolute;
+    top: 100%;
+    left: 50%;                        /* 关键：左边 50% */
+    transform: translateX(-50%);      /* 关键：向左偏移自身宽度的一半 → 完全居中 */
+    right: auto;                      /* 取消原来的 right: 0 */
+    width: 380px;
+    max-height: 70vh;
+    overflow-y: auto;
+    margin-top: 8px;
+    z-index: 1000;
+    padding: 8px 0;
+}
+
+/* 其余样式保持不变 */
+#pagefind-search .pagefind-ui__result {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s;
+}
+#pagefind-search .pagefind-ui__result:last-child { border-bottom: none; }
+#pagefind-search .pagefind-ui__result:hover { background-color: #f8f9ff; }
+#pagefind-search .pagefind-ui__result-title { font-size: 15px; font-weight: 600; color: #1f2937; margin-bottom: 4px; }
+#pagefind-search .pagefind-ui__result-link { 
+    color: #3B82F6; 
+    text-decoration: none; 
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    z-index: 10;
+}
+#pagefind-search .pagefind-ui__result-link:hover { text-decoration: underline; }
+#pagefind-search .pagefind-ui__result-excerpt { font-size: 13.5px; color: #666; line-height: 1.5; margin-top: 4px; }
+.pagefind-ui__result-excerpt mark { background: #dbeafe; color: #1e40af; padding: 1px 3px; border-radius: 3px; }
+#pagefind-search .pagefind-ui__message { padding: 20px; text-align: center; color: #666; font-size: 14px; }
+        .navbar {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 20px;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+            display: block;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #ffcc2f;
+        }
+
+        /* 汉堡菜单样式 */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+            z-index: 1001;
+        }
+
+        .hamburger .line {
+            width: 30px;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        /* 响应式设计 */
+    @media screen and (max-width: 768px) {
+        body {
+            padding-top: 70px;
+        }
+
+        .nav-menu {
+            position: fixed;
+            left: -100%;
+            top: 60px;
+            flex-direction: column;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            width: 100%;
+            text-align: center;
+            transition: left 0.3s ease-in-out;
+            box-shadow: 0 10px 27px rgba(0, 0, 0, 0.3);
+            padding: 20px 0;
+            z-index: 999;
+            gap: 0.5rem;
+        }
+
+        .nav-menu li {
+            padding: 10px 0;
+        }
+
+        .nav-menu.active {
+            left: 0;
+        }
+
+        .hamburger {
+            display: flex;
+        }
+
+        .hamburger.active .line:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+
+        .hamburger.active .line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active .line:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+        
+        /* 移动端底部导航按钮样式 */
+        .mobile-nav {
+            display: block;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 50;
+        }
+        
+        .nav-container-mobile {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 12px 0;
+        }
+        
+        .nav-item-mobile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item-mobile.active {
+            color: #3B82F6;
+            transform: scale(1.1);
+        }
+        
+        .nav-item-mobile .icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .nav-item-mobile .text {
+            font-size: 12px;
+        }
+        
+        .nav-item-mobile.center {
+            background: #3B82F6;
+            color: white;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 调整页面内边距以避免内容被底部导航遮挡 */
+        body {
+            padding-bottom: 70px;
+        }
+    }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 45px;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.4em;
+            margin-bottom: 35px;
+            text-align: center;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 20px;
+            font-weight: 700;
+        }
+
+        h2 {
+            color: #34495e;
+            font-size: 1.7em;
+            margin: 35px 0 25px;
+            padding-left: 20px;
+            border-left: 5px solid #3498db;
+            font-weight: 600;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .step {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        .step-number {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 36px;
+            margin-right: 12px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .video-container {
+            background: white;
+            border-radius: 15px;
+            padding: 35px;
+            margin: 40px 0;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .video-placeholder {
+            width: 100%;
+            height: 450px;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 2px dashed #2196f3;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1976d2;
+            margin: 25px 0;
+            font-size: 1.2em;
+        }
+        ul, ol {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        li {
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
+        .note {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+            border-left: 6px solid #ff9800;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.1);
+        }
+        .tip {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left: 6px solid #4caf50;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.1);
+        }
+        .note h3, .tip h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            font-size: 1.3em;
+        }
+        strong {
+            color: #2980b9;
+            font-weight: 700;
+        }
+        a {
+            color: #2196f3;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        a:hover {
+            color: #1976d2;
+            text-decoration: underline;
+        }
+        p {
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #444;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 35px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        th {
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            color: white;
+            padding: 20px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1.2em;
+        }
+        td {
+            padding: 20px;
+            border-bottom: 1px solid #e8e8e8;
+            background: white;
+        }
+        tr:hover td {
+            background: #f5f9ff;
+            transition: background 0.3s ease;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            .step {
+                padding: 20px;
+            }
+            .video-placeholder {
+                height: 300px;
+                font-size: 1em;
+            }
+        }
+        
+        /* 页脚样式 */
+        footer {
+            margin-top: 20px;
+            padding: 20px 0;
+            clear: both;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 标准导航菜单 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h2><a href="https://blog.aibochinese.com/" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/aibologo%20460%20100.png" alt="网站Logo"></a></h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="https://blog.aibochinese.com/mooc" class="nav-link">公开课</a></li>   
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/Rescous/free%20rs" class="nav-link">免费资源</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/education/tutor%20guide" class="nav-link">汉语教学</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/sitesbuild" class="nav-link">建站</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/payment/pay" class="nav-link">跨境收付</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/SMC/sm%20maketing" class="nav-link">自媒体营销</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/earn%20online" class="nav-link">项目推荐</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/tools/drive" class="nav-link">商务网盘</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/client" class="nav-link">客户端</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="line"></span>
+                <span class="line"></span>
+                <span class="line"></span>
+            </div>
+        </div>
+    </nav>
+    <p>_</p>
+    <p>_</p>
+    <h1>国际虚拟信用卡绑定和激活Cloudflare账户指南</h1>
+    
+    <div class="step">
+        <h2><span class="step-number">1</span>准备工作</h2>
+        <p>在开始之前，请确保您已准备好以下物品：</p>
+        <ul>
+            <li>一张国际虚拟信用卡（支持Visa或Mastercard）</li>
+<div class="two-up">
+  <a href="https://blog.aibochinese.com/payment/roogoo" target="_blank" rel="noopener" class="item">
+    <img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B9%BF%E5%91%8A%E8%81%94%E7%9B%9F/oogoo%20ads%202.png" alt="Roogoo Mastercard" loading="lazy">
+  </a>
+  <style>
+    .two-up .item img {
+      width: 300px;
+      height: 50px;
+      display: block;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      object-fit: cover;
+    }
+  </style>
+</div>
+            <li>可访问的邮箱地址</li>
+            <li>能够接收短信的手机号码（部分情况下需要）</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h2><span class="step-number">2</span>注册Cloudflare账户</h2>
+        <p>如果您还没有Cloudflare账户，请按照以下步骤注册：</p>
+        <ol>
+            <li>访问 <a href="https://dash.cloudflare.com/sign-up" target="_blank">Cloudflare注册页面</a></li>
+            <li>输入您的邮箱地址并设置密码</li>
+            <li>点击"Create Account"按钮完成注册</li>
+            <li>检查邮箱并点击验证链接确认账户</li>
+        </ol>
+    </div>
+
+    <div class="step">
+        <h2><span class="step-number">3</span>绑定国际虚拟信用卡</h2>
+        <p>绑定信用卡是使用Cloudflare付费服务的必要步骤，即使是免费服务也需要验证支付方式：</p>
+        <ol>
+            <li>登录到您的Cloudflare账户控制面板</li>
+            <li>点击右上角的用户图标，选择"Customer Portal"</li>
+            <li>在左侧菜单中选择"Billing"</li>
+            <li>点击"Make a Payment"或"Payment Methods"</li>
+            <li>选择"Add Payment Method"</li>
+            <li>选择信用卡作为支付方式</li>
+            <li>输入您的国际虚拟信用卡信息：
+                <ul>
+                    <li>卡号</li>
+                    <li>过期日期</li>
+                    <li>CVC安全码</li>
+                    <li>持卡人姓名</li>
+                </ul>
+            </li>
+            <li>确认信息无误后点击"Save"</li>
+            <li>系统可能会进行小额预授权验证（通常为$1或€1），这不会从您的卡中扣款，仅用于验证</li>
+        </ol>
+        
+        <div class="note">
+            <strong>注意事项：</strong>
+            <ul>
+                <li>确保您的虚拟信用卡支持国际交易</li>
+                <li>部分虚拟信用卡可能不被Cloudflare接受，请选择信誉良好的发卡机构</li>
+                <li>验证过程可能需要几分钟到几小时不等</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="step">
+        <h2><span class="step-number">4</span>激活Cloudflare账户</h2>
+        <p>完成信用卡绑定后，您需要激活账户才能使用全部功能：</p>
+        <ol>
+            <li>返回Cloudflare控制面板主页</li>
+            <li>如果看到"Billing"部分显示已验证，则表示信用卡绑定成功</li>
+            <li>在左侧菜单中选择"Workers & Pages"</li>
+            <li>如果这是您首次访问，可能需要同意服务条款</li>
+            <li>点击"Create Application"开始使用Cloudflare Pages</li>
+        </ol>
+        
+        <div class="tip">
+            <strong>提示：</strong>
+            <ul>
+                <li>账户激活后，您可以立即开始使用Cloudflare Pages和R2存储</li>
+                <li>免费套餐已足够大多数个人网站和小型项目使用</li>
+                <li>如遇到激活问题，可以联系Cloudflare支持团队</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="step">
+        <h2><span class="step-number">5</span>使用Cloudflare Pages免费建站</h2>
+        <p>Cloudflare Pages是一个现代化的静态网站托管平台，提供免费套餐：</p>
+        <ol>
+            <li>在"Workers & Pages"页面点击"Create Application"</li>
+            <li>选择"Pages"选项</li>
+            <li>连接您的Git仓库（GitHub或GitLab）或者直接上传静态文件</li>
+            <li>配置构建设置（如果使用框架如React、Vue等）</li>
+            <li>设置自定义域名（可选）</li>
+            <li>点击"Deploy"部署您的网站</li>
+        </ol>
+        
+        <div class="note">
+            <strong>Cloudflare Pages免费套餐特性：</strong>
+            <ul>
+                <li>无限个项目</li>
+                <li>每月500次构建</li>
+                <li>支持自定义域</li>
+                <li>自动HTTPS</li>
+                <li>全球CDN加速</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="step">
+        <h2><span class="step-number">6</span>使用Cloudflare R2对象存储</h2>
+        <p>Cloudflare R2是兼容S3的对象存储服务，免费套餐包含一定额度：</p>
+        <ol>
+            <li>在Cloudflare控制面板中选择"R2"选项</li>
+            <li>点击"Create Bucket"创建存储桶</li>
+            <li>为存储桶命名并选择合适的区域</li>
+            <li>设置访问权限（私有或公共）</li>
+            <li>上传文件到存储桶</li>
+            <li>通过API或绑定到Workers使用存储桶</li>
+        </ol>
+        
+        <div class="note">
+            <strong>Cloudflare R2免费套餐特性：</strong>
+            <ul>
+                <li>每月10GB存储空间</li>
+                <li>每月1000万次读取请求</li>
+                <li>每月100万次写入请求</li>
+                <li>可绑定S3 Browser以方便使用</li>
+                <li>无出口费用</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="video-container">
+        <h2>操作演示视频</h2>
+        <p>以下是绑定国际虚拟信用卡并激活Cloudflare账户的完整操作演示：</p>
+        <div class="video-placeholder">
+            <p><video controls width="450" height="250">
+  <source src="https://cf.aibochinese.com/%E8%A7%86%E9%A2%91%E7%A8%BF%E4%BB%B6/2025%E5%B9%B411%E6%9C%88/%E5%9C%A8%E7%BA%BF%E5%85%8D%E8%B4%B9%E7%94%B3%E8%AF%B7%E4%B8%87%E4%BA%8B%E8%BE%BE%E5%8D%A1%EF%BC%8C%E7%BB%91%E5%AE%9ACloudflare%E6%BF%80%E6%B4%BBR2%E5%AF%B9%E8%B1%A1%E5%AD%98%E5%82%A8%E5%92%8C%E7%94%A8Pages%E5%85%8D%E8%B4%B9%E5%BB%BA%E7%AB%99/%E5%9C%A8%E7%BA%BF%E5%85%8D%E8%B4%B9%E7%94%B3%E8%AF%B7%E4%B8%87%E4%BA%8B%E8%BE%BE%E5%8D%A1%EF%BC%8C%E7%BB%91%E5%AE%9ACloudflare%E6%BF%80%E6%B4%BBR2%E5%AF%B9%E8%B1%A1%E5%AD%98%E5%82%A8%E5%92%8C%E7%94%A8Pages%E5%85%8D%E8%B4%B9%E5%BB%BA%E7%AB%99.mp4" type="video/mp4">
+</video></p>
+        </div>
+        <p>通过观看以上视频，您可以更直观地了解整个操作流程。</p>
+    </div>
+
+    <div class="step">
+        <h2><span class="step-number">7</span>常见问题解答</h2>
+        <div class="note">
+            <h3>Q: 为什么需要国际虚拟信用卡？</h3>
+            <p>A: Cloudflare要求验证支付方式以防止滥用，即使使用免费服务也需要绑定有效的支付方式。</p>
+            
+            <h3>Q: 虚拟信用卡会被扣费吗？</h3>
+            <p>A: 通常只会有小额预授权验证（如$1），这笔款项会很快退回。免费套餐不会产生费用。</p>
+            
+            <h3>Q: 如果我的虚拟信用卡不被接受怎么办？</h3>
+            <p>A: 请选择信誉良好、支持国际交易的虚拟信用卡提供商，或尝试其他支付方式。</p>
+            
+            <h3>Q: Cloudflare Pages和传统主机有什么区别？</h3>
+            <p>A: Cloudflare Pages专为现代前端应用设计，提供更好的性能、安全性，并且完全免费。</p>
+        </div>
+    </div>
+
+    <div class="step">
+        <h2><span class="step-number">8</span>总结</h2>
+        <p>通过本指南，您已经学会了如何：</p>
+        <ul>
+            <li>准备并绑定国际虚拟信用卡到Cloudflare账户</li>
+            <li>激活Cloudflare账户以使用完整功能</li>
+            <li>使用Cloudflare Pages免费建站</li>
+            <li>利用Cloudflare R2对象存储服务</li>
+        </ul>
+        
+        <div class="tip">
+            <p>Cloudflare提供的免费服务对于个人项目和初创企业来说是非常有价值的资源。正确设置支付方式后，您可以充分利用这些工具来构建和部署现代Web应用程序。</p>
+            <p>记住定期检查您的使用情况，确保在免费额度范围内，避免产生不必要的费用。</p>
+        </div>
+    </div>
+    </div>
+    
+    <footer>
+        <div class="footer">
+            <p style="margin-bottom: 10px;">🙏感谢关注:<a href="https://www.youtube.com/@blog.aibochinese" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/youtube%20logo%2030.png" 
+             style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://x.com/i/communities/1988635370549096727" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%E6%B1%89%E8%AF%AD%E5%AE%A2%E6%88%B7%E7%AB%AF/icons8-x-30.png" 
+             style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://www.facebook.com/blog.aibochinese" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/facebook%20log0%2030.png" 
+             style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://wa.me/message/QXYAFEGTDWIBE1" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/whatsapp-48.png" 
+             style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://space.bilibili.com/3690971141245681?spm_id_from=333.788.0.0" style="color:white; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/icons8-%E8%83%86%E6%B1%81-30.png" 
+             style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://github.com/blogaibochinese" style="color:white; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/icons8-github-30.png" 
+             style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://xhslink.com/m/5it26wH34Zd" style="color:white; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/rednote.png" 
+             style="width: 30px; height: 30px; display:block;" /></a>
+            </p>
+            <p style="font-size: 12px; color: #888;">© 2025 <a href="https://blog.aibochinese.com/" style="color:red " target="_blank" rel="noopener noreferrer">爱博·客</a> - 所有权利保留</p>
+        </div>
+    </footer>
+    
+    <!-- 汉堡菜单 JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            hamburger.addEventListener('click', function() {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navMenu.classList.remove('active');
+                });
+            });
+        });
+    </script>
+
+    <!-- 移动端底部导航按钮 - 仅在移动端显示 -->
+    <div class="mobile-nav">
+        <div class="nav-container-mobile">
+            <!-- 首页按钮 -->
+            <a href="https://blog.aibochinese.com/" class="nav-item-mobile active">
+                <i class="fa fa-home icon"></i>
+                <span class="text">首页</span>
+            </a>
+            
+            <!-- 资源按钮 -->
+            <a href="https://blog.aibochinese.com/Rescous/free%20rs" class="nav-item-mobile">
+                <i class="fa fa-cloud-download icon"></i>
+                <span class="text">资源</span>
+            </a>
+
+            <!-- 最新 - 突出显示 -->
+            <a href="https://blog.aibochinese.com/newest" class="nav-item-mobile center">
+                <i class="fa fa-refresh icon"></i>
+                <span class="text">最新</span>
+            </a>
+
+            <!-- 建站按钮 -->
+            <a href="https://blog.aibochinese.com/sitesbuild" class="nav-item-mobile">
+                <i class="fa fa-code icon"></i>
+                <span class="text">建站</span>
+            </a>
+
+            <!-- 淘金按钮 -->
+            <a href="https://blog.aibochinese.com/earn%20online" class="nav-item-mobile">
+                <i class="fa fa-usd icon"></i>
+                <span class="text">淘金</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- 移动端底部导航按钮JavaScript -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 添加导航交互效果
+        const navItems = document.querySelectorAll('.mobile-nav .nav-item-mobile:not(.center)');
+        
+        navItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                // 移除所有激活状态
+                navItems.forEach(i => i.classList.remove('active'));
+                // 给当前点击项添加激活状态
+                this.classList.add('active');
+            });
+        });
+    });
+    </script>
+    
+    <!-- 引入Font Awesome图标库 -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+       </script>
+   <!-- 悬浮图标容器 -->
+    <div class="float-icons-container">
+        <!-- 悬浮微信客服图标 -->
+        <div class="wechat-float" onclick="toggleWechatModal()">
+            <div class="wechat-icon"></div>
+        </div>
+        
+        <!-- 悬浮搜索按钮 -->
+        <div class="search-float" onclick="toggleSearchModal()">
+            <i class="fa fa-search text-white text-2xl"></i>
+        </div>
+    </div>
+
+    <!-- 搜索弹出窗 -->
+    <div id="searchModal" class="search-modal" onclick="closeSearchModal(event)">
+        <div class="search-popup" onclick="event.stopPropagation()">
+            <h3>搜索内容</h3>
+            <div id="pagefind-search-popup"></div>
+            <button class="close-btn" onclick="closeSearchModal()">关闭</button>
+        </div>
+    </div>
+
+    <!-- 微信弹出窗 -->
+    <div id="wechatModal" class="wechat-modal" onclick="closeWechatModal(event)">
+        <div class="wechat-popup" onclick="event.stopPropagation()">
+            <h3>微信客服</h3>
+            <img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E6%B7%BB%E5%8A%A0%E5%BE%AE%E4%BF%A1.png" alt="微信二维码" class="wechat-qr">
+            <p>扫描添加客服微信</p>
+            <button class="close-btn" onclick="closeWechatModal()">关闭</button>
+        </div>
+    </div>
+
+    <script>
+        // 搜索弹窗控制函数
+        function toggleSearchModal() {
+            const modal = document.getElementById('searchModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function closeSearchModal(event) {
+            document.getElementById('searchModal').style.display = 'none';
+        }
+
+        // 微信弹窗控制函数
+        function toggleWechatModal() {
+            const modal = document.getElementById('wechatModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function closeWechatModal(event) {
+            document.getElementById('wechatModal').style.display = 'none';
+        }
+
+        // 点击模态背景关闭
+        window.onclick = function(event) {
+            const searchModal = document.getElementById('searchModal');
+            const wechatModal = document.getElementById('wechatModal');
+            
+            if (event.target === searchModal) {
+                closeSearchModal();
+            } else if (event.target === wechatModal) {
+                closeWechatModal();
+            }
+        };
+    </script>
+       <!-- Pagefind 搜索（已完美修复） -->
+    <script src="/post/pagefind/pagefind-ui.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            console.log("Initializing Pagefind search...");
+            try {
+                // 初始化页面顶部搜索框
+                new PagefindUI({
+                    element: "#pagefind-search",
+                    showImages: false,
+                    showSubResults: true,
+                    resetStyles: false,
+                    translations: {
+                        placeholder: "🔍资源、教程、工具..."
+                    }
+                });
+                
+                // 初始化右侧悬浮搜索弹窗
+                new PagefindUI({
+                    element: "#pagefind-search-popup",
+                    showImages: false,
+                    showSubResults: true,
+                    resetStyles: false,
+                    translations: {
+                        placeholder: "🔍资源、教程、工具..."
+                    }
+                });
+                
+                console.log("Pagefind search initialized successfully");
+            } catch (error) {
+                console.error("Pagefind search initialization failed:", error);
+            }
+        });
+    </script>
+     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6203499194676961"
+     crossorigin="anonymous"></script>  
+</body>
+</html>
