@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中国大陆 Google AdSense 美国税务信息（W-8BEN）填写完整教程（2025最新）</title>
+<meta name="description" content="2025年最新中国大陆Google AdSense美国税务信息W-8BEN填写完整教程，正确填写后美国来源收入预扣税率可降至0%/10%">
+    <!-- 引入Font Awesome图标 -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
+            padding-top: 70px;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 20px;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+            display: block;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            margin: 0;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #ffcc2f;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .bar {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #f38020, #ffcc2f);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(243, 128, 32, 0.3);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            margin-top: 1rem;
+        }
+
+        .intro {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 3rem;
+            border-left: 5px solid #f38020;
+        }
+
+        .intro h2 {
+            color: #f38020;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .intro p {
+            font-size: 1.1rem;
+            margin-bottom: 1.2rem;
+            line-height: 1.9;
+            color: #555;
+        }
+
+        .toc {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffe082 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .toc h2 {
+            color: #f38020;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .toc ul {
+            columns: 2;
+            column-gap: 3rem;
+            list-style: none;
+        }
+
+        .toc li {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .toc li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #f38020;
+            font-weight: bold;
+        }
+
+        .toc a {
+            color: #166088;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .toc a:hover {
+            color: #f38020;
+            padding-left: 5px;
+        }
+
+        .tutorial-section {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 3rem;
+            transition: transform 0.3s;
+        }
+
+        .tutorial-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .tutorial-section h2 {
+            color: #f38020;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #ffcc2f;
+            font-weight: 600;
+        }
+
+        .tutorial-section h3 {
+            color: #166088;
+            margin: 2rem 0 1.2rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .tutorial-section p {
+            margin-bottom: 1.2rem;
+            line-height: 1.9;
+            color: #555;
+        }
+
+        .tutorial-section ul, .tutorial-section ol {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tutorial-section li {
+            margin-bottom: 0.8rem;
+            line-height: 1.8;
+        }
+
+        .steps {
+            counter-reset: step-counter;
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .steps li {
+            margin-bottom: 2rem;
+            position: relative;
+            padding-left: 4rem;
+            line-height: 1.8;
+        }
+
+        .steps li:before {
+            counter-increment: step-counter;
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: linear-gradient(135deg, #f38020, #ff9a44);
+            color: white;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 3px 10px rgba(243, 128, 32, 0.3);
+        }
+
+        .note, .tip, .warning {
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .note {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-left: 5px solid #2196f3;
+        }
+
+        .tip {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left: 5px solid #4caf50;
+        }
+
+        .warning {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-left: 5px solid #f44336;
+        }
+
+        .note strong, .tip strong, .warning strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1.5rem;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        footer {
+            background: linear-gradient(135deg, hsl(210, 87%, 57%), #34495e);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 15px;
+            margin-top: 3rem;
+        }
+
+        .footer p {
+            margin-bottom: 1rem;
+        }
+
+        .footer a {
+            color: #ffcc2f;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer a:hover {
+            color: #f38020;
+        }
+
+        .footer img {
+            margin: 0 5px;
+            vertical-align: middle;
+        }
+
+        @media (max-width: 968px) {
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                flex-direction: column;
+                background-color: #3498db;
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 27px rgba(0,0,0,0.05);
+                padding: 2rem 0;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .toc ul {
+                columns: 1;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .tutorial-section h2 {
+                font-size: 1.6rem;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+
+            .steps li {
+                padding-left: 3rem;
+            }
+
+            .steps li:before {
+                width: 2rem;
+                height: 2rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.6rem; }
+
+            .intro, .tutorial-section {
+                padding: 1.5rem;
+            }
+
+            .tutorial-section h2 {
+                font-size: 1.4rem;
+            }
+        }
+        
+        /* 移动端底部导航按钮样式 */
+        .mobile-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 50;
+            display: none;
+        }
+        
+        .mobile-nav .nav-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 12px 0;
+        }
+        
+        .mobile-nav .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            color: #333;
+        }
+        
+        .mobile-nav .nav-item.nav-item-active {
+            color: #3B82F6;
+            transform: scale(1.1);
+        }
+        
+        .mobile-nav .nav-item.center {
+            background: #3B82F6;
+            color: white;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: -20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mobile-nav .nav-item.center:hover {
+            background: #2563eb;
+        }
+        
+        .mobile-nav .nav-item .icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .mobile-nav .nav-item .text {
+            font-size: 12px;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-nav {
+                display: block;
+            }
+        }
+                button {
+            background-color: yellow; /* 黄色背景 */
+            color: black; /* 黑色文字 */
+            font-weight: bold; /* 粗体 */
+            font-size: 18px; /* 字体大小，可调整 */
+            padding: 15px 30px; /* 内边距，调整按钮大小 */
+            border: none;
+            border-radius: 5px; /* 圆角，可选 */
+            cursor: pointer;
+            text-align: center;
+        }
+        button:hover {
+            background-color: #ffd700; /* 鼠标悬停时稍深黄色，可选 */
+        }
+                      /* 悬浮微信图标样式 */
+        .wechat-float {
+            width: 60px;
+            height: 60px;
+            background-color: hsl(148, 45%, 88%); /* 微信绿色 */
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .wechat-float:hover {
+            transform: scale(1.1);
+        }
+
+        .wechat-icon {
+            width: 40px;
+            height: 40px;
+            background-image: url('https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/wechaticon.png'); /* 用户提供的微信图标URL */
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* 弹出窗样式 */
+        /* 悬浮图标容器 */
+        .float-icons-container {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .wechat-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 悬浮搜索按钮 */
+        .search-float {
+            width: 60px;
+            height: 60px;
+            background-color: #3B82F6; /* 蓝色 */
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .search-float:hover {
+            transform: scale(1.1);
+        }
+
+        /* 搜索弹出窗 */
+        .search-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-popup {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .search-popup h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .wechat-popup {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+            width: 90%;
+        }
+
+        .wechat-qr {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 10px;
+            display: block; /* 二维码图片，用户替换src */
+        }
+
+        .close-btn {
+            background-color: #ff4d4f;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .close-btn:hover {
+            background-color: #ff7875;
+        }
+
+        /* ==================== 全新 Pagefind 搜索样式（搜索框水平居中版） ==================== */
+.search-container {
+    position: relative;
+    /* 删除 margin-right，改为自动左右 margin 实现居中 */
+    margin: 0 auto;           /* 关键：水平居中 */
+    z-index: 1001;
+    min-width: 200px;
+    max-width: 380px;         /* 建议加上最大宽度，和下拉结果保持一致 */
+    width: 100%;
+    display: flex;
+    justify-content: center;  /* 内部元素水平居中 */
+    align-items: center;
+}
+
+/* 输入框：去掉宽度 100% + focus 扩展的左右晃动问题 */
+#pagefind-search .pagefind-ui__search-input {
+    padding: 10px 16px;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    font-size: 16px;
+    /* 固定宽度，或者使用 min-width + max-width 防止晃动 */
+    width: 300px;                     /* 固定一个舒适的宽度 */
+    max-width: 100%;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background: white;
+    color: #333;
+    box-sizing: border-box;
+    outline: none;
+}
+
+#pagefind-search .pagefind-ui__search-input:focus {
+    border-color: #4a6fa5;
+    box-shadow: 0 0 0 4px rgba(74, 111, 165, 0.2);
+    /* focus 时不再改变宽度，避免整个搜索框左右晃动 */
+}
+
+/* 下拉结果：从右对齐改为居中对齐 */
+#pagefind-search .pagefind-ui__results {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    position: absolute;
+    top: 100%;
+    left: 50%;                        /* 关键：左边 50% */
+    transform: translateX(-50%);      /* 关键：向左偏移自身宽度的一半 → 完全居中 */
+    right: auto;                      /* 取消原来的 right: 0 */
+    width: 380px;
+    max-height: 70vh;
+    overflow-y: auto;
+    margin-top: 8px;
+    z-index: 1000;
+    padding: 8px 0;
+}
+
+/* 其余样式保持不变 */
+#pagefind-search .pagefind-ui__result {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s;
+}
+#pagefind-search .pagefind-ui__result:last-child { border-bottom: none; }
+#pagefind-search .pagefind-ui__result:hover { background-color: #f8f9ff; }
+#pagefind-search .pagefind-ui__result-title { font-size: 15px; font-weight: 600; color: #1f2937; margin-bottom: 4px; }
+#pagefind-search .pagefind-ui__result-link { 
+    color: #3B82F6; 
+    text-decoration: none; 
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    z-index: 10;
+}
+#pagefind-search .pagefind-ui__result-link:hover { text-decoration: underline; }
+#pagefind-search .pagefind-ui__result-excerpt { font-size: 13.5px; color: #666; line-height: 1.5; margin-top: 4px; }
+.pagefind-ui__result-excerpt mark { background: #dbeafe; color: #1e40af; padding: 1px 3px; border-radius: 3px; }
+#pagefind-search .pagefind-ui__message { padding: 20px; text-align: center; color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
+<!-- 标准导航菜单 -->
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="logo">
+            <h2><a href="https://blog.aibochinese.com/" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/aibologo%20460%20100.png" alt="网站Logo"></a></h2>
+        </div>
+        <ul class="nav-menu">
+
+             <li class="nav-item">
+                <a href="https://blog.aibochinese.com/Rescous/free%20rs" class="nav-link">免费资源</a>
+            </li>
+            <li class="nav-item">
+                <a href="https://blog.aibochinese.com/education/tutor%20guide" class="nav-link">汉语教学</a>
+            </li>
+            <li class="nav-item">
+                <a href="https://blog.aibochinese.com/sitesbuild" class="nav-link">建站</a>
+            </li>
+            <li class="nav-item">
+                <a href="https://blog.aibochinese.com/payment/pay" class="nav-link">跨境收付</a>
+            </li>
+            <li class="nav-item">
+                <a href="https://blog.aibochinese.com/SMC/sm%20maketing" class="nav-link">自媒体营销</a>
+            </li>
+             <li class="nav-item">
+                <a href="https://blog.aibochinese.com/earn%20online" class="nav-link">项目推荐</a>
+            </li>
+             <li class="nav-item">
+                <a href="https://blog.aibochinese.com/tools/drive" class="nav-link">商务网盘</a>
+            </li>
+            <li class="nav-item">
+                <a href="https://blog.aibochinese.com/client" class="nav-link">客户端</a>
+            </li>
+        </ul>
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </div>
+</nav>
+
+    <div class="container">
+        <header>
+            <h1>中国大陆 Google AdSense 美国税务信息（W-8BEN）填写完整教程</h1>
+            <div class="subtitle">2025年最新版</div>
+        </header>
+
+        <section class="tutorial-section">
+            <div class="highlight">
+                正确填写后，美国来源收入预扣税率可降至 <strong>0%（AdSense广告）/ 10%（YouTube版税）</strong>，否则默认最高 <strong>30%</strong> 被扣！
+            </div>
+
+            <h2>一、为什么必须填写美国税务信息？</h2>
+            <ul>
+                <li>Google 是美国公司，必须遵守美国税法（第1441条）</li>
+                <li>只要有美国流量（美国用户点击/观看），就涉及美国来源收入</li>
+                <li>中美税收协定生效，中国居民可享受减免税率</li>
+                <li>不填写 = 自动扣 30%，每月20日前未提交还会暂停付款</li>
+            </ul>
+
+            <h2>二、准备工作（务必提前确认）</h2>
+            <table>
+                <tr><th>项目</th><th>要求</th></tr>
+                <tr><td>姓名</td><td>必须与 AdSense 收款人姓名完全一致（建议用护照拼音）</td></tr>
+                <tr><td>地址</td><td>必须与 AdSense 验证地址一致（已收到 PIN 码的地址）</td></tr>
+                <tr><td>外国 TIN</td><td>使用中国身份证号码（18位数字），<strong>不要留空</strong></td></tr>
+                <tr><td>无需 ITIN</td><td>中国大陆居民不需要申请美国纳税人识别号</td></tr>
+            </table>
+
+            <h2>三、详细填写步骤（7大步全部截图级说明）</h2>
+
+            <h3>1. 登录并进入税务信息页面</h3>
+            <ol>
+                <li>打开 <a href="https://adsense.google.com" target="_blank">adsense.google.com</a></li>
+                <li>左侧菜单 → <strong>付款（Payments）</strong></li>
+                <li>点击 <strong>付款信息（Payments info）</strong> → <strong>管理设置</strong></li>
+                <li>找到「美国税务信息」→ 点击右侧铅笔图标 ✏️</li>
+            </ol>
+
+            <h3>2. 开始填写 W-8BEN 表格</h3>
+            <ol>
+                <li>点击「管理税务信息」</li>
+                <li>账户类型：选择 <strong>个人（Individual）</strong></li>
+                <li>是否美国公民/居民：选择 <strong>否</strong></li>
+                <img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/w8tax/w-BEN01.png" 
+         style="max-width: 100%; height: auto;" />
+                <li>系统推荐 W-8BEN → 点击开始填写</li>
+            </ol>
+
+            <h3>3. W-8BEN 七步详细填写（最重点）</h3>
+
+            <div class="highlight">每一步都必须准确，否则会被拒绝！</div>
+
+            <ol>
+                <li>
+                    <strong>第1步：纳税身份</strong><br>
+                    姓名：Wei Zhang（与收款人完全一致，首字母大写）<br>
+                    国家：China<br>
+                    外国TIN：输入18位身份证号码（例如 110101199001011234）
+                </li>
+                <li>
+                    <strong>第2步：地址</strong><br>
+                    国家：China<br>
+                    邮编、省、市、详细地址全部用英文填写<br>
+                    示例：<code>Room 1203, Building 5, No.88 Beijing Road, Haidian District, Beijing</code>
+                </li>
+                <li>
+                    <strong>第3步：申请税收协定（最关键！）</strong><br>
+                    是否申请税收协定优惠 → <strong>是</strong><br>
+                    <img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/w8tax/w-BEN02.png" 
+         style="max-width: 100%; height: auto;" />
+                    条约国家 → China<br>
+                    请勾选以下所有适用项目（多选）：
+                    <img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/w8tax/w-BEN03.png" 
+         style="max-width: 100%; height: auto;" />
+                    <ul>
+                        <li>服务（Services）→ 税率 <strong>0%</strong>（AdSense 广告收入）</li>
+                        <li>其他版权版税（Other royalties）→ 税率 <strong>10%</strong>（YouTube 观看收入）</li>
+                    </ul>
+                </li>
+                <li><strong>第4步：预览 PDF</strong> → 仔细检查所有信息，无误后继续</li>
+                <li><strong>第5步：电子签名</strong> → 输入姓名作为签名</li>
+                <img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/w8tax/w-BEN04.png" 
+         style="max-width: 100%; height: auto;" />
+                <li><strong>第6步：美国活动宣誓</strong> → 选择「否，我不在美国提供服务」</li>
+                <img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/w8tax/w-BEN05.png" 
+         style="max-width: 100%; height: auto;" />
+                <li><strong>第7步：提交</strong> → 完成！</li>
+                <img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/w8tax/w-BEN06.png" 
+         style="max-width: 100%; height: auto;" />
+            </ol>
+
+            <h3>4. 提交后查看结果</h3>
+            <ul>
+                <li>返回「美国税务信息」页面</li>
+                <li>状态显示 <strong>Approved</strong> 且税率显示 0%/10% 即成功</li>
+                <li>如显示 Declined，查看邮件提示重新提交</li>
+            </ul>
+
+            <div class="tip">
+                <strong>常见拒绝原因：</strong><br>
+                1. 姓名与收款人不一致<br>
+                2. 身份证号码填写错误或留空<br>
+                3. 没有勾选税收协定<br>
+                4. 地址与 AdSense 验证地址不一致
+            </div>
+
+            <h2>四、常见问题解答</h2>
+            <table>
+                <tr><th>问题</th><th>答案</th></tr>
+                <tr><td>AdSense 和 YouTube 要分别填吗？</td><td>不用，共用同一份 W-8BEN</td></tr>
+                <tr><td>税率是按全部收入扣吗？</td><td>不是，只对美国来源收入扣税（通常占总收入10%-30%）</td></tr>
+                <tr><td>企业账户怎么办？</td><td>选择 W-8BEN-E，TIN 填写统一社会信用代码</td></tr>
+                <tr><td>多久有效？</td><td>提交当年 + 之后3个日历年，之后需重新提交</td></tr>
+                <tr><td>新加坡税务信息也要填吗？</td><td>要另外填，但与美国税务信息互不影响</td></tr>
+            </table>
+
+            <div class="center">
+                <p><strong>保存本页面，填写时对照操作，100% 通过！</strong></p>
+                <p>最后更新：2025年12月</p>
+            </div>
+        </section>
+        <footer>
+            <div class="footer">
+                    <p style="margin-bottom: 10px;">🙏感谢关注:<a href="https://www.youtube.com/@blog.aibochinese" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/youtube%20logo%2030.png" 
+                     style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://x.com/i/communities/1988635370549096727" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%E6%B1%89%E8%AF%AD%E5%AE%A2%E6%88%B7%E7%AB%AF/icons8-x-30.png" 
+                     style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://www.facebook.com/blog.aibochinese" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/facebook%20log0%2030.png" 
+                     style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://wa.me/message/QXYAFEGTDWIBE1" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/whatsapp-48.png" 
+                     style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://space.bilibili.com/1014631395?spm_id_from=333.1387.0.0" style="color:white; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/icons8-%E8%83%86%E6%B1%81-30.png" 
+                     style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://github.com/blogaibochinese" style="color:white; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/icons8-github-30.png" 
+                     style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://xhslink.com/m/5it26wH34Zd" style="color:white; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/rednote.png" 
+                     style="width: 30px; height: 30px; display:block;" /></a>
+                    </p>
+                    <p style="font-size: 14px; color: hsl(0, 9%, 98%);">© 2025 <a href="https://blog.aibochinese.com/" style="color:red " target="_blank" rel="noopener noreferrer">爱博·客</a> - 所有权利保留</p>
+                </div>
+            </footer>
+        </div>
+        <!-- 移动端底部导航按钮 - 仅在移动端显示 -->
+        <div class="mobile-nav">
+            <div class="nav-container">
+                <!-- 首页按钮 -->
+                <a href="https://blog.aibochinese.com/" class="nav-item nav-item-active">
+                    <i class="fa fa-home icon"></i>
+                    <span class="text">首页</span>
+                </a>
+                
+                <!-- 资源按钮 -->
+                <a href="https://blog.aibochinese.com/Rescous/free%20rs" class="nav-item">
+                    <i class="fa fa-cloud-download icon"></i>
+                    <span class="text">资源</span>
+                </a>
+
+                <!-- 最新 - 突出显示 -->
+                <a href="https://blog.aibochinese.com/newest" class="nav-item center">
+                    <i class="fa fa-refresh icon"></i>
+                    <span class="text">最新</span>
+                </a>
+
+                <!-- 建站按钮 -->
+                <a href="https://blog.aibochinese.com/sitesbuild" class="nav-item">
+                    <i class="fa fa-code icon"></i>
+                    <span class="text">建站</span>
+                </a>
+
+                <!-- 淘金按钮 -->
+                <a href="https://blog.aibochinese.com/earn%20online" class="nav-item">
+                    <i class="fa fa-usd icon"></i>
+                    <span class="text">淘金</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 悬浮图标容器 -->
+        <div class="float-icons-container">
+            <!-- 悬浮微信客服图标 -->
+            <div class="wechat-float" onclick="toggleWechatModal()">
+                <div class="wechat-icon"></div>
+            </div>
+            
+            <!-- 悬浮搜索按钮 -->
+            <div class="search-float" onclick="toggleSearchModal()">
+                <i class="fa fa-search text-white text-2xl"></i>
+            </div>
+        </div>
+
+        <!-- 搜索弹出窗 -->
+        <div id="searchModal" class="search-modal" onclick="closeSearchModal(event)">
+            <div class="search-popup" onclick="event.stopPropagation()">
+                <h3>搜索内容</h3>
+                <div id="pagefind-search-popup"></div>
+                <button class="close-btn" onclick="closeSearchModal()">关闭</button>
+            </div>
+        </div>
+
+        <!-- 微信弹出窗 -->
+        <div id="wechatModal" class="wechat-modal" onclick="closeWechatModal(event)">
+            <div class="wechat-popup" onclick="event.stopPropagation()">
+                <h3>微信客服</h3>
+                <img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E6%B7%BB%E5%8A%A0%E5%BE%AE%E4%BF%A1.png" alt="微信二维码" class="wechat-qr">
+                <p>扫描添加客服微信</p>
+                <button class="close-btn" onclick="closeWechatModal()">关闭</button>
+            </div>
+        </div>
+
+        <script src="https://blog.aibochinese.com/js/script.js"></script>
+        
+        <!-- 移动端底部导航按钮交互 -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // 添加导航交互效果
+                const navItems = document.querySelectorAll('.mobile-nav .nav-item:not(.center)');
+                
+                navItems.forEach(item => {
+                    item.addEventListener('click', function(e) {
+                        // 移除所有激活状态
+                        navItems.forEach(i => i.classList.remove('nav-item-active'));
+                        // 给当前点击项添加激活状态
+                        this.classList.add('nav-item-active');
+                    });
+                });
+            });
+        </script>
+         <script src="https://blog.aibochinese.com/js/script.js"></script>
+
+        <script>
+            // 搜索弹窗控制函数
+            function toggleSearchModal() {
+                const modal = document.getElementById('searchModal');
+                modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+            }
+
+            function closeSearchModal(event) {
+                document.getElementById('searchModal').style.display = 'none';
+            }
+
+            // 微信弹窗控制函数
+            function toggleWechatModal() {
+                const modal = document.getElementById('wechatModal');
+                modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+            }
+
+            function closeWechatModal(event) {
+                document.getElementById('wechatModal').style.display = 'none';
+            }
+
+            // 点击模态背景关闭
+            window.onclick = function(event) {
+                const searchModal = document.getElementById('searchModal');
+                const wechatModal = document.getElementById('wechatModal');
+                
+                if (event.target === searchModal) {
+                    closeSearchModal();
+                } else if (event.target === wechatModal) {
+                    closeWechatModal();
+                }
+            };
+        </script>
+           <!-- Pagefind 搜索（已完美修复） -->
+        <script src="/post/pagefind/pagefind-ui.js"></script>
+        <script>
+            window.addEventListener('DOMContentLoaded', function () {
+                console.log("Initializing Pagefind search...");
+                try {
+        
+                    // 初始化右侧悬浮搜索弹窗
+                    new PagefindUI({
+                        element: "#pagefind-search-popup",
+                        showImages: false,
+                        showSubResults: true,
+                        resetStyles: false,
+                        translations: {
+                            placeholder: "🔍资源、教程、工具..."
+                        }
+                    });
+                    
+                    console.log("Pagefind search initialized successfully");
+                } catch (error) {
+                    console.error("Pagefind search initialization failed:", error);
+                }
+                            // 初始化汉堡菜单
+                const hamburger = document.querySelector('.hamburger');
+                const navMenu = document.querySelector('.nav-menu');
+                
+                if (hamburger && navMenu) {
+                    hamburger.addEventListener('click', function() {
+                        // 切换导航菜单的显示/隐藏
+                        navMenu.classList.toggle('active');
+                        // 切换汉堡图标的样式
+                        hamburger.classList.toggle('active');
+                    });
+                }
+            });
+        </script>
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Article",           // 或 WebPage、Article、FAQPage、Product等
+          "name": "中国大陆 Google AdSense 美国税务信息（W-8BEN）填写完整教程（2025最新）",
+          "keywords": "AdSense税务,W-8BEN填写教程,Google AdSense税务信息,美国税务信息填写",
+          "description": "2025年最新中国大陆Google AdSense美国税务信息W-8BEN填写完整教程，正确填写后美国来源收入预扣税率可降至0%/10%",
+          "url": "https://blog.aibochinese.com/post/China%20AdSense%20W-8BEN%20Tax%20Guide%20(2025).html",
+          "datePublished": "2025-12-10",
+          "dateModified": "2025-12-10",
+          "author": {"@type": "Person", "name": "AbelZou"},
+          "publisher": {
+            "@type": "Organization",
+            "name": "爱博·客",
+            "logo": {"@type": "ImageObject", "url": "https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/50-50%20%E7%88%B1%E5%8D%9A%E5%AE%A2logo.png"}
+          }
+        }
+        </script>   
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6203499194676961"
+             crossorigin="anonymous"></script>
+    </body>
+</html>
