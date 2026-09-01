@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+             <style>
+       /* 悬浮微信图标样式 */
+        .wechat-float {
+            width: 60px;
+            height: 60px;
+            background-color: hsl(148, 45%, 88%); /* 微信绿色 */
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .wechat-float:hover {
+            transform: scale(1.1);
+        }
+
+        .wechat-icon {
+            width: 40px;
+            height: 40px;
+            background-image: url('https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/wechaticon.png'); /* 用户提供的微信图标URL */
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* 弹出窗样式 */
+        /* 悬浮图标容器 */
+        .float-icons-container {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .wechat-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 悬浮搜索按钮 */
+        .search-float {
+            width: 60px;
+            height: 60px;
+            background-color: #3B82F6; /* 蓝色 */
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .search-float:hover {
+            transform: scale(1.1);
+        }
+
+        /* 搜索弹出窗 */
+        .search-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-popup {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .search-popup h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .wechat-popup {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+            width: 90%;
+        }
+
+        .wechat-qr {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 10px;
+            display: block; /* 二维码图片，用户替换src */
+        }
+
+        .close-btn {
+            background-color: #ff4d4f;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .close-btn:hover {
+            background-color: #ff7875;
+        }
+
+        /* ==================== 全新 Pagefind 搜索样式（搜索框水平居中版） ==================== */
+.search-container {
+    position: relative;
+    /* 删除 margin-right，改为自动左右 margin 实现居中 */
+    margin: 0 auto;           /* 关键：水平居中 */
+    z-index: 1001;
+    min-width: 200px;
+    max-width: 380px;         /* 建议加上最大宽度，和下拉结果保持一致 */
+    width: 100%;
+    display: flex;
+    justify-content: center;  /* 内部元素水平居中 */
+    align-items: center;
+}
+
+/* 输入框：去掉宽度 100% + focus 扩展的左右晃动问题 */
+#pagefind-search .pagefind-ui__search-input {
+    padding: 10px 16px;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    font-size: 16px;
+    /* 固定宽度，或者使用 min-width + max-width 防止晃动 */
+    width: 300px;                     /* 固定一个舒适的宽度 */
+    max-width: 100%;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background: white;
+    color: #333;
+    box-sizing: border-box;
+    outline: none;
+}
+
+#pagefind-search .pagefind-ui__search-input:focus {
+    border-color: #4a6fa5;
+    box-shadow: 0 0 0 4px rgba(74, 111, 165, 0.2);
+    /* focus 时不再改变宽度，避免整个搜索框左右晃动 */
+}
+
+/* 下拉结果：从右对齐改为居中对齐 */
+#pagefind-search .pagefind-ui__results {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    position: absolute;
+    top: 100%;
+    left: 50%;                        /* 关键：左边 50% */
+    transform: translateX(-50%);      /* 关键：向左偏移自身宽度的一半 → 完全居中 */
+    right: auto;                      /* 取消原来的 right: 0 */
+    width: 380px;
+    max-height: 70vh;
+    overflow-y: auto;
+    margin-top: 8px;
+    z-index: 1000;
+    padding: 8px 0;
+}
+
+/* 其余样式保持不变 */
+#pagefind-search .pagefind-ui__result {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s;
+}
+#pagefind-search .pagefind-ui__result:last-child { border-bottom: none; }
+#pagefind-search .pagefind-ui__result:hover { background-color: #f8f9ff; }
+#pagefind-search .pagefind-ui__result-title { font-size: 15px; font-weight: 600; color: #1f2937; margin-bottom: 4px; }
+#pagefind-search .pagefind-ui__result-link { 
+    color: #3B82F6; 
+    text-decoration: none; 
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    z-index: 10;
+}
+#pagefind-search .pagefind-ui__result-link:hover { text-decoration: underline; }
+#pagefind-search .pagefind-ui__result-excerpt { font-size: 13.5px; color: #666; line-height: 1.5; margin-top: 4px; }
+.pagefind-ui__result-excerpt mark { background: #dbeafe; color: #1e40af; padding: 1px 3px; border-radius: 3px; }
+#pagefind-search .pagefind-ui__message { padding: 20px; text-align: center; color: #666; font-size: 14px; }
+</style>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trae IDE 使用教程 - 生成网站源码和修改代码</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        /* 导航菜单样式 */
+.navbar {
+            background: linear-gradient(135deg, hsl(229, 85%, 5%) 0%, #764ba2 100%);
+            color: #ffffff;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: flex-start; /* 改为左对齐，取消space-between的分散布局 */
+            align-items: center;
+            padding: 0.8rem 20px;
+        }
+
+        .logo {
+            flex-shrink: 0; /* 防止logo压缩 */
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+            display: block;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0 0 0 1rem; /* 给logo和menu添加小间距，灵活调整 */
+            padding: 0;
+            gap: 0rem; /* 减小间距从1.5rem到1rem，使更紧凑灵活 */
+            flex-wrap: wrap; /* 允许换行，增加灵活性 */
+        }
+
+        .nav-link {
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            font-weight: 600; /* 加粗字体，提高明显度 */
+            white-space: nowrap;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* 添加轻微阴影，提升对比度 */
+        }
+
+        .nav-link:hover {
+            color: #ffeb3b;
+            text-shadow: 0 0 8px rgba(255, 235, 59, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3); /* 保留hover阴影 */
+        }
+        
+        /* 汉堡菜单样式 */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+            z-index: 1001;
+            margin-left: auto; /* 汉堡菜单推到右边 */
+        }
+
+        .hamburger .line {
+            width: 30px;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        /* 响应式设计 */
+        @media screen and (max-width: 768px) {
+            body {
+                padding-top: 70px;
+            }
+
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 60px;
+                flex-direction: column;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                width: 100%;
+                text-align: center;
+                transition: left 0.3s ease-in-out;
+                box-shadow: 0 10px 27px rgba(0, 0, 0, 0.3);
+                padding: 20px 0;
+                z-index: 999;
+                gap: 0.5rem;
+            }
+
+            .nav-menu li {
+                padding: 10px 0;
+            }
+
+            .nav-menu .nav-link {
+                color: white;
+                text-shadow: none; /* 移动端无阴影 */
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hamburger.active .line:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+
+            .hamburger.active .line:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active .line:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+        }
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+        .content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+        h3 {
+            color: #764ba2;
+            margin-top: 1.5rem;
+        }
+        .step {
+            background: #f1f8ff;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        .note {
+            background: #fffbeb;
+            border-left: 4px solid #f6ad55;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip {
+            background: #f0fff4;
+            border-left: 4px solid #48bb78;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+        .nav-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+        .toc {
+            list-style-type: none;
+            padding: 0;
+        }
+        .toc li {
+            margin: 0.5rem 0;
+        }
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        .video-container {
+            margin: 2rem 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        #video-demo {
+            color: #e53e3e;
+            border-bottom: 2px solid #e53e3e;
+        }
+        
+        /* 移动端底部导航按钮样式 */
+        .mobile-nav {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-nav {
+                display: block;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+                z-index: 50;
+            }
+            
+            .nav-container {
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                padding: 12px 0;
+            }
+            
+            .nav-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-decoration: none;
+                color: #333;
+                transition: all 0.3s ease;
+            }
+            
+            .nav-item.active {
+                color: #667eea;
+                transform: scale(1.1);
+            }
+            
+            .nav-item .icon {
+                font-size: 20px;
+                margin-bottom: 4px;
+            }
+            
+            .nav-item .text {
+                font-size: 12px;
+            }
+            
+            .nav-item.center {
+                background: #667eea;
+                color: white;
+                border-radius: 50%;
+                width: 48px;
+                height: 48px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            /* 调整页面内边距以避免内容被底部导航遮挡 */
+            body {
+                padding-bottom: 70px;
+            }
+        }
+        
+        /* Footer 样式 - 优化配色：使用与主题匹配的浅渐变背景，提高美观度 */
+        footer {
+            margin-top: 40px; /* 增加顶部间距，避免与内容贴太近 */
+            padding: 20px 0;
+            clear: both;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, hsl(226, 68%, 6%) 0%, #f5f0ff 100%); /* 优化为浅紫渐变，匹配主题颜色，更柔和美观 */
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px hwb(226 90% 5% / 0.836); /* 添加轻微阴影，提升立体感 */
+        }
+
+        .footer p:first-of-type {
+            margin-bottom: 15px; /* 调整图标行间距 */
+        }
+
+        .footer a {
+            margin: 0 5px; /* 图标间小间距 */
+            transition: opacity 0.3s ease; /* 添加hover效果 */
+        }
+
+        .footer a:hover {
+            opacity: 0.7;
+            transform: scale(1.1); /* 轻微放大，提升交互美观 */
+        }
+
+        .footer p:last-of-type {
+            font-size: 12px;
+            color: #666; /* 调整版权文本颜色，更柔和 */
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 标准导航菜单 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h2><a href="https://blog.aibochinese.com/" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/aibologo%20460%20100.png" alt="网站Logo"></a></h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/Rescous/free%20rs" class="nav-link">免费资源</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/education/tutor%20guide" class="nav-link">汉语教学</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/sitesbuild" class="nav-link">建站</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/payment/pay" class="nav-link">跨境收付</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/SMC/sm%20maketing" class="nav-link">自媒体营销</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/earn%20online" class="nav-link">项目推荐</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/tools/drive" class="nav-link">商务网盘</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/client" class="nav-link">客户端</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="line"></span>
+                <span class="line"></span>
+                <span class="line"></span>
+            </div>
+        </div>
+    </nav>
+
+    <header>
+       <p>_</p>
+       <p>_</p>
+        <h1>Trae IDE 使用教程</h1>
+        <div class="subtitle">生成网站源码和修改代码的完整指南</div>
+    </header>
+
+    <div class="container">
+        <div class="content">
+            <h2>目录</h2>
+            <ul class="toc">
+                <li><a href="#introduction">什么是 Trae IDE</a></li>
+                <li><a href="#getting-started">开始使用 Trae</a></li>
+                <li><a href="#generating-website">生成网站源码</a></li>
+                <li><a href="#modifying-code">修改代码</a></li>
+                <li><a href="#reference-commands">参考指令</a></li>
+                <li><a href="#best-practices">最佳实践</a></li>
+            </ul>
+
+            <h2 id="introduction">什么是 Trae IDE</h2>
+            <p>Trae IDE 是一个强大的在线集成开发环境，专为现代 Web 开发设计。它提供了完整的开发工具链，包括代码编辑、实时预览、调试工具和部署功能。</p>
+            
+            <div class="note">
+                <strong>注意：</strong>Trae IDE 无需安装，直接在浏览器中运行，支持多种编程语言和框架。
+            </div>
+
+            <h2 id="getting-started">开始使用 Trae</h2>
+            <div class="step">
+                <h3>1. 访问 Trae IDE</h3>
+                <p>打开浏览器，访问 Trae IDE 官方网站。</p>
+            </div>
+            
+            <div class="step">
+                <h3>2. 创建新项目</h3>
+                <p>在主页选择合适的项目模板或创建空白项目。</p>
+            </div>
+            
+            <div class="step">
+                <h3>3. 熟悉界面</h3>
+                <p>了解编辑器界面：文件浏览器、代码编辑区、终端、预览窗口等。</p>
+            </div>
+
+            <h2 id="generating-website">生成网站源码</h2>
+            <p>Trae IDE 提供了多种方式来生成网站源码，从简单的静态页面到复杂的 Web 应用。</p>
+            
+            <div class="step">
+                <h3>方法一：使用模板生成</h3>
+                <p>通过内置模板快速生成网站结构：</p>
+                <ol>
+                    <li>在新建项目时选择合适的模板（如 React、Vue、HTML5 等）</li>
+                    <li>根据向导填写项目信息</li>
+                    <li>点击"创建"按钮生成项目结构</li>
+                </ol>
+            </div>
+            
+            <div class="step">
+                <h3>方法二：导入现有项目</h3>
+                <p>导入本地或远程的代码仓库：</p>
+                <ol>
+                    <li>点击"导入项目"</li>
+                    <li>选择导入方式：Git 仓库、ZIP 文件或文件夹</li>
+                    <li>配置项目设置</li>
+                    <li>完成导入后自动构建项目</li>
+                </ol>
+            </div>
+            
+            <div class="step">
+                <h3>方法三：AI 辅助生成</h3>
+                <p>使用 AI 功能根据描述生成代码：</p>
+                <ol>
+                    <li>打开 AI 助手面板</li>
+                    <li>描述你想要的网站功能和样式</li>
+                    <li>AI 会生成相应的代码结构</li>
+                    <li>审查并调整生成的代码</li>
+                </ol>
+            </div>
+
+            <h2 id="modifying-code">修改代码</h2>
+            <p>Trae IDE 提供了强大的代码编辑功能，支持实时预览和调试。</p>
+            
+            <div class="step">
+                <h3>编辑文件</h3>
+                <ol>
+                    <li>在文件浏览器中找到要编辑的文件</li>
+                    <li>双击文件在编辑器中打开</li>
+                    <li>进行代码修改</li>
+                    <li>保存更改（Ctrl+S 或 Cmd+S）</li>
+                </ol>
+            </div>
+            
+            <div class="step">
+                <h3>实时预览</h3>
+                <p>Trae IDE 提供实时预览功能：</p>
+                <ul>
+                    <li>修改代码后预览窗口会自动刷新</li>
+                    <li>可以在不同设备尺寸下测试响应式设计</li>
+                    <li>支持热重载，无需手动刷新</li>
+                </ul>
+            </div>
+            
+            <div class="step">
+                <h3>使用终端</h3>
+                <p>在内置终端中执行命令：</p>
+                <ul>
+                    <li>点击终端图标打开终端面板</li>
+                    <li>执行构建、安装依赖等命令</li>
+                    <li>查看命令输出和错误信息</li>
+                </ul>
+            </div>
+
+            <h2 id="video-demo">视频演示</h2>
+<video controls width="450" height="250">
+  <source src="https://cf.aibochinese.com/%E8%A7%86%E9%A2%91%E7%A8%BF%E4%BB%B6/2025%E5%B9%B411%E6%9C%88/%E5%85%8D%E8%B4%B9%E5%BB%BA%E7%AB%99%E4%B9%8BTrae%20AI%20%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E4%B8%8E%E7%BC%96%E8%BE%91/%E5%85%8D%E8%B4%B9%E5%BB%BA%E7%AB%99%E4%B9%8BTrae%20AI%20%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E4%B8%8E%E7%BC%96%E8%BE%91.mp4" type="video/mp4">
+</video>
+            
+            <h2 id="reference-commands">参考指令</h2>
+            <p>以下是在 Trae IDE 中常用的命令：</p>
+            
+            <h3>项目管理命令</h3>
+            <div class="code-block">
+# 创建新项目
+npx create-react-app my-app
+# 或
+npm init vue@latest my-app
+# 或
+npm init vite@latest my-app
+            </div>
+            
+            <h3>依赖管理命令</h3>
+            <div class="code-block">
+# 安装项目依赖
+npm install
+
+# 安装特定包
+npm install package-name
+
+# 安装开发依赖
+npm install --save-dev package-name
+
+# 卸载包
+npm uninstall package-name
+            </div>
+            
+            <h3>构建和运行命令</h3>
+            <div class="code-block">
+# 启动开发服务器
+npm run dev
+# 或
+npm start
+
+# 构建生产版本
+npm run build
+
+# 预览生产构建
+npm run preview
+            </div>
+            
+            <h3>Git 相关命令</h3>
+            <div class="code-block">
+# 初始化 Git 仓库
+git init
+
+# 添加文件到暂存区
+git add .
+
+# 提交更改
+git commit -m "提交信息"
+
+# 推送到远程仓库
+git push origin main
+
+# 拉取最新更改
+git pull origin main
+            </div>
+            
+            <h3>Trae IDE 特有命令</h3>
+            <div class="code-block">
+# 在 Trae 中预览网站
+trae preview
+
+# 部署到 Trae 托管服务
+trae deploy
+
+# 导出项目为 ZIP 文件
+trae export
+            </div>
+
+            <h2 id="best-practices">最佳实践</h2>
+            
+            <div class="tip">
+                <h3>1. 项目结构管理</h3>
+                <ul>
+                    <li>保持清晰的文件夹结构</li>
+                    <li>使用有意义的文件和文件夹命名</li>
+                    <li>将相关功能组织在同一个模块中</li>
+                </ul>
+            </div>
+            
+            <div class="tip">
+                <h3>2. 代码规范</h3>
+                <ul>
+                    <li>遵循一致的代码风格</li>
+                    <li>添加必要的注释</li>
+                    <li>定期格式化代码</li>
+                </ul>
+            </div>
+            
+            <div class="tip">
+                <h3>3. 版本控制</h3>
+                <ul>
+                    <li>频繁提交更改</li>
+                    <li>编写清晰的提交信息</li>
+                    <li>使用分支进行功能开发</li>
+                </ul>
+            </div>
+            
+            <div class="tip">
+                <h3>4. 性能优化</h3>
+                <ul>
+                    <li>压缩图片和资源文件</li>
+                    <li>使用代码分割减少初始加载时间</li>
+                    <li>优化 CSS 和 JavaScript</li>
+                </ul>
+            </div>
+
+            <div class="nav-links">
+                <a href="../index.html" class="nav-link">← 返回首页</a>
+                <a href="../sitesbuild.html" class="nav-link">网站搭建教程 →</a>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <h3>相关资源</h3>
+            <ul>
+                <li><a href="../sitesbuild.html">网站搭建教程</a></li>
+                <li><a href="../education/tutor guide.html">新手入门指南</a></li>
+                <li><a href="../tools/capcut.html">视频编辑工具</a></li>
+                <li><a href="../tools/obs.html">直播推流工具</a></li>
+            </ul>
+            
+            <h3>推荐文章</h3>
+            <ul>
+                <li><a href="../buildsites/cloudflare Pages.html">Cloudflare Pages 部署</a></li>
+                <li><a href="../buildsites/github-cfpages.html">GitHub + Cloudflare 搭建网站</a></li>
+                <li><a href="../buildsites/RackNerd-Host.html">RackNerd 主机使用</a></li>
+            </ul>
+            
+            <div class="note">
+                <h3>提示</h3>
+                <p>使用 Trae IDE 时，建议经常保存工作并使用版本控制功能，以防止数据丢失。</p>
+            </div>
+ <div class="two-up">
+  <a href="https://blog.aibochinese.com/payment/roogoo" target="_blank" rel="noopener" class="item">
+    <img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B9%BF%E5%91%8A%E8%81%94%E7%9B%9F/oogoo%20ads%202.png" alt="Roogoo Mastercard" loading="lazy">
+  </a>
+  <style>
+    .two-up .item img {
+      width: 300px;
+      height: 50px;
+      display: block;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      object-fit: cover;
+    }
+  </style>
+</div>
+        </div>
+    </div>
+    
+    <!-- Footer 部分 -->
+    <footer>
+        <div class="footer">
+            <p>🙏感谢关注:<a href="https://www.youtube.com/@blog.aibochinese" style="color:#667eea; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/youtube%20logo%2030.png" 
+             style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://x.com/i/communities/1988635370549096727" style="color:#667eea; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%E6%B1%89%E8%AF%AD%E5%AE%A2%E6%88%B7%E7%AB%AF/icons8-x-30.png" 
+             style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://www.facebook.com/blog.aibochinese" style="color:#667eea; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/facebook%20log0%2030.png" 
+             style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://wa.me/message/QXYAFEGTDWIBE1" style="color:#667eea; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/whatsapp-48.png" 
+             style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://space.bilibili.com/1014631395?spm_id_from=333.1387.0.0" style="color:#667eea; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/icons8-%E8%83%86%E6%B1%81-30.png" 
+             style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://github.com/blogaibochinese" style="color:#667eea; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/icons8-github-30.png" 
+             style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://xhslink.com/m/5it26wH34Zd" style="color:#667eea; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/rednote.png" 
+             style="width: 30px; height: 30px; display:block;" /></a>
+            </p>
+            <p>© 2025 <a href="https://blog.aibochinese.com/" style="color:hsl(0, 90%, 48%)" target="_blank" rel="noopener noreferrer">爱博·客</a> - 所有权利保留</p>
+        </div>
+    </footer>
+
+    <!-- 移动端底部导航按钮 - 仅在移动端显示 -->
+    <div class="mobile-nav">
+        <div class="nav-container">
+            <!-- 首页按钮 -->
+            <a href="https://blog.aibochinese.com/" class="nav-item active">
+                <i class="fa fa-home icon"></i>
+                <span class="text">首页</span>
+            </a>
+            
+            <!-- 资源按钮 -->
+            <a href="https://blog.aibochinese.com/Rescous/free%20rs" class="nav-item">
+                <i class="fa fa-cloud-download icon"></i>
+                <span class="text">资源</span>
+            </a>
+
+            <!-- 最新 - 突出显示 -->
+            <a href="https://blog.aibochinese.com/newest" class="nav-item center">
+                <i class="fa fa-refresh icon"></i>
+                <span class="text">最新</span>
+            </a>
+
+            <!-- 建站按钮 -->
+            <a href="https://blog.aibochinese.com/sitesbuild" class="nav-item">
+                <i class="fa fa-code icon"></i>
+                <span class="text">建站</span>
+            </a>
+
+            <!-- 淘金按钮 -->
+            <a href="https://blog.aibochinese.com/earn%20online" class="nav-item">
+                <i class="fa fa-usd icon"></i>
+                <span class="text">淘金</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- 汉堡菜单 JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            hamburger.addEventListener('click', function() {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navMenu.classList.remove('active');
+                });
+            });
+        });
+    </script>
+
+    <!-- 移动端底部导航按钮JavaScript -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 添加导航交互效果
+        const navItems = document.querySelectorAll('.mobile-nav .nav-item:not(.center)');
+        
+        navItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                // 移除所有激活状态
+                navItems.forEach(i => i.classList.remove('active'));
+                // 给当前点击项添加激活状态
+                this.classList.add('active');
+            });
+        });
+    });
+    </script>
+      </script>
+   <!-- 悬浮图标容器 -->
+    <div class="float-icons-container">
+        <!-- 悬浮微信客服图标 -->
+        <div class="wechat-float" onclick="toggleWechatModal()">
+            <div class="wechat-icon"></div>
+        </div>
+        
+        <!-- 悬浮搜索按钮 -->
+        <div class="search-float" onclick="toggleSearchModal()">
+            <i class="fa fa-search text-white text-2xl"></i>
+        </div>
+    </div>
+
+    <!-- 搜索弹出窗 -->
+    <div id="searchModal" class="search-modal" onclick="closeSearchModal(event)">
+        <div class="search-popup" onclick="event.stopPropagation()">
+            <h3>搜索内容</h3>
+            <div id="pagefind-search-popup"></div>
+            <button class="close-btn" onclick="closeSearchModal()">关闭</button>
+        </div>
+    </div>
+
+    <!-- 微信弹出窗 -->
+    <div id="wechatModal" class="wechat-modal" onclick="closeWechatModal(event)">
+        <div class="wechat-popup" onclick="event.stopPropagation()">
+            <h3>微信客服</h3>
+            <img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E6%B7%BB%E5%8A%A0%E5%BE%AE%E4%BF%A1.png" alt="微信二维码" class="wechat-qr">
+            <p>扫描添加客服微信</p>
+            <button class="close-btn" onclick="closeWechatModal()">关闭</button>
+        </div>
+    </div>
+
+    <script>
+        // 搜索弹窗控制函数
+        function toggleSearchModal() {
+            const modal = document.getElementById('searchModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function closeSearchModal(event) {
+            document.getElementById('searchModal').style.display = 'none';
+        }
+
+        // 微信弹窗控制函数
+        function toggleWechatModal() {
+            const modal = document.getElementById('wechatModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function closeWechatModal(event) {
+            document.getElementById('wechatModal').style.display = 'none';
+        }
+
+        // 点击模态背景关闭
+        window.onclick = function(event) {
+            const searchModal = document.getElementById('searchModal');
+            const wechatModal = document.getElementById('wechatModal');
+            
+            if (event.target === searchModal) {
+                closeSearchModal();
+            } else if (event.target === wechatModal) {
+                closeWechatModal();
+            }
+        };
+    </script>
+       <!-- Pagefind 搜索（已完美修复） -->
+    <script src="/post/pagefind/pagefind-ui.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            console.log("Initializing Pagefind search...");
+            try {
+                // 初始化页面顶部搜索框
+                new PagefindUI({
+                    element: "#pagefind-search",
+                    showImages: false,
+                    showSubResults: true,
+                    resetStyles: false,
+                    translations: {
+                        placeholder: "🔍资源、教程、工具..."
+                    }
+                });
+                
+                // 初始化右侧悬浮搜索弹窗
+                new PagefindUI({
+                    element: "#pagefind-search-popup",
+                    showImages: false,
+                    showSubResults: true,
+                    resetStyles: false,
+                    translations: {
+                        placeholder: "🔍资源、教程、工具..."
+                    }
+                });
+                
+                console.log("Pagefind search initialized successfully");
+            } catch (error) {
+                console.error("Pagefind search initialization failed:", error);
+            }
+        });
+    </script>
+ <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6203499194676961"
+     crossorigin="anonymous"></script>  
+</body>
+</html>

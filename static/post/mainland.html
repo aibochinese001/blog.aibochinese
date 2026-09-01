@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>国际虚拟信用卡在国内使用教程 - 爱博CTC</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        /* 页面特定样式 */
+        .tutorial-container {
+            max-width: 1200px;
+            margin: 100px auto 50px;
+            padding: 0 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .tutorial-header {
+            text-align: center;
+            padding: 30px 0;
+            background: linear-gradient(135deg, #4a6fa5, #166088);
+            color: white;
+            border-radius: 10px 10px 0 0;
+            margin-bottom: 30px;
+        }
+        
+        .tutorial-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .tutorial-content {
+            padding: 0 30px 30px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section h2 {
+            color: #4a6fa5;
+            border-bottom: 2px solid #4fc3f7;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .step-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .step-card {
+            flex: 1;
+            min-width: 300px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 4px solid #4a90e2;
+        }
+        
+        .step-card h3 {
+            color: #166088;
+            margin-top: 0;
+        }
+        
+        .demo-image {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .demo-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 宽高比 */
+            height: 0;
+            overflow: hidden;
+            margin: 30px 0;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .tips {
+            background: #e8f4fd;
+            border-left: 4px solid #4a90e2;
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+        
+        .tips h3 {
+            color: #166088;
+            margin-top: 0;
+        }
+        
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .platform-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .platform-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .platform-card img {
+            max-width: 80px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+        
+        .platform-card h4 {
+            color: #4a6fa5;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .tutorial-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .step-container {
+                flex-direction: column;
+            }
+            
+            .tutorial-content {
+                padding: 0 15px 20px;
+            }
+        }
+        /* 悬浮微信图标样式 */
+        .wechat-float {
+            width: 60px;
+            height: 60px;
+            background-color: hsl(148, 45%, 88%); /* 微信绿色 */
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .wechat-float:hover {
+            transform: scale(1.1);
+        }
+
+        .wechat-icon {
+            width: 40px;
+            height: 40px;
+            background-image: url('https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/wechaticon.png'); /* 用户提供的微信图标URL */
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* 弹出窗样式 */
+        /* 悬浮图标容器 */
+        .float-icons-container {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .wechat-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 悬浮搜索按钮 */
+        .search-float {
+            width: 60px;
+            height: 60px;
+            background-color: #3B82F6; /* 蓝色 */
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .search-float:hover {
+            transform: scale(1.1);
+        }
+
+        /* 搜索弹出窗 */
+        .search-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-popup {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .search-popup h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .wechat-popup {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+            width: 90%;
+        }
+
+        .wechat-qr {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 10px;
+            display: block; /* 二维码图片，用户替换src */
+        }
+
+        .close-btn {
+            background-color: #ff4d4f;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .close-btn:hover {
+            background-color: #ff7875;
+        }
+
+        /* ==================== 全新 Pagefind 搜索样式（搜索框水平居中版） ==================== */
+.search-container {
+    position: relative;
+    /* 删除 margin-right，改为自动左右 margin 实现居中 */
+    margin: 0 auto;           /* 关键：水平居中 */
+    z-index: 1001;
+    min-width: 200px;
+    max-width: 380px;         /* 建议加上最大宽度，和下拉结果保持一致 */
+    width: 100%;
+    display: flex;
+    justify-content: center;  /* 内部元素水平居中 */
+    align-items: center;
+}
+
+/* 输入框：去掉宽度 100% + focus 扩展的左右晃动问题 */
+#pagefind-search .pagefind-ui__search-input {
+    padding: 10px 16px;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    font-size: 16px;
+    /* 固定宽度，或者使用 min-width + max-width 防止晃动 */
+    width: 300px;                     /* 固定一个舒适的宽度 */
+    max-width: 100%;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background: white;
+    color: #333;
+    box-sizing: border-box;
+    outline: none;
+}
+
+#pagefind-search .pagefind-ui__search-input:focus {
+    border-color: #4a6fa5;
+    box-shadow: 0 0 0 4px rgba(74, 111, 165, 0.2);
+    /* focus 时不再改变宽度，避免整个搜索框左右晃动 */
+}
+
+/* 下拉结果：从右对齐改为居中对齐 */
+#pagefind-search .pagefind-ui__results {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    position: absolute;
+    top: 100%;
+    left: 50%;                        /* 关键：左边 50% */
+    transform: translateX(-50%);      /* 关键：向左偏移自身宽度的一半 → 完全居中 */
+    right: auto;                      /* 取消原来的 right: 0 */
+    width: 380px;
+    max-height: 70vh;
+    overflow-y: auto;
+    margin-top: 8px;
+    z-index: 1000;
+    padding: 8px 0;
+}
+
+/* 其余样式保持不变 */
+#pagefind-search .pagefind-ui__result {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s;
+}
+#pagefind-search .pagefind-ui__result:last-child { border-bottom: none; }
+#pagefind-search .pagefind-ui__result:hover { background-color: #f8f9ff; }
+#pagefind-search .pagefind-ui__result-title { font-size: 15px; font-weight: 600; color: #1f2937; margin-bottom: 4px; }
+#pagefind-search .pagefind-ui__result-link { 
+    color: #3B82F6; 
+    text-decoration: none; 
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    z-index: 10;
+}
+#pagefind-search .pagefind-ui__result-link:hover { text-decoration: underline; }
+#pagefind-search .pagefind-ui__result-excerpt { font-size: 13.5px; color: #666; line-height: 1.5; margin-top: 4px; }
+.pagefind-ui__result-excerpt mark { background: #dbeafe; color: #1e40af; padding: 1px 3px; border-radius: 3px; }
+#pagefind-search .pagefind-ui__message { padding: 20px; text-align: center; color: #666; font-size: 14px; }
+          
+
+     .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 宽高比 */
+            background: #000;
+        }
+
+        .video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .video-info {
+            padding: 25px;
+        }
+
+        .video-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+
+        .video-description {
+            font-size: 16px;
+            color: #718096;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .video-meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 14px;
+            color: #a0aec0;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* 手机端样式 */
+        @media (max-width: 768px) {
+
+            .video-wrapper {
+                padding-top: 50%; /* 300px宽度对应150px高度 = 50% */
+                max-height: 150px;
+            }
+
+            .video-info {
+                padding: 15px;
+            }
+
+            .video-title {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+
+            .video-description {
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+
+            .video-meta {
+                font-size: 12px;
+                gap: 15px;
+            }
+        }
+
+        /* 平板端样式 */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .container {
+                max-width: 800px;
+            }
+        }
+
+        /* 加载动画 */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }    
+    </style>
+    
+    <!-- 引入Font Awesome图标库 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <!-- 标准导航菜单 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h2><a href="https://blog.aibochinese.com/" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/aibologo%20460%20100.png" alt="网站Logo"></a></h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/Rescous/free%20rs" class="nav-link">免费资源</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/education/tutor%20guide" class="nav-link">汉语教学</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/sitesbuild" class="nav-link">建站</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/payment/pay" class="nav-link">跨境收付</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/SMC/sm%20maketing" class="nav-link">自媒体营销</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/earn%20online" class="nav-link">项目推荐</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/tools/drive" class="nav-link">商务网盘</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://blog.aibochinese.com/client" class="nav-link">客户端</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="tutorial-container">
+        <div class="tutorial-header">
+            <h1>国际虚拟信用卡在国内使用教程</h1>
+            <p>绑定微信、支付宝、淘宝、美团等平台及消费方法详解</p>
+        </div>
+        
+        <div class="tutorial-content">
+            <div class="section">
+                <h2>简介</h2>
+                <p>国际虚拟信用卡（VCC）是许多用户进行海外消费的重要工具。虽然它是国际信用卡，但在国内也可以通过一些方法进行绑定和使用。本教程将详细介绍如何在国内主流平台绑定和使用国际虚拟信用卡。</p>
+                
+                <div class="tips">
+                    <h3>重要提醒</h3>
+                    <p>1. 国际虚拟信用卡在国内使用时可能遇到限制，建议先小额测试。</p>
+                    <p>2. 不同平台对国际卡的支持程度不同，请根据实际情况选择。</p>
+                    <p>3. 使用前请确保卡片余额充足并了解相关手续费。</p>
+                </div>
+            </div>
+        
+            
+            <div class="section">
+                <h2>详细操作步骤</h2>
+                
+                <div class="step-container">
+                    <div class="step-card">
+                        <h3>1. 微信支付绑定</h3>
+                        <ol>
+                            <li>打开微信，点击"我" → "服务" → "钱包"</li>
+                            <li>选择"银行卡" → "添加银行卡"</li>
+                            <li>输入国际虚拟信用卡信息</li>
+                        </ol>
+                        <div class="demo-video">
+                           <video controls width="300" height="180">
+  <source src="https://cf.aibochinese.com/%E8%A7%86%E9%A2%91%E7%A8%BF%E4%BB%B6/2025%E5%B9%B411%E6%9C%88/VCC%E7%BB%91%E5%AE%9A%E5%BE%AE%E4%BF%A1%E6%B6%88%E8%B4%B9/VCC%E7%BB%91%E5%AE%9A%E5%BE%AE%E4%BF%A1%E6%B6%88%E8%B4%B9.mp4" type="video/mp4">
+</video>
+                        </div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <h3>2. 支付宝绑定</h3>
+                        <ol>
+                            <li>打开支付宝，点击"我的" → "银行卡"</li>
+                        </ol>
+                        <div class="demo-image">
+                            <img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/Safepal%20wechat%20alipay1.png" alt="绑定支付宝&微信">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-container">
+                    <div class="step-card">
+                        <h3>3. 淘宝使用</h3>
+                        <ol>
+                            <li>需3DS验证，仅 <a href="https://blog.aibochinese.com/payment/SafePal" style="color:red " target="_blank" rel="noopener noreferrer">SafePal联名万事达卡</a>支持</li>
+                        </ol>
+                        <div class="demo-image">
+                            <img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/vcc%E7%BB%91%E5%AE%9A%E6%B7%98%E5%AE%9D%E6%B6%88%E8%B4%B9-1.png" alt="淘宝使用国际信用卡演示">
+                        </div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <h3>4. 美团使用</h3>
+                        <ol>
+                            <li>输入CVV码和有效期即可，不需要3DS验证，支持Roogoo和Safepal卡</li>
+                        </ol>
+                        <div class="demo-image">
+                            <img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/VCC%E7%BB%91%E5%AE%9A%E7%BE%8E%E5%9B%A2%E6%B6%88%E8%B4%B9.png" alt="美团使用国际信用卡演示">
+                        </div>
+                    </div>
+                </div>
+            </div>
+       <div class="video-wrapper">
+            <div class="loading" id="loading"></div>
+            <video 
+                id="videoPlayer" 
+                controls 
+                preload="metadata"
+                poster="https://cf.aibochinese.com/%E8%A7%86%E9%A2%91%E7%A8%BF%E4%BB%B6/2025%E5%B9%B411%E6%9C%88/Roogoo%20U%E5%8D%A1%E7%9C%9F%E5%AE%9E%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C%20%E5%85%8D%E8%B4%B9%E5%BC%80%E5%8D%A1%EF%BC%8C%E6%B6%88%E8%B4%B90%E7%A3%A8%E6%8D%9F/Roogoo%20U%E5%8D%A1%E7%9C%9F%E5%AE%9E%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C%20%E5%85%8D%E8%B4%B9%E5%BC%80%E5%8D%A1%EF%BC%8C%E6%B6%88%E8%B4%B90%E7%A3%A8%E6%8D%9F-%E5%B0%81%E9%9D%A2.jpg"
+            >
+                <source src="https://cf.aibochinese.com/%E8%A7%86%E9%A2%91%E7%A8%BF%E4%BB%B6/2025%E5%B9%B411%E6%9C%88/Roogoo%20U%E5%8D%A1%E7%9C%9F%E5%AE%9E%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C%20%E5%85%8D%E8%B4%B9%E5%BC%80%E5%8D%A1%EF%BC%8C%E6%B6%88%E8%B4%B90%E7%A3%A8%E6%8D%9F/Roogoo%20U%E5%8D%A1%E7%9C%9F%E5%AE%9E%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C%20%E5%85%8D%E8%B4%B9%E5%BC%80%E5%8D%A1%EF%BC%8C%E6%B6%88%E8%B4%B90%E7%A3%A8%E6%8D%9F.mp4" type="video/mp4">
+            
+            </video>
+        </div>
+        
+        <div class="video-info">
+            <h1 class="video-title">Roogoo国际信用卡使用体验|演示</h1>
+            <div class="video-meta">
+                <div class="meta-item">
+                    <span>📅</span>
+                    <span>2025年11月</span>
+                </div>
+                <div class="meta-item">
+                    <span>👁️</span>
+                    <span>2,274 次观看</span>
+                </div>
+                <div class="meta-item">
+                    <span>⏱️</span>
+                    <span>10:34</span>
+                </div>
+            </div>
+        </div>
+            <div class="section">
+                <h2>消费注意事项</h2>
+                <ul>
+                    <li><strong>汇率问题：</strong>国际信用卡消费会按当日汇率转换，低于0.2%的磨损</li>
+                    <li><strong>手续费：</strong>部分平台可能收取额外手续费，请提前了解</li>
+                    <li><strong>退款处理：</strong>美团可以即时到账，其它平台退款可能需要2-14天</li>
+                </ul>
+            </div>   
+        </div>
+    </div>
+    
+<footer>
+<div class="footer">
+        <p style="margin-bottom: 10px;">🙏感谢关注:<a href="https://www.youtube.com/@blog.aibochinese" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/youtube%20logo%2030.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://x.com/i/communities/1988635370549096727" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%E6%B1%89%E8%AF%AD%E5%AE%A2%E6%88%B7%E7%AB%AF/icons8-x-30.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://www.facebook.com/blog.aibochinese" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/facebook%20log0%2030.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://wa.me/message/QXYAFEGTDWIBE1" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/whatsapp-48.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://space.bilibili.com/1014631395?spm_id_from=333.1387.0.0" style="color:white; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/icons8-%E8%83%86%E6%B1%81-30.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://github.com/blogaibochinese" style="color:white; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/icons8-github-30.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://xhslink.com/m/5it26wH34Zd" style="color:white; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/rednote.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>
+        </p>
+        <p style="font-size: 14px; color: hsl(0, 0%, 95%);">© 2025 <a href="https://blog.aibochinese.com/" style="color:red " target="_blank" rel="noopener noreferrer">爱博·客</a> - 所有权利保留</p>
+    <p>_</p>
+    <p>_</p>
+    </div>
+    </footer>
+
+    <script src="../../js/script.js"></script>
+    <script>
+        // 平台卡片悬停效果
+        document.querySelectorAll('.platform-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-10px)';
+                card.style.boxShadow = '0 15px 30px rgba(0,0,0,0.15)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+                card.style.boxShadow = '0 3px 10px rgba(0,0,0,0.08)';
+            });
+        });
+    </script>
+    
+    <!-- 移动端底部导航按钮 - 仅在移动端显示 -->
+    <div class="mobile-nav">
+        <div class="nav-container">
+            <!-- 首页按钮 -->
+            <a href="https://blog.aibochinese.com/" class="nav-item active">
+                <i class="fa fa-home icon"></i>
+                <span class="text">首页</span>
+            </a>
+            
+            <!-- 资源按钮 -->
+            <a href="https://blog.aibochinese.com/Rescous/free%20rs" class="nav-item">
+                <i class="fa fa-cloud-download icon"></i>
+                <span class="text">资源</span>
+            </a>
+
+            <!-- 最新 - 突出显示 -->
+            <a href="https://blog.aibochinese.com/newest" class="nav-item center">
+                <i class="fa fa-refresh icon"></i>
+                <span class="text">最新</span>
+            </a>
+
+            <!-- 建站按钮 -->
+            <a href="https://blog.aibochinese.com/sitesbuild" class="nav-item">
+                <i class="fa fa-code icon"></i>
+                <span class="text">建站</span>
+            </a>
+
+            <!-- 淘金按钮 -->
+            <a href="https://blog.aibochinese.com/earn%20online" class="nav-item">
+                <i class="fa fa-usd icon"></i>
+                <span class="text">淘金</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- 移动端底部导航按钮样式 -->
+    <style>
+        .mobile-nav {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-nav {
+                display: block;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+                z-index: 50;
+            }
+            
+            .nav-container {
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                padding: 12px 0;
+            }
+            
+            .nav-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-decoration: none;
+                color: #666;
+                transition: all 0.3s ease;
+            }
+            
+            .nav-item.active {
+                color: #3B82F6;
+                transform: scale(1.1);
+            }
+            
+            .nav-item.center {
+                margin-top: -20px;
+            }
+            
+            .icon {
+                font-size: 20px;
+                margin-bottom: 4px;
+            }
+            
+            .text {
+                font-size: 12px;
+            }
+        }
+    </style>
+    
+    <!-- 移动端底部导航按钮JavaScript -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 添加导航交互效果
+        const navItems = document.querySelectorAll('.mobile-nav .nav-item:not(.center)');
+        
+        navItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                // 移除所有激活状态
+                navItems.forEach(i => i.classList.remove('active'));
+                // 给当前点击项添加激活状态
+                this.classList.add('active');
+            });
+        });
+    });
+    </script>
+       </script>
+   <!-- 悬浮图标容器 -->
+    <div class="float-icons-container">
+        <!-- 悬浮微信客服图标 -->
+        <div class="wechat-float" onclick="toggleWechatModal()">
+            <div class="wechat-icon"></div>
+        </div>
+        
+        <!-- 悬浮搜索按钮 -->
+        <div class="search-float" onclick="toggleSearchModal()">
+            <i class="fa fa-search text-white text-2xl"></i>
+        </div>
+    </div>
+
+    <!-- 搜索弹出窗 -->
+    <div id="searchModal" class="search-modal" onclick="closeSearchModal(event)">
+        <div class="search-popup" onclick="event.stopPropagation()">
+            <h3>搜索内容</h3>
+            <div id="pagefind-search-popup"></div>
+            <button class="close-btn" onclick="closeSearchModal()">关闭</button>
+        </div>
+    </div>
+
+    <!-- 微信弹出窗 -->
+    <div id="wechatModal" class="wechat-modal" onclick="closeWechatModal(event)">
+        <div class="wechat-popup" onclick="event.stopPropagation()">
+            <h3>微信客服</h3>
+            <img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E6%B7%BB%E5%8A%A0%E5%BE%AE%E4%BF%A1.png" alt="微信二维码" class="wechat-qr">
+            <p>扫描添加客服微信</p>
+            <button class="close-btn" onclick="closeWechatModal()">关闭</button>
+        </div>
+    </div>
+
+    <script>
+        // 搜索弹窗控制函数
+        function toggleSearchModal() {
+            const modal = document.getElementById('searchModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function closeSearchModal(event) {
+            document.getElementById('searchModal').style.display = 'none';
+        }
+
+        // 微信弹窗控制函数
+        function toggleWechatModal() {
+            const modal = document.getElementById('wechatModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function closeWechatModal(event) {
+            document.getElementById('wechatModal').style.display = 'none';
+        }
+
+        // 点击模态背景关闭
+        window.onclick = function(event) {
+            const searchModal = document.getElementById('searchModal');
+            const wechatModal = document.getElementById('wechatModal');
+            
+            if (event.target === searchModal) {
+                closeSearchModal();
+            } else if (event.target === wechatModal) {
+                closeWechatModal();
+            }
+        };
+    </script>
+       <!-- Pagefind 搜索（已完美修复） -->
+    <script src="/post/pagefind/pagefind-ui.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            console.log("Initializing Pagefind search...");
+            try {
+                // 初始化页面顶部搜索框
+                new PagefindUI({
+                    element: "#pagefind-search",
+                    showImages: false,
+                    showSubResults: true,
+                    resetStyles: false,
+                    translations: {
+                        placeholder: "🔍资源、教程、工具..."
+                    }
+                });
+                
+                // 初始化右侧悬浮搜索弹窗
+                new PagefindUI({
+                    element: "#pagefind-search-popup",
+                    showImages: false,
+                    showSubResults: true,
+                    resetStyles: false,
+                    translations: {
+                        placeholder: "🔍资源、教程、工具..."
+                    }
+                });
+                
+                console.log("Pagefind search initialized successfully");
+            } catch (error) {
+                console.error("Pagefind search initialization failed:", error);
+            }
+        });
+    </script>
+            </script>
+ <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",           // 或 WebPage、Article、FAQPage、Product等
+  "name": "国际虚拟信用卡在国内使用教程 - 爱博CTC",
+  "keywords": "2026年国际虚拟信用卡国内绑卡消费指南,绑定微信,绑定支付宝,绑定淘宝,绑定美团",
+  "description": "绑定微信、支付宝、淘宝、美团等平台及消费方法详解",
+  "url": "https://blog.aibochinese.com/payment/VCC/mainland",
+  "datePublished": "2025-11-15",
+  "dateModified": "2025-11-30",
+  "author": {"@type": "Person", "name": "AbelZou"},
+  "publisher": {
+    "@type": "Organization",
+    "name": "爱博·客",
+    "logo": {"@type": "ImageObject", "url": "https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/50-50%20%E7%88%B1%E5%8D%9A%E5%AE%A2logo.png"}
+  }
+}
+</script>  
+ <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6203499194676961"
+     crossorigin="anonymous"></script>  
+</body>
+</html>
