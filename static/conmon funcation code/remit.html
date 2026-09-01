@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>跨境收付款解决方案流程图谱</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            overflow-x: auto;
+        }
+
+        .container {
+            max-width: 2200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 3.2em;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 15px rgba(0,0,0,0.7);
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.8);
+            font-size: 1.3em;
+            margin-bottom: 50px;
+        }
+
+        .main-layout {
+            display: flex;
+            gap: 50px;
+            align-items: flex-start;
+        }
+
+        .diagram-container {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .diagram {
+            position: relative;
+            min-height: 1600px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 35px;
+            padding: 140px 120px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        /* SVG连接线层 */
+        .connection-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* 场景区域背景 */
+        .scene-zone {
+            position: absolute;
+            border-radius: 30px;
+            z-index: 0;
+        }
+
+        .zone-payment {
+            top: 150px;
+            left: 80px;
+            right: 80px;
+            height: 580px;
+            background: linear-gradient(135deg, rgba(240, 147, 251, 0.08) 0%, rgba(245, 87, 108, 0.08) 100%);
+            border: 2px dashed rgba(240, 147, 251, 0.3);
+        }
+
+        .zone-collection {
+            top: 820px;
+            left: 80px;
+            right: 80px;
+            height: 680px;
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.08) 0%, rgba(0, 242, 254, 0.08) 100%);
+            border: 2px dashed rgba(79, 172, 254, 0.3);
+        }
+
+        /* 场景标题 */
+        .scene-header {
+            position: absolute;
+            font-size: 1.9em;
+            font-weight: bold;
+            color: white;
+            padding: 16px 50px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            z-index: 20;
+            letter-spacing: 2px;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-payment {
+            top: 110px;
+            left: 80px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .header-collection {
+            top: 780px;
+            left: 80px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        /* 主体按钮 - 更大尺寸和间距 */
+        .entity-btn {
+            position: absolute;
+            padding: 32px 55px;
+            border-radius: 22px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.45);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-align: center;
+            min-width: 220px;
+            z-index: 15;
+            border: 3px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .entity-btn:hover {
+            transform: translateY(-10px) scale(1.1);
+            box-shadow: 0 18px 50px rgba(0,0,0,0.6);
+            border-color: rgba(255,255,255,0.6);
+            z-index: 25;
+        }
+
+        .entity-btn small {
+            display: block;
+            font-size: 0.58em;
+            opacity: 0.85;
+            margin-top: 10px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        /* ========== 场景一：海外支付 - 超大间距 ========== */
+        .binance {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            top: 260px;
+            left: 140px;
+        }
+
+        .usdt-payment {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            top: 260px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
+            padding: 38px 70px;
+            box-shadow: 0 15px 45px rgba(102, 126, 234, 0.5);
+            border: 4px solid rgba(255,255,255,0.4);
+        }
+
+        .roogoo {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            top: 260px;
+            right: 140px;
+        }
+
+        .rmb-node {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            top: 540px;
+            right: 140px;
+            font-size: 1.3em;
+        }
+
+        /* ========== 场景二：跨境收款 - 超大间距 ========== */
+        .revenue-sources {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+            top: 920px;
+            left: 50%;
+            transform: translateX(-700px);
+            font-size: 1.3em;
+        }
+
+        .kvb {
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            top: 920px;
+            left: 50%;
+            transform: translateX(-350px);
+            font-size: 1.3em;
+        }
+
+        .stripe {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            top: 920px;
+            left: 50%;
+            transform: translateX(-110px);
+        }
+
+        .wise {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            top: 920px;
+            left: 50%;
+            transform: translateX(130px);
+        }
+
+        .aibopay {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            top: 920px;
+            left: 50%;
+            transform: translateX(480px);
+        }
+
+        .usdt-collection {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            top: 1240px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
+            padding: 38px 70px;
+            box-shadow: 0 15px 45px rgba(102, 126, 234, 0.5);
+            border: 4px solid rgba(255,255,255,0.4);
+        }
+
+        /* 流程标签 - 完全分离 */
+        .flow-tag {
+            position: absolute;
+            background: rgba(255,255,255,0.97);
+            padding: 12px 26px;
+            border-radius: 22px;
+            font-size: 1.05em;
+            color: #333;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.25);
+            z-index: 10;
+            font-weight: 600;
+            white-space: nowrap;
+            border: 2px solid;
+            transition: all 0.3s ease;
+            line-height: 1.6;
+        }
+
+        .flow-tag:hover {
+            transform: scale(1.12);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+            z-index: 30;
+        }
+
+        /* 场景一标签 - 大幅度分离 */
+        .tag1 { 
+            top: 190px; 
+            left: 370px; 
+            border-color: #fda085; 
+            background: linear-gradient(135deg, #fff8f0 0%, #ffe8e0 100%);
+        }
+        .tag2 { 
+            top: 190px; 
+            right: 370px; 
+            border-color: #f5576c; 
+            background: linear-gradient(135deg, #fff0f5 0%, #ffe6f0 100%);
+        }
+        .tag3 { 
+            top: 450px; 
+            right: 240px; 
+            border-color: #38f9d7; 
+            background: linear-gradient(135deg, #f0fffc 0%, #e0fff8 100%);
+        }
+        .tag-center { 
+            top: 440px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            border-color: #764ba2; 
+            background: linear-gradient(135deg, #f5f0ff 0%, #ebe0ff 100%);
+            font-size: 0.95em;
+            max-width: 320px;
+            text-align: center;
+            white-space: normal;
+            padding: 14px 28px;
+        }
+
+        /* 场景二标签 - 分散布局 */
+        .tag5 { 
+            top: 850px; 
+            left: 50%;
+            transform: translateX(-700px);
+            border-color: #330867; 
+            background: linear-gradient(135deg, #f0f5ff 0%, #e6f0ff 100%);
+            font-size: 0.88em; 
+        }
+        .tag6 { 
+            top: 850px; 
+            left: 50%;
+            transform: translateX(-350px);
+            border-color: #a6c1ee; 
+            background: linear-gradient(135deg, #f5f8ff 0%, #ebf3ff 100%);
+            font-size: 0.95em;
+        }
+        .tag7 { 
+            top: 850px; 
+            left: 50%;
+            transform: translateX(-110px);
+            border-color: #8fd3f4; 
+            background: linear-gradient(135deg, #f0fbff 0%, #e0f7fa 100%);
+            font-size: 0.95em;
+        }
+        .tag8 { 
+            top: 850px; 
+            left: 50%;
+            transform: translateX(130px);
+            border-color: #fed6e3; 
+            background: linear-gradient(135deg, #fff8fb 0%, #fff0f5 100%);
+            font-size: 0.88em; 
+        }
+        .tag9 { 
+            top: 850px; 
+            left: 50%;
+            transform: translateX(480px);
+            border-color: #fee140; 
+            background: linear-gradient(135deg, #fffef0 0%, #fffae0 100%);
+            font-size: 0.88em; 
+        }
+        .tag10 { 
+            top: 1130px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            border-color: #667eea; 
+            background: linear-gradient(135deg, #f0f3ff 0%, #e6ecff 100%);
+        }
+        .tag-bottom { 
+            top: 1420px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            border-color: #43e97b; 
+            background: linear-gradient(135deg, #f0fff8 0%, #e6ffe6 100%);
+            max-width: 420px;
+            text-align: center;
+            font-size: 1em;
+        }
+
+        /* 侧边信息卡片 */
+        .sidebar {
+            width: 380px;
+            flex-shrink: 0;
+        }
+
+        .info-card {
+            background: white;
+            padding: 32px;
+            border-radius: 22px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-card h3 {
+            color: #333;
+            margin-bottom: 22px;
+            font-size: 1.6em;
+            border-left: 5px solid #f5576c;
+            padding-left: 18px;
+        }
+
+        .info-card ul {
+            list-style: none;
+            color: #555;
+        }
+
+        .info-card li {
+            padding: 14px 0;
+            padding-left: 38px;
+            position: relative;
+            line-height: 1.8;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .info-card li:last-child {
+            border-bottom: none;
+        }
+
+        .info-card li:before {
+            position: absolute;
+            left: 0;
+            font-size: 1.4em;
+        }
+
+        .card-revenue li:before {
+            content: "💰";
+        }
+
+        .card-advantage li:before {
+            content: "✨";
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-left: 4px solid #667eea;
+            padding: 18px;
+            margin-top: 18px;
+            border-radius: 10px;
+            font-size: 0.98em;
+            color: #555;
+            line-height: 1.9;
+        }
+
+        @media (max-width: 1900px) {
+            .main-layout {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 1400px) {
+            .diagram { 
+                min-height: 1700px; 
+                padding: 100px 80px;
+            }
+            
+            .entity-btn { 
+                font-size: 1.3em; 
+                padding: 26px 45px; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌐 跨境收付款解决方案</h1>
+        <div class="subtitle">完整流程关系图谱</div>
+        
+        <div class="main-layout">
+            <!-- 主图谱区域 -->
+            <div class="diagram-container">
+                <div class="diagram">
+                    <!-- 场景区域背景 -->
+                    <div class="scene-zone zone-payment"></div>
+                    <div class="scene-zone zone-collection"></div>
+                    
+                    <!-- SVG连接线 -->
+                    <svg class="connection-layer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 1600" preserveAspectRatio="none">
+                        <defs>
+                            <!-- 定义箭头 -->
+                            <marker id="arrow-gold" markerWidth="14" markerHeight="14" refX="11" refY="4" orient="auto">
+                                <polygon points="0 0, 14 4, 0 8" fill="#ffd700" />
+                            </marker>
+                            <marker id="arrow-green" markerWidth="14" markerHeight="14" refX="11" refY="4" orient="auto">
+                                <polygon points="0 0, 14 4, 0 8" fill="#00ff9f" />
+                            </marker>
+                            <marker id="arrow-pink" markerWidth="14" markerHeight="14" refX="11" refY="4" orient="auto">
+                                <polygon points="0 0, 14 4, 0 8" fill="#ff6b9d" />
+                            </marker>
+                            <marker id="arrow-blue" markerWidth="14" markerHeight="14" refX="11" refY="4" orient="auto">
+                                <polygon points="0 0, 14 4, 0 8" fill="#4facfe" />
+                            </marker>
+                            
+                            <!-- 发光效果 -->
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        
+                        <!-- 场景一：支付流程线条 -->
+                        <!-- 币安 → USDT -->
+                        <path d="M 300 300 Q 600 300 840 300" 
+                              stroke="#ffd700" stroke-width="7" fill="none" 
+                              marker-end="url(#arrow-gold)" opacity="0.88" filter="url(#glow)"/>
+                        
+                        <!-- USDT → Roogoo -->
+                        <path d="M 960 300 Q 1200 300 1440 300" 
+                              stroke="#ff6b9d" stroke-width="7" fill="none" 
+                              marker-end="url(#arrow-pink)" opacity="0.88" filter="url(#glow)"/>
+                        
+                        <!-- USDT → RMB -->
+                        <path d="M 900 350 Q 1100 470 1440 580" 
+                              stroke="#00ff9f" stroke-width="7" fill="none" 
+                              marker-end="url(#arrow-green)" opacity="0.88" filter="url(#glow)"/>
+                        
+                        <!-- 场景二：收款流程线条 - 扇形汇聚 -->
+                        <!-- 营收渠道 → USDT -->
+                        <path d="M 200 960 Q 500 1120 820 1280" 
+                              stroke="#30cfd0" stroke-width="6" fill="none" 
+                              marker-end="url(#arrow-blue)" opacity="0.85" filter="url(#glow)"/>
+                        
+                        <!-- KVB → USDT -->
+                        <path d="M 550 960 Q 750 1120 860 1280" 
+                              stroke="#a6c1ee" stroke-width="6" fill="none" 
+                              marker-end="url(#arrow-blue)" opacity="0.85" filter="url(#glow)"/>
+                        
+                        <!-- Stripe → USDT -->
+                        <path d="M 790 960 L 880 1280" 
+                              stroke="#8fd3f4" stroke-width="6" fill="none" 
+                              marker-end="url(#arrow-blue)" opacity="0.85" filter="url(#glow)"/>
+                        
+                        <!-- Wise → USDT -->
+                        <path d="M 1030 960 Q 950 1120 920 1280" 
+                              stroke="#fed6e3" stroke-width="6" fill="none" 
+                              marker-end="url(#arrow-blue)" opacity="0.85" filter="url(#glow)"/>
+                        
+                        <!-- AiboPay → USDT -->
+                        <path d="M 1380 960 Q 1100 1120 960 1280" 
+                              stroke="#fee140" stroke-width="6" fill="none" 
+                              marker-end="url(#arrow-blue)" opacity="0.85" filter="url(#glow)"/>
+                        
+                        <!-- USDT → 循环回流（虚线）-->
+                        <path d="M 900 1380 Q 1250 1450 1500 1280" 
+                              stroke="#667eea" stroke-width="6" fill="none" 
+                              marker-end="url(#arrow-pink)" opacity="0.55" 
+                              stroke-dasharray="18,12" filter="url(#glow)"/>
+                    </svg>
+                    
+                    <!-- 场景标题 -->
+                    <div class="scene-header header-payment">💳 场景一：海外支付</div>
+                    <div class="scene-header header-collection">💰 场景二：跨境收款</div>
+                    
+                    <!-- 场景一：主体按钮 -->
+                    <div class="entity-btn binance">币安<small>Binance</small></div>
+                    <div class="entity-btn usdt-payment">USDT<small>支付核心</small></div>
+                    <div class="entity-btn roogoo">Roogoo<small>虚拟U卡</small></div>
+                    <div class="entity-btn rmb-node">人民币<small>RMB回国</small></div>
+                    
+                    <!-- 场景一：流程标签 -->
+                    <div class="flow-tag tag1">开通USDT</div>
+                    <div class="flow-tag tag2">充值消费</div>
+                    <div class="flow-tag tag3">换汇</div>
+                    <div class="flow-tag tag-center">即开即用·0费率<br>境外收款可充值</div>
+                    
+                    <!-- 场景二：主体按钮 -->
+                    <div class="entity-btn revenue-sources">营收渠道<small>四大来源</small></div>
+                    <div class="entity-btn kvb">KVB<small>外汇信号</small></div>
+                    <div class="entity-btn stripe">Stripe<small>在线支付</small></div>
+                    <div class="entity-btn wise">Wise<small>国际汇款</small></div>
+                    <div class="entity-btn aibopay">AiboPay<small>多国账户</small></div>
+                    <div class="entity-btn usdt-collection">USDT<small>收款中心</small></div>
+                    
+                    <!-- 场景二：流程标签 -->
+                    <div class="flow-tag tag5">共创·教学<br>返佣</div>
+                    <div class="flow-tag tag6">信号费</div>
+                    <div class="flow-tag tag7">多渠道</div>
+                    <div class="flow-tag tag8">GBP→EUR<br>→USDT</div>
+                    <div class="flow-tag tag9">多国银行</div>
+                    <div class="flow-tag tag10">汇聚收款·低费率</div>
+                    <div class="flow-tag tag-bottom">循环：充值U卡消费 或 换RMB回国</div>
+                </div>
+            </div>
+            
+            <!-- 右侧信息栏 -->
+            <div class="sidebar">
+                <div class="info-card card-revenue">
+                    <h3>💼 营收渠道详情</h3>
+                    <ul>
+                        <li><strong>Roogoo共创计划</strong><br>国际项目合作收益</li>
+                        <li><strong>国际中文教学</strong><br>在线教育服务费</li>
+                        <li><strong>币安超级返佣</strong><br>交易佣金返利</li>
+                        <li><strong>KVB信号提供</strong><br>外汇信号服务费</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card card-advantage">
+                    <h3>✨ 方案核心优势</h3>
+                    <ul>
+                        <li><strong>USDT中转</strong><br>手续费极低，全球通用</li>
+                        <li><strong>多路径收款</strong><br>Stripe/Wise/AiboPay灵活选择</li>
+                        <li><strong>U卡即用</strong><br>0开卡费，境外资金可充值</li>
+                        <li><strong>回国便捷</strong><br>币安换汇或直接消费</li>
+                    </ul>
+                    <div class="highlight-box">
+                        💡 <strong>最佳实践：</strong>境外收入→USDT收款→币安换RMB回国 或 充值Roogoo U卡国内消费
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

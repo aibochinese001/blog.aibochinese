@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>解说视频列表</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+            /* 课程列表 */
+        .container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            border: 3px solid #2196F3;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 80vh;
+        }
+               .video-section {
+            width: 70%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 3px solid #2196F3;
+        }
+
+        .video-title {
+            color: #2196F3;
+            font-size: 15px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .video-player {
+            width: 100%;
+            background-color: #000;
+            border: 2px solid #2196F3;
+            border-radius: 4px;
+        }
+
+        .playlist-section {
+            width: 30%;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .playlist-section::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .playlist-section::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .playlist-section::-webkit-scrollbar-thumb {
+            background: #2196F3;
+            border-radius: 4px;
+        }
+
+        .playlist-section::-webkit-scrollbar-thumb:hover {
+            background: #1976D2;
+        }
+
+        .playlist-header {
+            color: #2196F3;
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            border-bottom: 2px solid #2196F3;
+            padding-bottom: 10px;
+        }
+
+        .video-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+            border: 2px solid #e3f2fd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .video-item:hover {
+            background-color: #e3f2fd;
+            border-color: #2196F3;
+            transform: translateX(5px);
+        }
+
+        .video-item.active {
+            background-color: #2196F3;
+            color: white;
+            border-color: #2196F3;
+        }
+
+        .video-item-title {
+            font-size: 10px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .video-item-duration {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .video-item.active .video-item-duration {
+            color: #e3f2fd;
+        }
+
+        .chapter-title {
+            color: #2196F3;
+            font-size: 15px;
+            font-weight: bold;
+            margin: 15px 0 10px 0;
+            padding: 8px 10px;
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            border-radius: 4px;
+        }
+
+        .video-section {
+            width: 70%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 3px solid #2196F3;
+        }
+
+        .video-player-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .video-player {
+            width: 100%;
+            flex: 1;
+            max-height: calc(100% - 60px);
+            background-color: #000;
+            border: 2px solid #2196F3;
+            border-radius: 4px;
+            object-fit: contain;
+        }
+
+        .document-button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            align-self: center;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        .document-button:hover {
+            background-color: #1976D2;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="video-section">
+            <div class="video-title" id="currentTitle">永久免费建站教程</div>
+            <div class="video-player-container">
+                <iframe class="video-player" id="videoPlayer" src="https://player.bilibili.com/player.html?bvid=BV1SDqoBNENh&page=1&high_quality=1&danmaku=0" frameborder="0" allowfullscreen></iframe>
+                <button class="document-button">查看相应文档说明</button>
+            </div>
+        </div>
+
+        <div class="playlist-section">
+            <div class="playlist-header">视频列表</div>
+            <div id="playlist"></div>
+        </div>
+    </div>
+
+      <script>
+        // 从B站链接提取BV号
+        function extractBVId(url) {
+            const bvRegex = /BV[0-9A-Za-z]{10}/;
+            const match = url.match(bvRegex);
+            return match ? match[0] : null;
+        }
+
+        // 生成B站嵌入链接
+        function generateBilibiliEmbedUrl(bvId) {
+            return `https://player.bilibili.com/player.html?bvid=${bvId}&page=1&high_quality=1&danmaku=0`;
+        }
+
+        const videos = [
+            {
+                chapter: "国际Visa|万事达卡",
+                title: "1.Roogoo U卡真实使用体验 免费开卡，消费0磨损",
+                url: "https://www.bilibili.com/video/BV1SDqoBNENh/?share_source=copy_web&vd_source=abedd2d3559485229d7467595ab02153",
+                duration: "10:34",
+                document: "https://blog.aibochinese.com/payment/roogoo"
+            },
+            {
+                chapter: "国际Visa|万事达卡",
+                title: "2.2026年 0磨损境外收款美元或USDT回国教程",
+                url: "https://cf.aibochinese.com/%E8%A7%86%E9%A2%91%E7%A8%BF%E4%BB%B6/2025%E5%B9%B412%E6%9C%88/2026%E5%B9%B4%200%E7%A3%A8%E6%8D%9F%E5%A2%83%E5%A4%96%E6%94%B6%E6%AC%BE%E7%BE%8E%E5%85%83%E6%88%96USDT%E5%9B%9E%E5%9B%BD%E6%95%99%E7%A8%8B/2026%E5%B9%B4%200%E7%A3%A8%E6%8D%9F%E5%A2%83%E5%A4%96%E6%94%B6%E6%AC%BE%E7%BE%8E%E5%85%83%E6%88%96USDT%E5%9B%9E%E5%9B%BD%E6%95%99%E7%A8%8B.mp4",
+                duration: "10:20",
+                document: "https://blog.aibochinese.com/payment/pay"
+            },
+            {
+                chapter: "国际Visa|万事达卡",
+                title: "3.2026年最具潜力的副业：做一家线上eSIM营业厅",
+                url: "https://www.bilibili.com/video/BV1SDqoBNENh/?share_source=copy_web&vd_source=abedd2d3559485229d7467595ab02153",
+                duration: "20:50",
+                document: "https://blog.aibochinese.com/esim-business"
+            },
+           {
+                chapter: "国际Visa|万事达卡",
+                title: "3.代充美元USDT,以及兑换回RMB【CTC服务】",
+                url: "https://cf.aibochinese.com/%E8%A7%86%E9%A2%91%E7%A8%BF%E4%BB%B6/%E4%BB%A3%E5%85%85%E7%BE%8E%E5%85%83USDT%2C%E4%BB%A5%E5%8F%8A%E5%85%91%E6%8D%A2%E5%9B%9ERMB%E3%80%90CTC%E6%9C%8D%E5%8A%A1%E3%80%91/%E4%BB%A3%E5%85%85%E7%BE%8E%E5%85%83USDT%2C%E4%BB%A5%E5%8F%8A%E5%85%91%E6%8D%A2%E5%9B%9ERMB%E3%80%90CTC%E6%9C%8D%E5%8A%A1%E3%80%91.mp4",
+                duration: "4:13",
+                document: "https://blog.aibochinese.com/payment/Proxy%20Recharge"
+            },
+            {
+                chapter: "加密货币收付",
+                title: "1.省钱有招：USDT链上转账怎么选择网络？",
+                url: "https://cf.aibochinese.com/%E8%A7%86%E9%A2%91%E7%A8%BF%E4%BB%B6/%E7%9C%81%E9%92%B1%E6%9C%89%E6%8B%9B%EF%BC%9AUSDT%E9%93%BE%E4%B8%8A%E8%BD%AC%E8%B4%A6%E6%80%8E%E4%B9%88%E9%80%89%E6%8B%A9%E7%BD%91%E7%BB%9C%EF%BC%9F/%E7%9C%81%E9%92%B1%E6%9C%89%E6%8B%9B%EF%BC%9AUSDT%E9%93%BE%E4%B8%8A%E8%BD%AC%E8%B4%A6%E6%80%8E%E4%B9%88%E9%80%89%E6%8B%A9%E7%BD%91%E7%BB%9C%EF%BC%9F.mp4",
+                duration: "4:15",
+                document: "https://blog.aibochinese.com/web3/binance"
+            },
+            {
+                chapter: "加密货币收付",
+                title: "2.购买USDT|加密货币转账|充值Visa或万事达卡教程",
+                url: "https://cf.aibochinese.com/%E8%A7%86%E9%A2%91%E7%A8%BF%E4%BB%B6/%E6%89%8B%E6%8A%8A%E6%89%8B%E7%BB%99%E6%82%A8%E6%BC%94%E7%A4%BA%EF%BC%9A%E8%99%9A%E6%8B%9F%E4%BF%A1%E7%94%A8%E5%8D%A1%E5%85%85%E5%80%BCUSDT.mp4",
+                duration: "13:15",
+                document: "hhttps://blog.aibochinese.com/payment/self%20recharge"
+            }
+
+        ];
+
+        const playlist = document.getElementById('playlist');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const currentTitle = document.getElementById('currentTitle');
+        let currentVideoDocument = ''; // 存储当前视频的文档链接
+
+        // 按章节分组视频
+        const videosByChapter = videos.reduce((acc, video) => {
+            if (!acc[video.chapter]) {
+                acc[video.chapter] = [];
+            }
+            acc[video.chapter].push(video);
+            return acc;
+        }, {});
+
+        // 设置初始视频的文档链接（默认第一个视频）
+        if (videos.length > 0) {
+            currentVideoDocument = videos[0].document;
+        }
+
+        // 渲染视频列表
+        Object.entries(videosByChapter).forEach(([chapter, chapterVideos]) => {
+            // 创建章节标题
+            const chapterTitle = document.createElement('div');
+            chapterTitle.className = 'chapter-title';
+            chapterTitle.textContent = chapter;
+            playlist.appendChild(chapterTitle);
+
+            // 创建该章节下的视频项
+            chapterVideos.forEach((video, index) => {
+                const item = document.createElement('div');
+                item.className = 'video-item';
+                item.innerHTML = `
+                    <div class="video-item-title">${video.title}</div>
+                    <div class="video-item-duration">时长: ${video.duration}</div>
+                `;
+                
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.video-item').forEach(el => {
+                        el.classList.remove('active');
+                    });
+                    item.classList.add('active');
+                    
+                    // 检查是否为B站视频链接
+                    const bvId = extractBVId(video.url);
+                    if (bvId) {
+                        // 生成B站嵌入链接
+                        const embedUrl = generateBilibiliEmbedUrl(bvId);
+                        videoPlayer.src = embedUrl;
+                    } else {
+                        // 普通视频链接
+                        videoPlayer.src = video.url;
+                    }
+                    
+                    currentTitle.textContent = video.title;
+                    currentVideoDocument = video.document; // 更新当前视频的文档链接
+                });
+                
+                playlist.appendChild(item);
+            });
+        });
+
+        // 添加查看文档按钮点击事件
+        const documentButton = document.querySelector('.document-button');
+        documentButton.addEventListener('click', () => {
+            if (currentVideoDocument) {
+                // 使用新窗口打开文档链接
+                window.open(currentVideoDocument, '_blank');
+            } else {
+                alert('当前视频暂无相关文档');
+            }
+        });
+    </script>
+</body>
+</html>
