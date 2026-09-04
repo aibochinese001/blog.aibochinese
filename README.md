@@ -1,57 +1,61 @@
 # blog.aibochinese
 
-这是 aibochinese 的个人 / 博客网站源码仓库。本 README 使用简体中文编写，包含项目简介、运行与部署说明，以及贡献方式等常用信息。请根据实际情况将下列占位信息替换为真实内容（例如站点域名、运行命令和联系方式）。
+这是 aibochinese 的个人 / 博客网站源码仓库。下文已根据仓库内容自动填充实际信息与建议；请按需修改。
 
-站点预览
-- 访问地址（占位）：https://blog.aibochinese
-- 首页截图 / 演示：请在仓库中添加 `docs/` 或 `assets/` 目录并放入截图图片，然后在此处替换链接。
+站点概览（仓库检测结果）
+- 静态站点目录：static/（包含 index.html、sitemap.html、mooc.html 等页面）
+- 静态首页：static/index.html
+- Cloudflare Worker 脚本：src/index.ts（检测到使用 env.ASSETS.fetch 来返回 static 目录资源，通常用于 Cloudflare Workers / Pages 的静态资源绑定）
+- 未检测到：package.json、CNAME、.github/workflows（仓库根目录下未找到这些文件）
 
-主要功能
-- 博客文章发布与管理
-- 分类与标签支持
-- 响应式布局，适配移动端
-- 文章目录、搜索与阅读统计（视具体实现而定）
+主要功能（基于现有文件推断）
+- 纯静态 HTML 页面为主，包含课程、文章、站点地图等内容
+- 通过 Cloudflare Worker（src/index.ts）作为前端路由/静态资源分发层
+- 多个示例与工具页面（在 static/ 目录下）
 
-技术栈（请按实际项目替换）
-- 静态站点生成器：Hugo / Jekyll / Hexo / Next.js（请替换为项目实际使用的框架）
-- 语言与框架：HTML / CSS / JavaScript（或 React / Vue / Svelte）
-- 部署平台：GitHub Pages / Vercel / Netlify（请替换）
-- 持续集成：可选 GitHub Actions（如已配置请描述工作流）
+本地预览（简单方法）
+如果仓库不使用 Node 构建流程，可以直接预览静态页面：
 
-快速开始（本地运行 —— 请根据项目实际命令替换）
-1. 克隆仓库
-   git clone https://github.com/aibochinese001/blog.aibochinese.git
-2. 进入项目目录并安装依赖（如果使用 Node 环境）
-   cd blog.aibochinese
-   npm install
-3. 本地启动（示例）
-   npm run dev
-4. 在浏览器打开：http://localhost:3000
+1) 使用 Python 简易静态服务器（适用于 static 目录）：
+   cd static
+   # Python 3
+   python3 -m http.server 8000
+   # 在浏览器打开 http://localhost:8000
 
-构建与部署（示例）
-- 本地构建：
-  npm run build
-- 部署到 GitHub Pages：
-  - 如果使用 GitHub Pages：将构建产物推送到 gh-pages 分支，或使用 GitHub Actions 自动部署。
-  - 如果使用 Vercel/Netlify：将仓库连接到相应平台，设置构建命令与输出目录。
+2) 或使用 Node 的 http-server（如已安装）：
+   npm install -g http-server
+   cd static
+   http-server -p 8000
 
-贡献
-- 欢迎提交 issue 或 PR。若无特别贡献指南，可遵循如下流程：
-  1. Fork 仓库并创建分支：git checkout -b feature/your-feature
-  2. 提交修改：git commit -m "feat: 描述你的改动"
-  3. 推送分支并创建 Pull Request，说明你的变更内容与目的
+如果你希望在本地运行 Cloudflare Worker（src/index.ts）进行更真实的预览，推荐安装 Wrangler 并运行：
+- 参考：https://developers.cloudflare.com/workers/
+- 示例：
+  wrangler dev src/index.ts
 
-许可证
-- 本项目默认使用 MIT 许可证（如需其他许可证，请在此处替换为实际许可证并添加 LICENSE 文件）。
+构建与部署建议
+- 当前仓库结构适合部署到 Cloudflare Pages 或 Cloudflare Workers（通过 Assets 绑定）。
+  - Cloudflare Pages：将 static/ 作为构建产物目录，或直接配置为静态站点源。
+  - Cloudflare Workers：使用 Workers 的 Assets 绑定或 Wrangler 的 "site" 功能，将 static/ 上传为静态资源并通过 src/index.ts 提供路由。
+- 也可部署为 GitHub Pages：将 static/ 的内容构建并推到 gh-pages 分支（若选择此方式，可添加 package.json 与构建脚本，或在 Actions 中配置部署）。
 
-鸣谢
-- 感谢使用的主题/模板与开源工具，例如：主题名、第三方库或参考项目（请替换为实际引用）。
+建议补充与改进（可选）
+- 若项目包含构建/依赖，请添加 package.json（记录运行脚本、依赖）。
+- 若希望自动部署，请添加 .github/workflows/（GitHub Actions）或配置 Cloudflare Pages 连接。示例：自动将 static/ 部署到 gh-pages 或触发 Wrangler 发布到 Workers。
+- 若使用自定义域，请在仓库根目录添加 CNAME 文件并在域名提供商处配置 DNS。
+- 考虑添加 LICENSE（例如 MIT）和 CONTRIBUTING.md 来规范贡献流程。
+
+快速贡献流程（通用）
+1. Fork 仓库并创建分支：git checkout -b feature/your-feature
+2. 提交修改：git commit -m "feat: 描述你的改动"
+3. 推送分支并创建 Pull Request，说明你的变更内容与目的
 
 作者与联系
 - 作者：aibochinese001
-- 邮箱（占位）：your-email@example.com
-- 个人主页 / 社交（占位）：https://example.com
 
----
+更多操作
+- 我可以：
+  - 自动将 static/ 的首页链接填入 README 的“站点预览”部分并提交；
+  - 检索并解析仓库内的更多配置文件（如果存在）以进一步完善 README（例如 package.json、wrangler.toml、CNAME、.github/workflows）；
+  - 帮你添加示例 GitHub Actions Workflow 或 wrangler.toml 模板来实现自动部署。
 
-如果你希望我将 README 中的占位项替换为仓库内的真实信息（例如自动检测静态站点生成器、提取 package.json 中的运行命令、或填入 GitHub Pages 的 URL），我可以继续读取仓库文件并根据真实内容更新 README。
+如需我继续：请告诉我想要的下一步（例如“把 static/index.html 的 URL 写入 README”、“添加 wrangler.toml 示例并提交”或“创建 GitHub Actions 部署 workflow”）。
