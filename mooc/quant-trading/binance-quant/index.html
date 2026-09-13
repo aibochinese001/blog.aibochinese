@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binance量化机器人教程 - 爱博·客公开课</title>
+    <meta name="description" content="币安交易所机器人完整教程：网格交易、智能持仓策略配置">
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e17 0%, #1a1f2e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #f0b90b 0%, #f8d33a 100%);
+            text-align: center;
+            padding: 100px 20px 60px;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: #000000;
+            text-shadow: 0 2px 10px rgba(240, 185, 11, 0.5);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            color: #333333;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .nav-back {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-back:hover {
+            color: #f0b90b;
+        }
+        
+        .section-title {
+            font-size: 2.2rem;
+            margin: 60px 0 30px;
+            text-align: center;
+            background: linear-gradient(45deg, #f0b90b, #f8d33a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .tutorial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+        
+        .tutorial-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(240, 185, 11, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tutorial-card:hover {
+            transform: translateY(-5px);
+            border-color: #f0b90b;
+            box-shadow: 0 10px 30px rgba(240, 185, 11, 0.2);
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            color: #f0b90b;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+        
+        .card-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .features-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        
+        .features-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+        }
+        
+        .features-list li::before {
+            content: "✅";
+            margin-right: 10px;
+            color: #f0b90b;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #f0b90b, #f8d33a);
+            color: #000;
+            padding: 12px 25px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(240, 185, 11, 0.4);
+        }
+        
+        .api-section {
+            background: rgba(240, 185, 11, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 60px 0;
+            border-left: 4px solid #f0b90b;
+        }
+        
+        .api-title {
+            font-size: 1.8rem;
+            color: #f0b90b;
+            margin-bottom: 20px;
+        }
+        
+        .api-steps {
+            list-style: none;
+            counter-reset: step;
+        }
+        
+        .api-steps li {
+            counter-increment: step;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        .api-steps li::before {
+            content: counter(step);
+            background: #f0b90b;
+            color: #000;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+        }
+        
+        .footer {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 80px;
+            border-top: 1px solid rgba(240, 185, 11, 0.3);
+        }
+        
+        .footer p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .tutorial-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .api-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回导航 -->
+    <a href="../index.html" class="nav-back">
+        <i class="fas fa-arrow-left"></i>
+        <span>返回量化交易主页</span>
+    </a>
+    
+    <!-- 主标题区域 -->
+    <header class="header">
+        <div class="container">
+            <h1><i class="fab fa-bitcoin"></i> Binance量化机器人教程</h1>
+            <p>全球最大的加密货币交易所，提供专业的量化交易工具和机器人服务</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 机器人功能介绍 -->
+        <section>
+            <h2 class="section-title">🤖 Binance机器人功能</h2>
+            <div class="tutorial-grid">
+                <div class="tutorial-card">
+                    <div class="card-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <h3 class="card-title">网格交易机器人</h3>
+                    <p class="card-description">
+                        通过预设的价格区间自动进行买入卖出操作，
+                        在震荡行情中获取稳定收益。
+                    </p>
+                    <ul class="features-list">
+                        <li>支持现货和合约交易</li>
+                        <li>自定义价格区间和网格数量</li>
+                        <li>智能止盈止损设置</li>
+                        <li>实时收益统计</li>
+                    </ul>
+                    <a href="bot-tutorials/grid-trading.html" class="btn">学习配置</a>
+                </div>
+                
+                <div class="tutorial-card">
+                    <div class="card-icon">
+                        <i class="fas fa-sitemap"></i>
+                    </div>
+                    <h3 class="card-title">智能持仓机器人</h3>
+                    <p class="card-description">
+                        根据市场波动自动调整持仓规模，
+                        实现动态风险管理与仓位优化。
+                    </p>
+                    <ul class="features-list">
+                        <li>动态仓位管理</li>
+                        <li>波动率自适应策略</li>
+                        <li>多币种组合管理</li>
+                        <li>风险评估系统</li>
+                    </ul>
+                    <a href="bot-tutorials/smart-position.html" class="btn">学习配置</a>
+                </div>
+                
+                <div class="tutorial-card">
+                    <div class="card-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="card-title">现货策略机器人</h3>
+                    <p class="card-description">
+                        提供多种现货交易策略，包括DCA定投、
+                        趋势跟踪、均值回归等高级算法。
+                    </p>
+                    <ul class="features-list">
+                        <li>DCA定投策略</li>
+                        <li>趋势跟踪算法</li>
+                        <li>技术指标触发</li>
+                        <li>多时间框架分析</li>
+                    </ul>
+                    <a href="bot-tutorials/spot-strategies.html" class="btn">学习配置</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- API配置教程 -->
+        <section class="api-section">
+            <h3 class="api-title">🔑 API配置指南</h3>
+            <ul class="api-steps">
+                <li>
+                    <strong>创建API密钥</strong>
+                    <p>登录币安账户 → 用户中心 → API管理 → 创建API密钥</p>
+                    <small style="color: rgba(255,255,255,0.6);">
+                        建议限制IP地址并仅启用交易权限
+                    </small>
+                </li>
+                <li>
+                    <strong>权限设置</strong>
+                    <p>勾选"允许现货和杠杆交易"权限，可根据需要添加其他权限</p>
+                    <small style="color: rgba(255,255,255,0.6);">
+                        避免开启提现权限以增强安全性
+                    </small>
+                </li>
+                <li>
+                    <strong>密钥保管</strong>
+                    <p>妥善保存API Key和Secret Key，建议使用密码管理器</p>
+                    <small style="color: rgba(255,255,255,0.6);">
+                        Secret Key只显示一次，请务必保存好
+                    </small>
+                </li>
+                <li>
+                    <strong>IP白名单</strong>
+                    <p>添加使用的IP地址到白名单，增强API安全性</p>
+                    <small style="color: rgba(255,255,255,0.6);">
+                        如果使用云服务器，需要填写服务器IP
+                    </small>
+                </li>
+            </ul>
+        </section>
+
+        <!-- 实战教程 -->
+        <section>
+            <h2 class="section-title">🎯 实战配置步骤</h2>
+            <div class="tutorial-grid">
+                <div class="tutorial-card">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="card-title">网格交易配置详解</h3>
+                    <p class="card-description">
+                        详细演示如何在币安平台配置网格交易机器人，
+                        包括参数设置和风险控制。
+                    </p>
+                    <ul class="features-list">
+                        <li>价格区间设定技巧</li>
+                        <li>网格密度优化</li>
+                        <li>资金分配策略</li>
+                        <li>止损止盈设置</li>
+                    </ul>
+                    <a href="bot-tutorials/grid-details.html" class="btn">查看详情</a>
+                </div>
+                
+                <div class="tutorial-card">
+                    <div class="card-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="card-title">策略优化技巧</h3>
+                    <p class="card-description">
+                        学习如何根据市场情况优化交易策略，
+                        提高机器人运行效率和收益。
+                    </p>
+                    <ul class="features-list">
+                        <li>参数回测方法</li>
+                        <li>市场适应性调整</li>
+                        <li>性能监控指标</li>
+                        <li>常见问题解决</li>
+                    </ul>
+                    <a href="bot-tutorials/optimization.html" class="btn">学习优化</a>
+                </div>
+                
+                <div class="tutorial-card">
+                    <div class="card-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3 class="card-title">风险管理指南</h3>
+                    <p class="card-description">
+                        深入了解量化交易中的风险管理，
+                        避免常见错误和潜在风险。
+                    </p>
+                    <ul class="features-list">
+                        <li>仓位控制原则</li>
+                        <li>极端行情应对</li>
+                        <li>系统故障处理</li>
+                        <li>安全防范措施</li>
+                    </ul>
+                    <a href="bot-tutorials/risk-management.html" class="btn">风险指南</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 常见问题 -->
+        <section>
+            <h2 class="section-title">❓ 常见问题解答</h2>
+            <div style="background: rgba(255,255,255,0.05); border-radius: 15px; padding: 30px;">
+                <div style="margin-bottom: 25px;">
+                    <h4 style="color: #f0b90b; margin-bottom: 10px;">Q: 网格交易适合什么市场环境？</h4>
+                    <p style="color: rgba(255,255,255,0.8);">
+                        A: 网格交易最适合在震荡市场中运行，在单边上涨或下跌行情中效果会受影响。
+                    </p>
+                </div>
+                <div style="margin-bottom: 25px;">
+                    <h4 style="color: #f0b90b; margin-bottom: 10px;">Q: 如何选择合适的价格区间？</h4>
+                    <p style="color: rgba(255,255,255,0.8);">
+                        A: 建议分析历史价格波动，选择在历史价格区间内，并考虑未来价格走势。
+                    </p>
+                </div>
+                <div>
+                    <h4 style="color: #f0b90b; margin-bottom: 10px;">Q: 机器人的运行费用如何？</h4>
+                    <p style="color: rgba(255,255,255,0.8);">
+                        A: 币安机器人免费使用，只需支付正常的交易手续费。
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 爱博·客 - Binance量化机器人教程</p>
+            <p>投资有风险，交易需谨慎</p>
+        </div>
+    </footer>
+
+    <script>
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.tutorial-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+    </script>
+</body>
+</html>
