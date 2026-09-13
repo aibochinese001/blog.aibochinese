@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B站拓客技巧 - 爱博·客</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #2c3e50;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding-top: 80px;
+      padding-bottom: 60px; /* 为底部导航留出空间 */
+    }
+        /* 悬浮微信图标样式 */
+        .wechat-float {
+            width: 60px;
+            height: 60px;
+            background-color: hsl(148, 45%, 88%); /* 微信绿色 */
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .wechat-float:hover {
+            transform: scale(1.1);
+        }
+
+        .wechat-icon {
+            width: 40px;
+            height: 40px;
+            background-image: url('https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/wechaticon.png'); /* 用户提供的微信图标URL */
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* 弹出窗样式 */
+        /* 悬浮图标容器 */
+        .float-icons-container {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .wechat-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 悬浮搜索按钮 */
+        .search-float {
+            width: 60px;
+            height: 60px;
+            background-color: #3B82F6; /* 蓝色 */
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .search-float:hover {
+            transform: scale(1.1);
+        }
+
+        /* 搜索弹出窗 */
+        .search-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-popup {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .search-popup h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .wechat-popup {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+            width: 90%;
+        }
+
+        .wechat-qr {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 10px;
+            display: block; /* 二维码图片，用户替换src */
+        }
+
+        .close-btn {
+            background-color: #ff4d4f;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .close-btn:hover {
+            background-color: #ff7875;
+        }
+
+        /* ==================== 全新 Pagefind 搜索样式（搜索框水平居中版） ==================== */
+.search-container {
+    position: relative;
+    /* 删除 margin-right，改为自动左右 margin 实现居中 */
+    margin: 0 auto;           /* 关键：水平居中 */
+    z-index: 1001;
+    min-width: 200px;
+    max-width: 380px;         /* 建议加上最大宽度，和下拉结果保持一致 */
+    width: 100%;
+    display: flex;
+    justify-content: center;  /* 内部元素水平居中 */
+    align-items: center;
+}
+
+/* 输入框：去掉宽度 100% + focus 扩展的左右晃动问题 */
+#pagefind-search .pagefind-ui__search-input {
+    padding: 10px 16px;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    font-size: 16px;
+    /* 固定宽度，或者使用 min-width + max-width 防止晃动 */
+    width: 300px;                     /* 固定一个舒适的宽度 */
+    max-width: 100%;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background: white;
+    color: #333;
+    box-sizing: border-box;
+    outline: none;
+}
+
+#pagefind-search .pagefind-ui__search-input:focus {
+    border-color: #4a6fa5;
+    box-shadow: 0 0 0 4px rgba(74, 111, 165, 0.2);
+    /* focus 时不再改变宽度，避免整个搜索框左右晃动 */
+}
+
+/* 下拉结果：从右对齐改为居中对齐 */
+#pagefind-search .pagefind-ui__results {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    position: absolute;
+    top: 100%;
+    left: 50%;                        /* 关键：左边 50% */
+    transform: translateX(-50%);      /* 关键：向左偏移自身宽度的一半 → 完全居中 */
+    right: auto;                      /* 取消原来的 right: 0 */
+    width: 380px;
+    max-height: 70vh;
+    overflow-y: auto;
+    margin-top: 8px;
+    z-index: 1000;
+    padding: 8px 0;
+}
+
+/* 其余样式保持不变 */
+#pagefind-search .pagefind-ui__result {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s;
+}
+#pagefind-search .pagefind-ui__result:last-child { border-bottom: none; }
+#pagefind-search .pagefind-ui__result:hover { background-color: #f8f9ff; }
+#pagefind-search .pagefind-ui__result-title { font-size: 15px; font-weight: 600; color: #1f2937; margin-bottom: 4px; }
+#pagefind-search .pagefind-ui__result-link { 
+    color: #3B82F6; 
+    text-decoration: none; 
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    z-index: 10;
+}
+#pagefind-search .pagefind-ui__result-link:hover { text-decoration: underline; }
+#pagefind-search .pagefind-ui__result-excerpt { font-size: 13.5px; color: #666; line-height: 1.5; margin-top: 4px; }
+.pagefind-ui__result-excerpt mark { background: #dbeafe; color: #1e40af; padding: 1px 3px; border-radius: 3px; }
+#pagefind-search .pagefind-ui__message { padding: 20px; text-align: center; color: #666; font-size: 14px; }
+    /* 移动端底部导航样式 */
+    .mobile-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 50;
+      display: none; /* 默认隐藏 */
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 12px 0;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #6b7280;
+      transition: all 0.3s ease;
+    }
+
+    .nav-item i {
+      font-size: 1.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .nav-item span {
+      font-size: 0.75rem;
+    }
+
+    .nav-item-active {
+      color: #3B82F6;
+      transform: scale(1.1);
+    }
+
+    .center-item {
+      background: #3B82F6;
+      color: white;
+      border-radius: 50%;
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: -1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .center-item i {
+      font-size: 1.25rem;
+      margin: 0;
+    }
+
+    /* 在小屏幕设备上显示移动端导航 */
+    @media (max-width: 768px) {
+      .mobile-nav {
+        display: block;
+      }
+    }
+
+    /* 导航栏样式 */
+    .navbar {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        padding: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;  /* 使用 left 和 right 代替 width: 100% */
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem 20px;
+    }
+
+    .logo img {
+        height: 40px;
+        width: auto;
+        display: block;
+    }
+
+    .nav-menu {
+        display: flex;
+        list-style: none;
+        gap: 0.3rem;
+        margin: 0;
+        padding: 0;  /* 添加 padding: 0 以移除默认内边距 */
+    }
+
+    .nav-link {
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        font-weight: 500;
+        padding: 12px 20px;
+        border-radius: 25px;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        display: inline-block;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .nav-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .nav-link:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        z-index: 10;
+    }
+
+    .nav-link:hover::before {
+        left: 100%;
+    }
+
+    /* 为每个菜单项设置不同的渐变颜色 */
+    .nav-menu li:nth-child(1) .nav-link {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .nav-menu li:nth-child(2) .nav-link {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .nav-menu li:nth-child(3) .nav-link {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .nav-menu li:nth-child(4) .nav-link {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    }
+
+    .nav-menu li:nth-child(5) .nav-link {
+        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    }
+
+    .nav-menu li:nth-child(6) .nav-link {
+        background: linear-gradient(135deg, #ffa751 0%, #ffe259 100%);
+    }
+
+    .nav-menu li:nth-child(7) .nav-link {
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    }
+
+    .nav-menu li:nth-child(8) .nav-link {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+    }
+
+    .nav-menu li:nth-child(9) .nav-link {
+        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    }
+
+    /* 为每个菜单项添加悬停渐变效果 */
+    .nav-menu li:nth-child(1) .nav-link:hover {
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    }
+
+    .nav-menu li:nth-child(2) .nav-link:hover {
+        background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+    }
+
+    .nav-menu li:nth-child(3) .nav-link:hover {
+        background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+    }
+
+    .nav-menu li:nth-child(4) .nav-link:hover {
+        background: linear-gradient(135deg, #38f9d7 0%, #43e97b 100%);
+    }
+
+    .nav-menu li:nth-child(5) .nav-link:hover {
+        background: linear-gradient(135deg, #fee140 0%, #fa709a 100%);
+    }
+
+    .nav-menu li:nth-child(6) .nav-link:hover {
+        background: linear-gradient(135deg, #ffe259 0%, #ffa751 100%);
+    }
+
+    .nav-menu li:nth-child(7) .nav-link:hover {
+        background: linear-gradient(135deg, #fed6e3 0%, #a8edea 100%);
+    }
+
+    .nav-menu li:nth-child(8) .nav-link:hover {
+        background: linear-gradient(135deg, #fecfef 0%, #ff9a9e 100%);
+    }
+
+    .nav-menu li:nth-child(9) .nav-link:hover {
+        background: linear-gradient(135deg, #fcb69f 0%, #ffecd2 100%);
+    }
+
+    /* 汉堡菜单样式 */
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+    }
+
+    .bar {
+        width: 25px;
+        height: 3px;
+        background-color: white;
+        margin: 3px 0;
+        transition: 0.3s;
+    }
+
+    /* 主要内容区 */
+    .main-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 30px 60px;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 60px;
+      animation: fadeInDown 0.8s ease;
+    }
+
+    .page-title {
+      font-size: 3rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .page-subtitle {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 300;
+    }
+
+    /* 技巧区块 */
+    .tips-section {
+      margin-bottom: 50px;
+      animation: fadeInUp 0.8s ease;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 50px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* 技巧内容区域 */
+    .tips-content {
+      margin-top: 30px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 35px;
+      padding-left: 10px;
+    }
+
+    .section-icon {
+      font-size: 2rem;
+      color: #3498db;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      color: #2c3e50;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .tips-content {
+      line-height: 1.8;
+    }
+
+    .tips-content h3 {
+      color: #3498db;
+      margin: 25px 0 15px;
+      font-size: 1.5rem;
+    }
+
+    .tips-content p {
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+    }
+
+    .tips-content ul {
+      padding-left: 30px;
+      margin-bottom: 20px;
+    }
+
+    .tips-content li {
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+
+        /* 页脚样式 */
+        footer {
+            background: linear-gradient(135deg, hsl(210, 87%, 57%), #34495e);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 15px;
+            margin-top: 3rem;
+        }
+
+        .footer p {
+            margin-bottom: 1rem;
+        }
+
+        .footer a {
+            color: #ffcc2f;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer a:hover {
+            color: #f38020;
+        }
+
+        .footer img {
+            margin: 0 5px;
+            vertical-align: middle;
+        }
+
+    /* 动画 */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 大屏幕双栏布局 */
+    @media (min-width: 1024px) {
+      .tips-content {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+      }
+      
+      .tip-item {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      
+      .tip-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      }
+      
+      .tip-item h3 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #3498db;
+      }
+      
+      .tip-item p {
+        margin-bottom: 20px;
+      }
+      
+      .tip-item ul {
+        padding-left: 25px;
+      }
+      
+      .tip-item li {
+        margin-bottom: 12px;
+        line-height: 1.7;
+      }
+    }
+    
+    /* 响应式设计 */
+    @media (max-width: 1024px) {
+        .nav-menu {
+            position: fixed;
+            left: -100%;
+            top: 60px;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.9);
+            width: 100%;
+            text-align: center;
+            transition: left 0.3s ease-in-out;
+            box-shadow: 0 10px 27px rgba(0, 0, 0, 0.3);
+            padding: 20px 0;
+            z-index: 999;
+            gap: 0rem;
+        }
+
+        .nav-menu li {
+            padding: 5px 0;
+        }
+
+        .nav-link {
+            display: inline-block;
+            width: auto;
+            min-width: 120px;
+            margin: 0 auto;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .nav-link:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-menu.active {
+            left: 0;
+        }
+
+        .hamburger {
+            display: flex;
+        }
+
+        .hamburger.active .bar:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+
+        .hamburger.active .bar:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active .bar:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+    }
+
+    @media (max-width: 1023px) {
+      .tip-item {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 25px;
+      }
+      
+      .tip-item h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #3498db;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        padding-top: 70px;
+      }
+
+      .nav-container {
+        padding: 0 20px;
+        height: 60px;
+      }
+
+      .main-content {
+        padding: 30px 20px 50px;
+      }
+
+      .page-title {
+        font-size: 2.2rem;
+      }
+
+      .page-subtitle {
+        font-size: 1rem;
+      }
+
+      .section-title {
+        font-size: 1.6rem;
+      }
+
+      .tips-section {
+        padding: 30px 20px;
+      }
+      
+      .tip-item {
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-title {
+        font-size: 1.8rem;
+      }
+
+      .section-title {
+        font-size: 1.4rem;
+      }
+
+      .tips-content h3 {
+        font-size: 1.3rem;
+      }
+
+      .tips-content p,
+      .tips-content li {
+        font-size: 1rem;
+      }
+    }
+                          /* 课程列表 */
+        .container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            border: 3px solid #2196F3;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 80vh;
+        }
+               .video-section {
+            width: 70%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 3px solid #2196F3;
+        }
+
+        .video-title {
+            color: #2196F3;
+            font-size: 15px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .video-player {
+            width: 100%;
+            background-color: #000;
+            border: 2px solid #2196F3;
+            border-radius: 4px;
+        }
+
+        .playlist-section {
+            width: 30%;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .playlist-section::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .playlist-section::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .playlist-section::-webkit-scrollbar-thumb {
+            background: #2196F3;
+            border-radius: 4px;
+        }
+
+        .playlist-section::-webkit-scrollbar-thumb:hover {
+            background: #1976D2;
+        }
+
+        .playlist-header {
+            color: #2196F3;
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            border-bottom: 2px solid #2196F3;
+            padding-bottom: 10px;
+        }
+
+        .video-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+            border: 2px solid #e3f2fd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .video-item:hover {
+            background-color: #e3f2fd;
+            border-color: #2196F3;
+            transform: translateX(5px);
+        }
+
+        .video-item.active {
+            background-color: #2196F3;
+            color: white;
+            border-color: #2196F3;
+        }
+
+        .video-item-title {
+            font-size: 10px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .video-item-duration {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .video-item.active .video-item-duration {
+            color: #e3f2fd;
+        }
+
+        .chapter-title {
+            color: #2196F3;
+            font-size: 15px;
+            font-weight: bold;
+            margin: 15px 0 10px 0;
+            padding: 8px 10px;
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            border-radius: 4px;
+        }
+
+        .video-section {
+            width: 70%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 3px solid #2196F3;
+        }
+
+        .video-player-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .video-player {
+            width: 100%;
+            flex: 1;
+            max-height: calc(100% - 60px);
+            background-color: #000;
+            border: 2px solid #2196F3;
+            border-radius: 4px;
+            object-fit: contain;
+        }
+
+        .document-button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            align-self: center;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        .document-button:hover {
+            background-color: #1976D2;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+  </style>
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <h2><a href="https://blog.aibochinese.com/" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/aibologo%20460%20100.png" alt="网站Logo"></a></h2>
+      </div>
+      <ul class="nav-menu">
+              <li class="nav-item"><a href="https://blog.aibochinese.com/mooc" class="nav-link">公开课</a></li>           
+        <li class="nav-item">
+          <a href="https://blog.aibochinese.com/Rescous/free%20rs" class="nav-link">免费资源</a>
+        </li>
+        <li class="nav-item">
+          <a href="https://blog.aibochinese.com/education/tutor%20guide" class="nav-link">汉语教学</a>
+        </li>
+        <li class="nav-item">
+          <a href="https://blog.aibochinese.com/sitesbuild" class="nav-link">建站</a>
+        </li>
+        <li class="nav-item">
+          <a href="https://blog.aibochinese.com/payment/pay" class="nav-link">跨境收付</a>
+        </li>
+        <li class="nav-item">
+          <a href="https://blog.aibochinese.com/SMC/sm%20maketing" class="nav-link">自媒体营销</a>
+        </li>
+        <li class="nav-item">
+          <a href="https://blog.aibochinese.com/earn%20online" class="nav-link">项目推荐</a>
+        </li>
+        <li class="nav-item">
+          <a href="https://blog.aibochinese.com/tools/drive" class="nav-link">商务网盘</a>
+        </li>
+        <li class="nav-item">
+          <a href="https://blog.aibochinese.com/client" class="nav-link">客户端</a>
+        </li>
+      </ul>
+      <div class="hamburger">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 主要内容 -->
+  <div class="main-content">
+    <!-- 页面标题 -->
+    <div class="page-header">
+      <h1 class="page-title">B站拓客技巧</h1>
+      <p class="page-subtitle">掌握这些技巧，快速提升B站影响力和粉丝数量</p>
+    </div>
+           <!-- 视频解说部分 -->
+    <div class="container">
+        <div class="video-section">
+            <div class="video-title" id="currentTitle">离客户近一点，就是离财富近一点！</div>
+            <div class="video-player-container">
+                <video class="video-player" id="videoPlayer" controls>
+                    <source src="https://cf.aibochinese.com/%E8%A7%86%E9%A2%91%E7%A8%BF%E4%BB%B6/2025%E5%B9%B412%E6%9C%88/%E5%9C%A8B%E7%AB%99%E6%80%8E%E4%B9%88%E5%8F%91%E5%86%85%E5%AE%B9%E4%BC%9A%E6%9C%89%E6%95%88%E7%9B%8A%EF%BC%9F%E6%96%B0%E5%8F%B7%E3%80%81%E6%97%A0%E7%B2%89%E4%BA%A6%E5%8F%AF-%E8%87%AA%E5%AA%92%E4%BD%93%E8%90%A5%E9%94%80%E6%95%99%E7%A8%8B/%E5%9C%A8B%E7%AB%99%E6%80%8E%E4%B9%88%E5%8F%91%E5%86%85%E5%AE%B9%E4%BC%9A%E6%9C%89%E6%95%88%E7%9B%8A%EF%BC%9F%E6%96%B0%E5%8F%B7%E3%80%81%E6%97%A0%E7%B2%89%E4%BA%A6%E5%8F%AF-%E8%87%AA%E5%AA%92%E4%BD%93%E8%90%A5%E9%94%80%E6%95%99%E7%A8%8B.mp4" type="video/mp4">
+                </video>
+                <button class="document-button">查看相应文档说明</button>
+            </div>
+        </div>
+
+        <div class="playlist-section">
+            <div class="playlist-header">视频列表</div>
+            <div id="playlist"></div>
+        </div>
+    </div>
+    <!-- 主要内容区 -->
+    <div class="tips-section">
+      <div class="section-header">
+        <i class="fab fa-bilibili section-icon"></i>
+        <h2 class="section-title">B站运营核心技巧</h2>
+      </div>
+      <div class="tips-content">
+        <div class="tip-item">
+          <h3>1. 主页设置优化</h3>
+          <p>一个吸引人的主页是留住访客的第一步：</p>
+          <ul>
+            <li><strong>头像和昵称：</strong>选择清晰、有辨识度的头像，昵称要简洁易记</li>
+            <li><strong>个性签名：</strong>用一句话概括你的频道特色，突出你的价值主张</li>
+            <li><strong>主页背景图：</strong>设计符合频道风格的背景图，体现专业性</li>
+            <li><strong>频道介绍：</strong>详细描述你的内容方向、更新频率和特色亮点</li>
+            <li><strong>频道标签：</strong>合理设置标签，便于用户搜索和推荐系统识别</li>
+          </ul>
+        </div>
+
+        <div class="tip-item">
+          <h3>2. 发帖技巧</h3>
+          <p>高质量的内容是吸引粉丝的核心：</p>
+          <ul>
+            <li><strong>标题优化：</strong>使用吸引眼球但不夸张的标题，包含关键词</li>
+            <li><strong>封面设计：</strong>制作高质量封面图，风格统一且突出主题</li>
+            <li><strong>内容结构：</strong>开头吸引注意，中间内容充实，结尾引导互动</li>
+            <li><strong>发布时间：</strong>根据目标受众活跃时间选择最佳发布时间</li>
+            <li><strong>标签使用：</strong>合理添加相关标签，提高内容曝光率</li>
+          </ul>
+        </div>
+
+        <div class="tip-item">
+          <h3>3. 创建合集</h3>
+          <p>合集能提升用户粘性和观看时长：</p>
+          <ul>
+            <li><strong>主题规划：</strong>围绕特定主题创建系列内容，形成完整知识体系</li>
+            <li><strong>命名规范：</strong>合集名称要清晰表达内容范围，便于用户理解</li>
+            <li><strong>更新频率：</strong>保持稳定的更新节奏，培养用户观看习惯</li>
+            <li><strong>内容关联：</strong>确保合集内视频内容相关性强，逻辑清晰</li>
+            <li><strong>引导观看：</strong>在视频中引导观众查看合集其他内容</li>
+          </ul>
+        </div>
+
+        <div class="tip-item">
+          <h3>4. 视频置顶</h3>
+          <p>合理使用置顶功能提升重要内容曝光：</p>
+          <ul>
+            <li><strong>精选内容：</strong>置顶最具代表性的作品或最新重要视频</li>
+            <li><strong>引导作用：</strong>置顶能引导新访客快速了解你的频道特色</li>
+            <li><strong>更新维护：</strong>定期更新置顶内容，保持时效性</li>
+            <li><strong>活动推广：</strong>有重要活动或合作时及时置顶相关视频</li>
+          </ul>
+        </div>
+
+        <div class="tip-item">
+          <h3>5. 增加帖子互动性</h3>
+          <p>高互动率能提升内容推荐权重：</p>
+          <ul>
+            <li><strong>引导评论：</strong>在视频结尾提出问题，鼓励观众分享观点</li>
+            <li><strong>及时回复：</strong>积极回复评论，与观众建立良好互动关系</li>
+            <li><strong>发起投票：</strong>利用投票功能了解观众喜好，增加参与感</li>
+            <li><strong>互动活动：</strong>定期举办抽奖、问答等互动活动</li>
+            <li><strong>弹幕引导：</strong>在视频中设置弹幕引导点，鼓励观众发送弹幕</li>
+          </ul>
+        </div>
+
+        <div class="tip-item">
+          <h3>6. 私信运营</h3>
+          <p>私信是维护核心粉丝关系的重要渠道：</p>
+          <ul>
+            <li><strong>自动回复：</strong>设置常见问题自动回复，提高响应效率</li>
+            <li><strong>个性化沟通：</strong>对重要粉丝或合作伙伴进行个性化沟通</li>
+            <li><strong>反馈收集：</strong>通过私信收集观众对内容的反馈和建议</li>
+            <li><strong>合作洽谈：</strong>处理商业合作、品牌推广等商务沟通</li>
+            <li><strong>危机处理：</strong>及时处理负面评论或投诉，维护频道形象</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 移动端底部导航按钮 - 仅在移动端显示 -->
+  <div class="mobile-nav">
+    <div class="nav-container">
+      <!-- 首页按钮 -->
+      <a href="https://blog.aibochinese.com/" class="nav-item nav-item-active">
+        <i class="fas fa-home"></i>
+        <span>首页</span>
+      </a>
+      
+      <!-- 资源按钮 -->
+      <a href="https://blog.aibochinese.com/Rescous/free%20rs" class="nav-item">
+        <i class="fas fa-cloud-download-alt"></i>
+        <span>资源</span>
+      </a>
+
+      <!-- 最新按钮 -->
+      <a href="https://blog.aibochinese.com/newest" class="nav-item center-item">
+        <i class="fas fa-sync-alt"></i>
+        <span>最新</span>
+      </a>
+
+      <!-- 建站按钮 -->
+      <a href="https://blog.aibochinese.com/sitesbuild" class="nav-item">
+        <i class="fas fa-code"></i>
+        <span>建站</span>
+      </a>
+
+      <!-- 淘金按钮 -->
+      <a href="https://blog.aibochinese.com/earn%20online" class="nav-item">
+        <i class="fas fa-dollar-sign"></i>
+        <span>淘金</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 页脚 -->
+  <footer>
+    <div class="footer">
+      <p style="margin-bottom: 10px;">🙏感谢关注:<a href="https://www.youtube.com/@blog.aibochinese" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/youtube%20logo%2030.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://x.com/i/communities/1988635370549096727" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%E6%B1%89%E8%AF%AD%E5%AE%A2%E6%88%B7%E7%AB%AF/icons8-x-30.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://www.facebook.com/blog.aibochinese" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/facebook%20log0%2030.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://wa.me/message/QXYAFEGTDWIBE1" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/whatsapp-48.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://space.bilibili.com/3690971141245681?spm_id_from=333.788.0.0" style="color:white; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/icons8-%E8%83%86%E6%B1%81-30.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://github.com/blogaibochinese" style="color:white; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/icons8-github-30.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://xhslink.com/m/5it26wH34Zd" style="color:white; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/rednote.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>
+      </p>
+      <p style="font-size: 12px; color: #888;">© 2025 <a href="https://blog.aibochinese.com/" style="color:red " target="_blank" rel="noopener noreferrer">爱博·客</a> - 所有权利保留</p>
+    </div>
+  </footer>
+
+  <script>
+    // 移动端菜单切换
+    document.addEventListener('DOMContentLoaded', function() {
+      const hamburger = document.querySelector('.hamburger');
+      const navMenu = document.querySelector('.nav-menu');
+      const navLinks = document.querySelectorAll('.nav-link');
+
+      if (hamburger) {
+        hamburger.addEventListener('click', function() {
+          hamburger.classList.toggle('active');
+          navMenu.classList.toggle('active');
+        });
+
+        navLinks.forEach(link => {
+          link.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+          });
+        });
+      }
+    });
+
+    // 移动端底部导航交互
+    document.addEventListener('DOMContentLoaded', () => {
+      const navItems = document.querySelectorAll('.mobile-nav .nav-item:not(.center-item)');
+      
+      navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          // 移除所有激活状态
+          navItems.forEach(i => i.classList.remove('nav-item-active'));
+          
+          // 给当前点击项添加激活状态
+          e.currentTarget.classList.add('nav-item-active');
+        });
+      });
+    });
+  </script>
+       </script>
+   <!-- 悬浮图标容器 -->
+    <div class="float-icons-container">
+        <!-- 悬浮微信客服图标 -->
+        <div class="wechat-float" onclick="toggleWechatModal()">
+            <div class="wechat-icon"></div>
+        </div>
+        
+        <!-- 悬浮搜索按钮 -->
+        <div class="search-float" onclick="toggleSearchModal()">
+            <i class="fa fa-search text-white text-2xl"></i>
+        </div>
+    </div>
+
+    <!-- 搜索弹出窗 -->
+    <div id="searchModal" class="search-modal" onclick="closeSearchModal(event)">
+        <div class="search-popup" onclick="event.stopPropagation()">
+            <h3>搜索内容</h3>
+            <div id="pagefind-search-popup"></div>
+            <button class="close-btn" onclick="closeSearchModal()">关闭</button>
+        </div>
+    </div>
+
+    <!-- 微信弹出窗 -->
+    <div id="wechatModal" class="wechat-modal" onclick="closeWechatModal(event)">
+        <div class="wechat-popup" onclick="event.stopPropagation()">
+            <h3>微信客服</h3>
+            <img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E6%B7%BB%E5%8A%A0%E5%BE%AE%E4%BF%A1.png" alt="微信二维码" class="wechat-qr">
+            <p>扫描添加客服微信</p>
+            <button class="close-btn" onclick="closeWechatModal()">关闭</button>
+        </div>
+    </div>
+
+    <script>
+        // 搜索弹窗控制函数
+        function toggleSearchModal() {
+            const modal = document.getElementById('searchModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function closeSearchModal(event) {
+            document.getElementById('searchModal').style.display = 'none';
+        }
+
+        // 微信弹窗控制函数
+        function toggleWechatModal() {
+            const modal = document.getElementById('wechatModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function closeWechatModal(event) {
+            document.getElementById('wechatModal').style.display = 'none';
+        }
+
+        // 点击模态背景关闭
+        window.onclick = function(event) {
+            const searchModal = document.getElementById('searchModal');
+            const wechatModal = document.getElementById('wechatModal');
+            
+            if (event.target === searchModal) {
+                closeSearchModal();
+            } else if (event.target === wechatModal) {
+                closeWechatModal();
+            }
+        };
+    </script>
+       <!-- Pagefind 搜索（已完美修复） -->
+    <script src="/post/pagefind/pagefind-ui.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            console.log("Initializing Pagefind search...");
+            try {
+                // 初始化页面顶部搜索框
+                new PagefindUI({
+                    element: "#pagefind-search",
+                    showImages: false,
+                    showSubResults: true,
+                    resetStyles: false,
+                    translations: {
+                        placeholder: "🔍资源、教程、工具..."
+                    }
+                });
+                
+                // 初始化右侧悬浮搜索弹窗
+                new PagefindUI({
+                    element: "#pagefind-search-popup",
+                    showImages: false,
+                    showSubResults: true,
+                    resetStyles: false,
+                    translations: {
+                        placeholder: "🔍资源、教程、工具..."
+                    }
+                });
+                
+                console.log("Pagefind search initialized successfully");
+            } catch (error) {
+                console.error("Pagefind search initialization failed:", error);
+            }
+        });
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6203499194676961"
+     crossorigin="anonymous"></script>
+        <script>
+        const videos = [
+            {
+                chapter: "视频内容优化",
+                title: "1.当前市场需要解决什么问题",
+                url: "https://cf.aibochinese.com/%E8%A7%86%E9%A2%91%E7%A8%BF%E4%BB%B6/2025%E5%B9%B412%E6%9C%88/%E5%9C%A8B%E7%AB%99%E6%80%8E%E4%B9%88%E5%8F%91%E5%86%85%E5%AE%B9%E4%BC%9A%E6%9C%89%E6%95%88%E7%9B%8A%EF%BC%9F%E6%96%B0%E5%8F%B7%E3%80%81%E6%97%A0%E7%B2%89%E4%BA%A6%E5%8F%AF-%E8%87%AA%E5%AA%92%E4%BD%93%E8%90%A5%E9%94%80%E6%95%99%E7%A8%8B/%E5%9C%A8B%E7%AB%99%E6%80%8E%E4%B9%88%E5%8F%91%E5%86%85%E5%AE%B9%E4%BC%9A%E6%9C%89%E6%95%88%E7%9B%8A%EF%BC%9F%E6%96%B0%E5%8F%B7%E3%80%81%E6%97%A0%E7%B2%89%E4%BA%A6%E5%8F%AF-%E8%87%AA%E5%AA%92%E4%BD%93%E8%90%A5%E9%94%80%E6%95%99%E7%A8%8B.mp4",
+                duration: "4:34",
+                document: "https://blog.aibochinese.com/SMC/bilibili"
+            },
+            {
+                chapter: "账户风控",
+                title: "1.如何避免封号或限制？",
+                url: "https://cf.aibochinese.com/%E8%A7%86%E9%A2%91%E7%A8%BF%E4%BB%B6/2025%E5%B9%B412%E6%9C%88/%E5%B7%A7%E8%AE%A1%EF%BC%9A%E8%AF%84%E8%AE%BA%E7%83%AD%E5%B8%96%EF%BC%8C%E5%A6%82%E4%BD%95%E5%9C%A8X%E5%B9%B3%E5%8F%B0%E6%89%BE%E5%88%B0%E7%B2%BE%E5%87%86%E5%AE%A2%E6%88%B7%EF%BC%9F/%E5%B7%A7%E8%AE%A1%EF%BC%9A%E8%AF%84%E8%AE%BA%E7%83%AD%E5%B8%96%EF%BC%8C%E5%A6%82%E4%BD%95%E5%9C%A8X%E5%B9%B3%E5%8F%B0%E6%89%BE%E5%88%B0%E7%B2%BE%E5%87%86%E5%AE%A2%E6%88%B7%EF%BC%9F.mp4",
+                duration: "2:34",
+                document: "https://blog.aibochinese.com/SMC/bilibili"
+            },
+            {
+                chapter: "互动-视频热度",
+                title: "1.理解B站视频推流逻辑",
+                url: "#",
+                duration: "8:20",
+                document: "https://blog.aibochinese.com/SMC/bilibili"
+            }
+
+        ];
+
+        const playlist = document.getElementById('playlist');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const currentTitle = document.getElementById('currentTitle');
+        let currentVideoDocument = ''; // 存储当前视频的文档链接
+
+        // 按章节分组视频
+        const videosByChapter = videos.reduce((acc, video) => {
+            if (!acc[video.chapter]) {
+                acc[video.chapter] = [];
+            }
+            acc[video.chapter].push(video);
+            return acc;
+        }, {});
+
+        // 设置初始视频的文档链接（默认第一个视频）
+        if (videos.length > 0) {
+            currentVideoDocument = videos[0].document;
+        }
+
+        // 渲染视频列表
+        Object.entries(videosByChapter).forEach(([chapter, chapterVideos]) => {
+            // 创建章节标题
+            const chapterTitle = document.createElement('div');
+            chapterTitle.className = 'chapter-title';
+            chapterTitle.textContent = chapter;
+            playlist.appendChild(chapterTitle);
+
+            // 创建该章节下的视频项
+            chapterVideos.forEach((video, index) => {
+                const item = document.createElement('div');
+                item.className = 'video-item';
+                item.innerHTML = `
+                    <div class="video-item-title">${video.title}</div>
+                    <div class="video-item-duration">时长: ${video.duration}</div>
+                `;
+                
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.video-item').forEach(el => {
+                        el.classList.remove('active');
+                    });
+                    item.classList.add('active');
+                    
+                    videoPlayer.src = video.url;
+                    currentTitle.textContent = video.title;
+                    currentVideoDocument = video.document; // 更新当前视频的文档链接
+                    videoPlayer.play();
+                });
+                
+                playlist.appendChild(item);
+            });
+        });
+
+        // 添加查看文档按钮点击事件
+        const documentButton = document.querySelector('.document-button');
+        documentButton.addEventListener('click', () => {
+            if (currentVideoDocument) {
+                // 使用新窗口打开文档链接
+                window.open(currentVideoDocument, '_blank');
+            } else {
+                alert('当前视频暂无相关文档');
+            }
+        });
+    </script>
+</body>
+</html>
