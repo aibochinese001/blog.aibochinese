@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网站架构全景课 - AI时代建站必修课 - 爱博·客公开课</title>
+    <meta name="description" content="AI时代可以不用写代码，但必须懂网站架构。6章系统讲解前端/后端/数据库/服务器/安全/AI建站，指挥AI帮你完成搭建和优化。">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --blue: #2563eb; --blue-dark: #1d4ed8; --teal: #0d9488; --teal-dark: #0f766e;
+            --bg: #f0f4ff; --card-bg: #ffffff; --text: #1e293b;
+            --text-light: #475569; --border: #e2e8f0; --radius: 12px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.06);
+            --gradient-hero: linear-gradient(135deg, #1e3a5f 0%, #2563eb 50%, #7c3aed 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: var(--bg); color: var(--text); line-height: 1.8;
+        }
+        /* 导航栏 */
+        .navbar {
+            background: var(--gradient-hero);
+            color: white; padding: 0; position: fixed; top: 0; left: 0; right: 0;
+            z-index: 1000; box-shadow: 0 2px 20px rgba(30,58,95,0.3);
+        }
+        .nav-container {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.8rem 20px;
+        }
+        .logo img { height: 40px; width: auto; display: block; }
+        .nav-menu { display: flex; list-style: none; gap: 1.5rem; margin: 0; padding: 0; }
+        .nav-link { color: rgba(255,255,255,0.92); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: 0.3s; }
+        .nav-link:hover, .nav-link.active { color: #93c5fd; }
+        .hamburger { display: none; flex-direction: column; cursor: pointer; }
+        .bar { width: 25px; height: 3px; background: white; margin: 3px 0; transition: 0.3s; }
+
+        .guide-container { max-width: 1000px; margin: 0 auto; padding: 30px 20px 80px; }
+        .breadcrumb { margin: 90px 0 20px; color: var(--text-light); font-size: 0.9rem; }
+        .breadcrumb a { color: var(--blue); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        /* Hero */
+        .guide-header {
+            text-align: center; padding: 50px 30px;
+            background: var(--gradient-hero); border-radius: var(--radius);
+            color: white; margin-bottom: 30px;
+        }
+        .guide-header .icon-circle {
+            width: 90px; height: 90px; background: rgba(255,255,255,0.18);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px; font-size: 40px;
+        }
+        .guide-header h1 { font-size: 2.3rem; margin-bottom: 10px; }
+        .guide-header p { font-size: 1.15rem; opacity: 0.92; }
+        .guide-meta {
+            display: flex; gap: 20px; justify-content: center; margin-top: 18px;
+            flex-wrap: wrap; font-size: 0.9rem; opacity: 0.85;
+        }
+        .guide-meta span { display: flex; align-items: center; gap: 6px; }
+
+        /* 简介 */
+        .intro-box {
+            background: var(--card-bg); border-radius: var(--radius);
+            padding: 30px 35px; box-shadow: var(--shadow); margin-bottom: 35px;
+            border-left: 5px solid var(--blue);
+        }
+        .intro-box h2 { color: var(--blue); margin-bottom: 15px; font-size: 1.4rem; }
+        .intro-box p { color: var(--text-light); margin-bottom: 10px; font-size: 1.02rem; }
+
+        /* 卖点卡片 */
+        .value-props {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 40px;
+        }
+        .value-card {
+            background: var(--card-bg); border-radius: var(--radius); padding: 25px 20px;
+            text-align: center; box-shadow: var(--shadow); transition: 0.3s;
+        }
+        .value-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(37,99,235,0.15); }
+        .value-card .v-icon { font-size: 36px; margin-bottom: 12px; display: block; }
+        .value-card h3 { font-size: 1.1rem; margin-bottom: 8px; color: var(--text); }
+        .value-card p { font-size: 0.9rem; color: var(--text-light); line-height: 1.6; }
+
+        /* 章节目录 */
+        .toc-title { text-align: center; font-size: 1.8rem; color: var(--text); margin-bottom: 30px; }
+        .chapter-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+        .chapter-card {
+            background: var(--card-bg); border-radius: var(--radius);
+            padding: 28px; box-shadow: var(--shadow);
+            text-decoration: none; color: var(--text);
+            transition: all 0.3s ease; border: 2px solid transparent;
+            display: flex; gap: 20px; align-items: flex-start;
+        }
+        .chapter-card:hover {
+            transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            border-color: var(--blue);
+        }
+        .chapter-icon {
+            width: 56px; height: 56px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; flex-shrink: 0;
+        }
+        .chapter-icon.c1 { background: #dbeafe; color: #2563eb; }
+        .chapter-icon.c2 { background: #d1fae5; color: #059669; }
+        .chapter-icon.c3 { background: #fef3c7; color: #d97706; }
+        .chapter-icon.c4 { background: #fee2e2; color: #dc2626; }
+        .chapter-icon.c5 { background: #f3e8ff; color: #7c3aed; }
+        .chapter-icon.c6 { background: #cffafe; color: #0e7490; }
+        .chapter-info h3 { font-size: 1.15rem; margin-bottom: 6px; }
+        .chapter-info p { color: var(--text-light); font-size: 0.88rem; }
+        .chapter-info .time-badge {
+            display: inline-block; background: var(--bg);
+            padding: 3px 10px; border-radius: 20px; font-size: 0.78rem;
+            color: var(--text-light); margin-top: 8px;
+        }
+        /* 全局架构预览 */
+        .preview-section {
+            background: var(--card-bg); border-radius: var(--radius);
+            padding: 30px; box-shadow: var(--shadow); margin: 40px 0;
+        }
+        .preview-section h2 { text-align: center; margin-bottom: 20px; color: var(--text); }
+        .preview-section img { width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); }
+
+        /* 适合人群 */
+        .audience { background: var(--card-bg); border-radius: var(--radius); padding: 30px; box-shadow: var(--shadow); margin-top: 30px; }
+        .audience h2 { text-align: center; margin-bottom: 20px; }
+        .audience-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .audience-item { text-align: center; padding: 20px; background: var(--bg); border-radius: 8px; }
+        .audience-item i { font-size: 28px; color: var(--blue); margin-bottom: 10px; display: block; }
+        .audience-item span { font-size: 0.9rem; color: var(--text); }
+
+        footer {
+            background: var(--gradient-hero);
+            color: white; padding: 24px 0;
+        }
+        .footer { max-width: 1200px; margin: 0 auto; padding: 0 20px; text-align: center; }
+        .footer a { color: #93c5fd; }
+
+        .mobile-nav { display: none; }
+        @media (max-width: 768px) {
+            .guide-header h1 { font-size: 1.6rem; }
+            .guide-header { padding: 35px 18px; }
+            .chapter-grid { grid-template-columns: 1fr; }
+            .value-props { grid-template-columns: 1fr; }
+            .audience-grid { grid-template-columns: 1fr; }
+            .intro-box { padding: 20px; }
+            .mobile-nav {
+                display: block; position: fixed; bottom: 0; left: 0; right: 0;
+                background: white; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000;
+            }
+            .mobile-nav .nav-container { display: flex; justify-content: space-around; padding: 10px 0; }
+            .mobile-nav .nav-item {
+                display: flex; flex-direction: column; align-items: center;
+                text-decoration: none; color: #666; padding: 6px 10px; font-size: 11px;
+            }
+            .mobile-nav .nav-item .icon { font-size: 16px; margin-bottom: 2px; }
+            .mobile-nav .nav-item.active { color: var(--blue); }
+            .mobile-nav .nav-item.center {
+                background: var(--blue); color: white; border-radius: 50%;
+                width: 46px; height: 46px; justify-content: center; margin-top: -16px;
+                box-shadow: 0 2px 10px rgba(37,99,235,0.4);
+            }
+        }
+        @media (max-width: 1024px) {
+            .nav-menu { position: fixed; left: -100%; top: 60px; flex-direction: column;
+                background: rgba(30,58,95,0.98); width: 100%; text-align: center;
+                transition: left 0.3s; box-shadow: 0 10px 27px rgba(0,0,0,0.3); padding: 20px 0; gap: 0.5rem; }
+            .nav-menu.active { left: 0; }
+            .nav-menu li { padding: 10px 0; }
+            .hamburger { display: flex; }
+            .hamburger.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .hamburger.active .bar:nth-child(2) { opacity: 0; }
+            .hamburger.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="https://blog.aibochinese.com/"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/aibologo%20460%20100.png" alt="爱博·客"></a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="https://blog.aibochinese.com/mooc" class="nav-link active">公开课</a></li>
+                <li><a href="https://blog.aibochinese.com/Rescous/free%20rs" class="nav-link">免费资源</a></li>
+                <li><a href="https://blog.aibochinese.com/education/tutor%20guide" class="nav-link">汉语教学</a></li>
+                <li><a href="https://blog.aibochinese.com/sitesbuild" class="nav-link">建站</a></li>
+                <li><a href="https://blog.aibochinese.com/payment/pay" class="nav-link">跨境收付</a></li>
+                <li><a href="https://blog.aibochinese.com/SMC/sm%20maketing" class="nav-link">自媒体营销</a></li>
+                <li><a href="https://blog.aibochinese.com/earn%20online" class="nav-link">项目推荐</a></li>
+            </ul>
+            <div class="hamburger"><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="guide-container">
+            <div class="breadcrumb">
+                <a href="https://blog.aibochinese.com/">首页</a> &raquo;
+                <a href="https://blog.aibochinese.com/mooc">公开课</a> &raquo;
+                <strong>网站架构全景课</strong>
+            </div>
+
+            <!-- Hero -->
+            <div class="guide-header">
+                <div class="icon-circle">🏗️</div>
+                <h1>网站架构全景课</h1>
+                <p>AI 时代可以不用写代码，但必须懂架构 — 才能指挥 AI 帮你搭建和优化网站</p>
+                <div class="guide-meta">
+                    <span><i class="fa fa-clock-o"></i> 预计阅读：45 分钟</span>
+                    <span><i class="fa fa-book"></i> 6 个章节</span>
+                    <span><i class="fa fa-signal"></i> 难度：零基础→架构思维</span>
+                    <span><i class="fa fa-language"></i> 中文</span>
+                </div>
+            </div>
+
+            <!-- 简介 -->
+            <div class="intro-box">
+                <h2>💡 为什么你需要学「网站架构」？</h2>
+                <p>2026年，AI 已经能帮你写 HTML、CSS、PHP、甚至部署整个网站。但如果你<strong>不知道网站由哪些部分组成</strong>、<strong>各部分之间如何协作</strong>，你就无法有效地指挥 AI。</p>
+                <p>这就好比你不需要会修发动机，但需要知道车有发动机、轮胎、油箱，知道它们各自做什么 — <strong>才能告诉修理工问题在哪</strong>。</p>
+                <p>本课程用<strong>最直白的语言 + 大量可视化结构图</strong>，带你系统理解一个网站的完整架构。学完后，你就能用自然语言指挥 AI：「帮我把 Nginx 反向代理配置一下」「给数据库加个索引」「优化一下前端加载速度」—— 因为你知道这些词<strong>意味着什么</strong>。</p>
+            </div>
+
+            <!-- 核心卖点 -->
+            <div class="value-props">
+                <div class="value-card">
+                    <span class="v-icon">🧠</span>
+                    <h3>零编程基础</h3>
+                    <p>不讲代码，只讲概念和关系。用类比和图示让你理解每个技术组件</p>
+                </div>
+                <div class="value-card">
+                    <span class="v-icon">🤖</span>
+                    <h3>AI 时代的必修课</h3>
+                    <p>学会用精确的术语指挥 AI，从"帮我建个网站"升级到"帮我部署 Nginx + PHP-FPM 架构"</p>
+                </div>
+                <div class="value-card">
+                    <span class="v-icon">📊</span>
+                    <h3>图文并茂</h3>
+                    <p>每章都配有专业级技术结构图，一眼看懂复杂关系</p>
+                </div>
+            </div>
+
+            <!-- 全局架构预览 -->
+            <div class="preview-section">
+                <h2>🌐 先看全貌：一个网站的完整架构</h2>
+                <p style="text-align:center;color:var(--text-light);margin-bottom:15px;font-size:0.95rem;">下图展示了从浏览器到数据库的每一层 — 本课程的 6 章就围绕这张图展开</p>
+                <a href="https://blog.aibochinese.com/uploads/diagram/website-full-arch.png" target="_blank">
+                    <img src="https://blog.aibochinese.com/uploads/diagram/website-full-arch.png" alt="网站完整架构全景图" loading="lazy">
+                </a>
+            </div>
+
+            <!-- 章节目录 -->
+            <h2 class="toc-title">📚 章节目录</h2>
+            <div class="chapter-grid">
+                <a href="chapter1" class="chapter-card">
+                    <div class="chapter-icon c1"><i class="fa fa-globe"></i></div>
+                    <div class="chapter-info">
+                        <h3>第一章：网站是什么</h3>
+                        <p>浏览器/域名/DNS/服务器/IP — 输入一个网址后发生了什么</p>
+                        <span class="time-badge">⏱ 约 6 分钟</span>
+                    </div>
+                </a>
+                <a href="chapter2" class="chapter-card">
+                    <div class="chapter-icon c2"><i class="fa fa-paint-brush"></i></div>
+                    <div class="chapter-info">
+                        <h3>第二章：前端与后端</h3>
+                        <p>HTML/CSS/JS vs PHP/Python — 浏览器负责什么，服务器负责什么</p>
+                        <span class="time-badge">⏱ 约 8 分钟</span>
+                    </div>
+                </a>
+                <a href="chapter3" class="chapter-card">
+                    <div class="chapter-icon c3"><i class="fa fa-database"></i></div>
+                    <div class="chapter-info">
+                        <h3>第三章：数据库与存储</h3>
+                        <p>MySQL/Redis/CDN — 网站的记忆系统，数据存在哪里、怎么取</p>
+                        <span class="time-badge">⏱ 约 7 分钟</span>
+                    </div>
+                </a>
+                <a href="chapter4" class="chapter-card">
+                    <div class="chapter-icon c4"><i class="fa fa-server"></i></div>
+                    <div class="chapter-info">
+                        <h3>第四章：服务器与部署</h3>
+                        <p>Linux/宝塔/Nginx/Docker — 让网站跑起来需要什么</p>
+                        <span class="time-badge">⏱ 约 8 分钟</span>
+                    </div>
+                </a>
+                <a href="chapter5" class="chapter-card">
+                    <div class="chapter-icon c5"><i class="fa fa-shield"></i></div>
+                    <div class="chapter-info">
+                        <h3>第五章：网站安全</h3>
+                        <p>SSL/防火墙/备份 — 常见攻击类型和防护策略</p>
+                        <span class="time-badge">⏱ 约 7 分钟</span>
+                    </div>
+                </a>
+                <a href="chapter6" class="chapter-card">
+                    <div class="chapter-icon c6"><i class="fa fa-magic"></i></div>
+                    <div class="chapter-info">
+                        <h3>第六章：AI 时代的建站</h3>
+                        <p>如何用自然语言指挥 AI 选型、部署、优化你的网站</p>
+                        <span class="time-badge">⏱ 约 9 分钟</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- 适合人群 -->
+            <div class="audience">
+                <h2>🎯 适合人群</h2>
+                <div class="audience-grid">
+                    <div class="audience-item">
+                        <i class="fa fa-user"></i>
+                        <span>想做网站但不会编程<br>的创业者/博主</span>
+                    </div>
+                    <div class="audience-item">
+                        <i class="fa fa-robot"></i>
+                        <span>想用 AI 高效建站的<br>技术爱好者</span>
+                    </div>
+                    <div class="audience-item">
+                        <i class="fa fa-briefcase"></i>
+                        <span>需要管理外包开发<br>的项目负责人</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer">
+            <p style="margin-bottom:10px;">
+                <a href="https://www.youtube.com/@blog.aibochinese" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/youtube%20logo%2030.png" style="width:30px;height:30px;display:inline-block;vertical-align:middle;margin:0 3px;"></a>
+                <a href="https://x.com/i/communities/1988635370549096727" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%E6%B1%89%E8%AF%AD%E5%AE%A2%E6%88%B7%E7%AB%AF/icons8-x-30.png" style="width:30px;height:30px;display:inline-block;vertical-align:middle;margin:0 3px;"></a>
+                <a href="https://www.facebook.com/blog.aibochinese" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/facebook%20log0%2030.png" style="width:30px;height:30px;display:inline-block;vertical-align:middle;margin:0 3px;"></a>
+                <a href="https://github.com/blogaibochinese" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/icons8-github-30.png" style="width:30px;height:30px;display:inline-block;vertical-align:middle;margin:0 3px;"></a>
+            </p>
+            <p style="font-size:13px;color:hsla(0,0%,100%,0.8);">&copy; 2025 <a href="https://blog.aibochinese.com/" style="color:#fff;">爱博·客</a> - 所有权利保留</p>
+        </div>
+    </footer>
+
+    <div class="mobile-nav">
+        <div class="nav-container">
+            <a href="https://blog.aibochinese.com/" class="nav-item"><i class="fa fa-home icon"></i><span class="text">首页</span></a>
+            <a href="https://blog.aibochinese.com/Rescous/free%20rs" class="nav-item"><i class="fa fa-cloud-download icon"></i><span class="text">资源</span></a>
+            <a href="https://blog.aibochinese.com/newest" class="nav-item center"><i class="fa fa-refresh icon"></i><span class="text">最新</span></a>
+            <a href="https://blog.aibochinese.com/sitesbuild" class="nav-item"><i class="fa fa-code icon"></i><span class="text">建站</span></a>
+            <a href="https://blog.aibochinese.com/earn%20online" class="nav-item"><i class="fa fa-usd icon"></i><span class="text">淘金</span></a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            if (hamburger) {
+                hamburger.addEventListener('click', () => {
+                    hamburger.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
