@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>常见问题排查与解决 - 中国Tokens出海 - 爱博·客</title>
+    <meta name="description" content="快速定位和解决运营问题">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .course-container {{
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 20px 50px;
+        }}
+        
+        .course-header {{
+            text-align: center;
+            margin-bottom: 40px;
+        }}
+        
+        .course-title {{
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }}
+        
+        .lesson-nav {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }}
+        
+        .nav-btn {{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }}
+        
+        .nav-btn:hover {{
+            background: #667eea;
+            color: white;
+        }}
+        
+        .lesson-content {{
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            line-height: 1.8;
+        }}
+        
+        .section {{
+            margin-bottom: 40px;
+        }}
+        
+        .section-title {{
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+            padding-left: 20px;
+        }}
+        
+        @media (max-width: 768px) {{
+            .course-title {{
+                font-size: 2rem;
+            }}
+            
+            .lesson-content {{
+                padding: 20px;
+            }}
+        }}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="/"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/logo.png" alt="爱博·客"></a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/index.html" class="nav-link">首页</a></li>
+                <li><a href="../mooc.html" class="nav-link">公开课</a></li>
+                <li><a href="dashboard.html" class="nav-link">课程导航</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="course-container">
+        <div class="course-header">
+            <h1 class="course-title">常见问题排查与解决</h1>
+            <p>快速定位和解决运营问题</p>
+        </div>
+
+        <div class="lesson-nav">
+            <a href="case-study.html" class="nav-btn">
+                <i class="fas fa-arrow-left"></i> 上一课：案例分析
+            </a>
+            <a href="next-steps.html" class="nav-btn">
+                下一课：未来规划 <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="lesson-content">
+            <div class="section">
+            <h2 class="section-title">常见问题排查与解决</h2>
+            <p>
+<div class="section">
+    <h2 class="section-title">常见问题排查与解决</h2>
+    
+    <h3>问题分类和处理流程</h3>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0;">
+        <div style="background: #FFF3E0; padding: 20px; border-radius: 8px;">
+            <h4>🔧 技术问题</h4>
+            <ul>
+                <li>API调用失败</li>
+                <li>服务不可用</li>
+                <li>性能下降</li>
+                <li>数据丢失</li>
+            </ul>
+        </div>
+        <div style="background: #F3E5F5; padding: 20px; border-radius: 8px;">
+            <h4>💼 业务问题</h4>
+            <ul>
+                <li>支付失败</li>
+                <li>账户异常</li>
+                <li>合规风险</li>
+                <li>客户投诉</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <h2 class="section-title">API问题排查指南</h2>
+    
+    <h3>常见API错误代码和处理</h3>
+    <table style="width: 100%; border-collapse: collapse; margin: 20px 0;" border="1">
+        <thead>
+            <tr style="background: #f8f9fa;">
+                <th style="padding: 12px; text-align: left;">错误代码</th>
+                <th style="padding: 12px; text-align: left;">原因分析</th>
+                <th style="padding: 12px; text-align: left;">解决方案</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="padding: 12px;"><strong>401 Unauthorized</strong></td>
+                <td style="padding: 12px;">API密钥无效或过期</td>
+                <td style="padding: 12px;">检查密钥有效性，重新生成</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px;"><strong>429 Too Many Requests</strong></td>
+                <td style="padding: 12px;">超过速率限制</td>
+                <td style="padding: 12px;">降低请求频率，升级套餐</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px;"><strong>500 Internal Server Error</strong></td>
+                <td style="padding: 12px;">服务器内部错误</td>
+                <td style="padding: 12px;">检查服务状态，联系支持</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px;"><strong>503 Service Unavailable</strong></td>
+                <td style="padding: 12px;">上游服务不可用</td>
+                <td style="padding: 12px;">等待恢复，使用备用服务</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <h2 class="section-title">监控和诊断工具</h2>
+    
+    <h3>系统健康检查脚本</h3>
+    <pre style="background: #f8f9fa; padding: 15px; border-radius: 8px; overflow-x: auto;">
+#!/bin/bash
+# 系统健康检查脚本
+
+# 检查服务状态
+check_service() {
+    service=$1
+    port=$2
+    
+    if nc -z localhost $port &>/dev/null; then
+        echo "✅ $service 服务正常 (端口: $port)"
+        return 0
+    else
+        echo "❌ $service 服务异常 (端口: $port)"
+        return 1
+    fi
+}
+
+# 检查数据库连接
+check_database() {
+    if pg_isready -h localhost -p 5432 &>/dev/null; then
+        echo "✅ 数据库连接正常"
+        return 0
+    else
+        echo "❌ 数据库连接失败"
+        return 1
+    fi
+}
+
+# 检查磁盘空间
+check_disk() {
+    usage=$(df / | awk 'NR==2 {print $5}' | sed 's/%//')
+    if [ $usage -lt 80 ]; then
+        echo "✅ 磁盘空间充足 ($usage%)"
+        return 0
+    else
+        echo "⚠️  磁盘空间紧张 ($usage%)"
+        return 1
+    fi
+}
+
+# 执行检查
+echo "=== 系统健康检查 ==="
+check_service "Nginx" 80
+check_service "API服务" 3000
+check_service "Redis" 6379
+check_database
+check_disk
+    </pre>
+</div>
+
+<p>后续课程将提供更多故障排查工具和方法。</p></p>
+            <p>在正式内容发布前，您可以通过课程导航页面查看其他已发布的课程。</p>
+        </div>
+            
+            <div class="lesson-nav" style="margin-top: 40px;">
+                <a href="case-study.html" class="nav-btn">
+                    <i class="fas fa-arrow-left"></i> 上一课：案例分析
+                </a>
+                <a href="next-steps.html" class="nav-btn">
+                    下一课：未来规划 <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导航菜单脚本 -->
+    <script>
+        const hamburger = document.querySelector(".hamburger");
+        const navMenu = document.querySelector(".nav-menu");
+
+        hamburger.addEventListener("click", () => {{
+            hamburger.classList.toggle("active");
+            navMenu.classList.toggle("active");
+        }});
+    </script>
+</body>
+</html>
