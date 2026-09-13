@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OKX合约网格配置 - 爱博·客公开课</title>
+    <meta name="description" content="OKX交易所合约网格交易机器人完整配置教程">
+    <link rel="stylesheet" href="../../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e17 0%, #1a1f2e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0066cc 0%, #00a3ff 100%);
+            text-align: center;
+            padding: 100px 20px 60px;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0, 102, 204, 0.5);
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .nav-back {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-back:hover {
+            color: #00a3ff;
+        }
+        
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+            border-left: 4px solid #0066cc;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            color: #0066cc;
+            margin-bottom: 20px;
+        }
+        
+        .step {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(0, 102, 204, 0.2);
+        }
+        
+        .step-number {
+            background: #0066cc;
+            color: #ffffff;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        
+        .step-title {
+            font-size: 1.3rem;
+            display: inline-block;
+            color: #ffffff;
+        }
+        
+        .step-content {
+            margin-top: 15px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.8;
+        }
+        
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            border-left: 3px solid #0066cc;
+        }
+        
+        .tip {
+            background: rgba(0, 102, 204, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #0066cc;
+        }
+        
+        .parameter-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .parameter-table th {
+            background: #0066cc;
+            color: #ffffff;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .parameter-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .parameter-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #0066cc, #00a3ff);
+            color: #ffffff;
+            padding: 12px 25px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 102, 204, 0.4);
+        }
+        
+        .footer {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 80px;
+            border-top: 1px solid rgba(0, 102, 204, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回导航 -->
+    <a href="../index.html" class="nav-back">
+        <i class="fas fa-arrow-left"></i>
+        <span>返回OKX教程</span>
+    </a>
+    
+    <!-- 主标题区域 -->
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-layer-group"></i> OKX合约网格配置教程</h1>
+            <p>专为永续合约设计的网格交易策略，实现杠杆交易的自动化操作</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 步骤1：功能概述 -->
+        <section class="section">
+            <div class="step">
+                <span class="step-number">1</span>
+                <h3 class="step-title">合约网格特点</h3>
+                <div class="step-content">
+                    <p>OKX合约网格与现货网格的主要区别：</p>
+                    
+                    <ul style="margin-left: 20px; color: rgba(255,255,255,0.8);">
+                        <li><strong>杠杆交易：</strong>支持2-100倍杠杆，放大收益和风险</li>
+                        <li><strong>保证金要求：</strong>需要足额保证金支持杠杆交易</li>
+                        <li><strong>资金费率：</strong>永续合约涉及资金费率结算</li>
+                        <li><strong>强平风险：</strong>需要更严格的风险控制</li>
+                        <li><strong>做多做空：</strong>支持双向交易策略</li>
+                    </ul>
+                    
+                    <div class="tip">
+                        <strong>⚠️ 风险提示：</strong>
+                        <p>合约交易风险较大，新手建议从低杠杆开始，严格控制仓位。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 步骤2：创建合约网格 -->
+        <section class="section">
+            <div class="step">
+                <span class="step-number">2</span>
+                <h3 class="step-title">创建合约网格机器人</h3>
+                <div class="step-content">
+                    <p>进入OKX交易界面，找到合约网格功能：</p>
+                    
+                    <div class="code-block">
+                        交易 → 合约交易 → 量化策略 → 网格交易
+                    </div>
+                    
+                    <p>选择"合约网格"，开始配置永续合约交易策略。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 步骤3：核心参数配置 -->
+        <section class="section">
+            <div class="step">
+                <span class="step-number">3</span>
+                <h3 class="step-title">核心参数配置</h3>
+                <div class="step-content">
+                    <p>合约网格的核心参数配置指南：</p>
+                    
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>说明</th>
+                                <th>配置建议</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>合约类型</strong></td>
+                                <td>USDT本位或币本位合约</td>
+                                <td>新手建议使用USDT本位</td>
+                            </tr>
+                            <tr>
+                                <td><strong>杠杆倍数</strong></td>
+                                <td>交易杠杆比例</td>
+                                <td>建议2-5倍，不超过10倍</td>
+                            </tr>
+                            <tr>
+                                <td><strong>价格区间</strong></td>
+                                <td>网格运行的价格范围</td>
+                                <td>参考支撑位和阻力位设置</td>
+                            </tr>
+                            <tr>
+                                <td><strong>网格数量</strong></td>
+                                <td>价格区间内的网格层级数</td>
+                                <td>15-30层，不宜过多</td>
+                            </tr>
+                            <tr>
+                                <td><strong>保证金</strong></td>
+                                <td>用于合约交易的保证金</td>
+                                <td>不超过总资金的20%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>投资模式</strong></td>
+                                <td>资金分配方式</td>
+                                <td>等金额或等差分配</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="tip">
+                        <strong>📈 杠杆选择建议：</strong>
+                        <p>杠杆越高风险越大，建议根据风险承受能力选择合适杠杆。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 步骤4：风险控制设置 -->
+        <section class="section">
+            <div class="step">
+                <span class="step-number">4</span>
+                <h3 class="step-title">风险控制设置</h3>
+                <div class="step-content">
+                    <p>合约网格必须严格设置风险控制参数：</p>
+                    
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>风险参数</th>
+                                <th>功能</th>
+                                <th>配置说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>止损价格</strong></td>
+                                <td>整体策略止损点</td>
+                                <td>设置最大可承受亏损</td>
+                            </tr>
+                            <tr>
+                                <td><strong>止盈价格</strong></td>
+                                <td>整体策略止盈点</td>
+                                <td>设置预期收益目标</td>
+                            </tr>
+                            <tr>
+                                <td><strong>强平价格</strong></td>
+                                <td>系统强制平仓价格</td>
+                                <td>关注保证金充足率</td>
+                            </tr>
+                            <tr>
+                                <td><strong>追加保证金</strong></td>
+                                <td>保证金不足时自动补充</td>
+                                <td>建议开启自动补充</td>
+                            </tr>
+                            <tr>
+                                <td><strong>风险提示</strong></td>
+                                <td>价格偏离预警</td>
+                                <td>设置合理的预警阈值</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 步骤5：高级功能 -->
+        <section class="section">
+            <div class="step">
+                <span class="step-number">5</span>
+                <h3 class="step-title">高级功能配置</h3>
+                <div class="step-content">
+                    <p>OKX合约网格的高级功能：</p>
+                    
+                    <ul style="margin-left: 20px; color: rgba(255,255,255,0.8);">
+                        <li><strong>AI参数推荐：</strong>基于历史数据的智能参数优化</li>
+                        <li><strong>多时间框架：</strong>支持不同周期的波动率分析</li>
+                        <li><strong>智能止损：</strong>移动止损和追踪止盈功能</li>
+                        <li><strong>策略组合：</strong>可与其他策略组合使用</li>
+                        <li><strong>API接入：</strong>支持程序化交易接口</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 步骤6：运行监控 -->
+        <section class="section">
+            <div class="step">
+                <span class="step-number">6</span>
+                <h3 class="step-title">运行监控与优化</h3>
+                <div class="step-content">
+                    <p>合约网格的重要监控指标：</p>
+                    
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>监控指标</th>
+                                <th>意义</th>
+                                <th>优化方向</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>资金费率</strong></td>
+                                <td>持仓资金成本</td>
+                                <td>选择有利的资金费率</td>
+                            </tr>
+                            <tr>
+                                <td><strong>保证金率</strong></td>
+                                <td>保证金充足程度</td>
+                                <td>保持充足保证金</td>
+                            </tr>
+                            <tr>
+                                <td><strong>网格收益率</strong></td>
+                                <td>策略实际收益</td>
+                                <td>定期评估策略效果</td>
+                            </tr>
+                            <tr>
+                                <td><strong>交易频率</strong></td>
+                                <td>策略活跃程度</td>
+                                <td>调整网格密度</td>
+                            </tr>
+                            <tr>
+                                <td><strong>风险指标</strong></td>
+                                <td>策略风险水平</td>
+                                <td>优化风险控制</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 优化策略 -->
+        <section class="section">
+            <h2 class="section-title">⚡ 优化策略建议</h2>
+            
+            <div class="step">
+                <h3 class="step-title">不同市场环境策略调整</h3>
+                <div class="step-content">
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>市场状态</th>
+                                <th>策略调整</th>
+                                <th>风险控制</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>高波动震荡</strong></td>
+                                <td>减少网格密度，增加网格间距</td>
+                                <td>降低杠杆，设置宽止损</td>
+                            </tr>
+                            <tr>
+                                <td><strong>低波动震荡</strong></td>
+                                <td>增加网格密度，缩小网格间距</td>
+                                <td>适当提高杠杆</td>
+                            </tr>
+                            <tr>
+                                <td><strong>趋势市场</strong></td>
+                                <td>减少网格数量，设置趋势跟随</td>
+                                <td>严格止损，控制回撤</td>
+                            </tr>
+                            <tr>
+                                <td><strong>极端行情</strong></td>
+                                <td>暂停策略或减少仓位</td>
+                                <td>加强监控，准备退出</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 常见问题 -->
+        <section class="section">
+            <h2 class="section-title">❓ 常见问题与解决</h2>
+            
+            <div class="step">
+                <h3 class="step-title">常见问题解答</h3>
+                <div class="step-content">
+                    <p><strong>Q: 合约网格适合新手吗？</strong></p>
+                    <p>A: 新手建议从现货网格开始，熟悉后再尝试合约网格。</p>
+                    
+                    <p><strong>Q: 如何避免强平风险？</strong></p>
+                    <p>A: 控制杠杆倍数，保持充足保证金，设置合理止损。</p>
+                    
+                    <p><strong>Q: 资金费率对策略的影响？</strong></p>
+                    <p>A: 资金费率会影响持仓成本，需要考虑在策略收益中。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 下一步 -->
+        <section style="text-align: center; padding: 40px 0;">
+            <h2 class="section-title">🚀 下一步学习</h2>
+            <p style="color: rgba(255,255,255,0.8); margin-bottom: 30px;">
+                掌握合约网格后，可以继续学习现货网格和策略交易
+            </p>
+            <a href="../index.html" class="btn">返回OKX教程主页</a>
+            <a href="../bot-tutorials/spot-grid.html" class="btn" style="background: transparent; border: 2px solid #0066cc; color: #0066cc; margin-left: 15px;">学习现货网格</a>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 爱博·客 - OKX合约网格教程</p>
+            <p>杠杆交易，科学配置，严格风控</p>
+        </div>
+    </footer>
+
+    <script>
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            const steps = document.querySelectorAll('.step');
+            steps.forEach((step, index) => {
+                step.style.opacity = '0';
+                step.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                    step.style.transition = 'all 0.6s ease';
+                    step.style.opacity = '1';
+                    step.style.transform = 'translateX(0)';
+                }, 200 * index);
+            });
+        });
+    </script>
+</body>
+</html>
