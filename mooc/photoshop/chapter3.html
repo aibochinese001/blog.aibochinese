@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第三章：文字与形状 - PS教程</title>
+    <meta name="description" content="Photoshop文字形状教程：文字工具、字符面板、图层样式特效、形状工具矢量图、钢笔路径">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --gold: #FFC107; --gold-dark: #FFA000; --blue: #3B82F6; --ps-blue: #001e36;
+            --ps-accent: #31A8FF; --bg: #f8f9fa; --card-bg: #ffffff; --text: #1a1a2e;
+            --text-light: #4a5568; --border: #e2e8f0; --radius: 12px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.06);
+            --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: var(--bg); color: var(--text); line-height: 1.8;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #001e36 0%, #0a3d62 50%, #1e5799 100%);
+            color: white; padding: 0; position: fixed; top: 0; left: 0; right: 0;
+            z-index: 1000; box-shadow: 0 2px 20px rgba(0,30,54,0.3);
+        }
+        .nav-container {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.8rem 20px;
+        }
+        .logo img { height: 40px; width: auto; display: block; }
+        .nav-menu { display: flex; list-style: none; gap: 1.5rem; margin: 0; padding: 0; }
+        .nav-link { color: rgba(255,255,255,0.9); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: 0.3s; }
+        .nav-link:hover, .nav-link.active { color: #31A8FF; }
+        .hamburger { display: none; flex-direction: column; cursor: pointer; }
+        .bar { width: 25px; height: 3px; background: white; margin: 3px 0; transition: 0.3s; }
+
+        .content-container { max-width: 900px; margin: 0 auto; padding: 90px 20px 100px; }
+        .breadcrumb { margin-bottom: 20px; color: var(--text-light); font-size: 0.9rem; }
+        .breadcrumb a { color: var(--ps-accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .chapter-header {
+            text-align: center; padding: 45px 20px; border-radius: var(--radius);
+            color: white; margin-bottom: 30px;
+        }
+        .chapter-header.ch0 { background: linear-gradient(135deg, #001e36 0%, #0a3d62 50%, #1e5799 100%); }
+        .chapter-header .chapter-num { font-size: 0.95rem; opacity: 0.85; margin-bottom: 5px; letter-spacing: 2px; }
+        .chapter-header h1 { font-size: 2rem; margin-bottom: 8px; }
+        .chapter-header .chapter-desc { font-size: 1rem; opacity: 0.85; }
+
+        .section {
+            background: var(--card-bg); border-radius: var(--radius);
+            padding: 28px 32px; box-shadow: var(--shadow); margin-bottom: 22px;
+            border: 1px solid var(--border);
+        }
+        .section h2 {
+            font-size: 1.25rem; color: var(--ps-blue); margin-bottom: 15px;
+            padding-bottom: 10px; border-bottom: 2px solid #edf2f7;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .section h3 { font-size: 1.1rem; color: var(--text); margin: 22px 0 10px; }
+        .section p { margin-bottom: 12px; color: var(--text-light); }
+        .section ul, .section ol { margin: 10px 0 10px 22px; color: var(--text-light); }
+        .section li { margin-bottom: 8px; }
+
+        .code-block {
+            background: var(--code-bg); color: var(--code-text);
+            padding: 16px 20px; border-radius: 8px; margin: 15px 0;
+            font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+            font-size: 0.9rem; line-height: 1.6; overflow-x: auto; position: relative;
+        }
+        .code-block .copy-btn {
+            position: absolute; top: 8px; right: 12px;
+            background: rgba(255,255,255,0.12); border: none; color: #94a3b8;
+            padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75rem;
+        }
+        .code-block .prompt { color: #4ade80; }
+        .code-block .comment { color: #64748b; }
+        .kbd {
+            display: inline-block; padding: 2px 8px; background: #edf2f7; border: 1px solid #cbd5e0;
+            border-radius: 4px; font-family: monospace; font-size: 0.85rem; color: #2d3748;
+        }
+
+        .tip {
+            padding: 14px 18px; border-radius: 8px; margin: 15px 0;
+            font-size: 0.95rem; display: flex; gap: 10px; align-items: flex-start;
+        }
+        .tip-info { background: #e0f2fe; color: #075985; border-left: 4px solid #31A8FF; }
+        .tip-success { background: #d1fae5; color: #065f46; border-left: 4px solid #10b981; }
+        .tip-warning { background: #fef3c7; color: #92400e; border-left: 4px solid #f59e0b; }
+        .tip .tip-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+
+        .step { display: flex; gap: 15px; margin: 15px 0; align-items: flex-start; }
+        .step-num {
+            width: 32px; height: 32px; background: var(--ps-accent); color: white;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 0.9rem; flex-shrink: 0; margin-top: 2px;
+        }
+        .step-content { flex: 1; }
+
+        .info-table {
+            width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.9rem;
+        }
+        .info-table th {
+            background: #f1f5f9; padding: 10px 14px; text-align: left;
+            font-weight: 600; border-bottom: 2px solid var(--border); color: var(--ps-blue);
+        }
+        .info-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+        .info-table tr:hover { background: #f8fafc; }
+
+        .chapter-nav {
+            display: flex; justify-content: space-between; margin-top: 40px; gap: 15px;
+        }
+        .chapter-nav a {
+            display: flex; align-items: center; gap: 8px; padding: 12px 20px;
+            background: var(--card-bg); border-radius: 8px; text-decoration: none;
+            color: var(--text); box-shadow: var(--shadow); transition: 0.3s; font-size: 0.9rem;
+            border: 1px solid var(--border);
+        }
+        .chapter-nav a:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); border-color: var(--ps-accent); }
+
+        footer {
+            background: linear-gradient(135deg, #001e36, #1e5799);
+            color: white; padding: 24px 0; text-align: center;
+        }
+        .footer { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .footer a { color: #31A8FF; }
+
+        .mobile-nav { display: none; }
+        @media (max-width: 768px) {
+            .chapter-header h1 { font-size: 1.5rem; }
+            .section { padding: 20px 18px; }
+            .mobile-nav {
+                display: block; position: fixed; bottom: 0; left: 0; right: 0;
+                background: white; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000;
+            }
+            .mobile-nav .nav-container { display: flex; justify-content: space-around; padding: 10px 0; }
+            .mobile-nav .nav-item {
+                display: flex; flex-direction: column; align-items: center;
+                text-decoration: none; color: #666; padding: 6px 10px; font-size: 11px;
+            }
+            .mobile-nav .nav-item .icon { font-size: 16px; margin-bottom: 2px; }
+            .mobile-nav .nav-item.active { color: var(--ps-accent); }
+            .mobile-nav .nav-item.center {
+                background: var(--ps-accent); color: white; border-radius: 50%;
+                width: 44px; height: 44px; justify-content: center;
+                margin-top: -16px; box-shadow: 0 2px 10px rgba(49,168,255,0.4);
+            }
+            .info-table { font-size: 0.8rem; }
+            .info-table th, .info-table td { padding: 8px 10px; }
+        }
+        @media (max-width: 1024px) {
+            .nav-menu {
+                position: fixed; left: -100%; top: 60px; flex-direction: column;
+                background: rgba(0,30,54,0.98); width: 100%; text-align: center;
+                transition: left 0.3s; box-shadow: 0 10px 27px rgba(0,0,0,0.3);
+                padding: 20px 0; gap: 0.5rem;
+            }
+            .nav-menu.active { left: 0; }
+            .nav-menu li { padding: 10px 0; }
+            .hamburger { display: flex; }
+            .hamburger.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .hamburger.active .bar:nth-child(2) { opacity: 0; }
+            .hamburger.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="https://blog.aibochinese.com/"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/aibologo%20460%20100.png" alt="爱博·客"></a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="https://blog.aibochinese.com/mooc" class="nav-link active">公开课</a></li>
+                <li><a href="https://blog.aibochinese.com/Rescous/free%20rs" class="nav-link">免费资源</a></li>
+                <li><a href="https://blog.aibochinese.com/education/tutor%20guide" class="nav-link">汉语教学</a></li>
+                <li><a href="https://blog.aibochinese.com/sitesbuild" class="nav-link">建站</a></li>
+                <li><a href="https://blog.aibochinese.com/payment/pay" class="nav-link">跨境收付</a></li>
+                <li><a href="https://blog.aibochinese.com/SMC/sm%20maketing" class="nav-link">自媒体营销</a></li>
+                <li><a href="https://blog.aibochinese.com/earn%20online" class="nav-link">项目推荐</a></li>
+            </ul>
+            <div class="hamburger"><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
+        </div>
+    </nav>
+<main><div class="content-container">
+        <div class="breadcrumb">
+            <a href="https://blog.aibochinese.com/">首页</a> &raquo;
+            <a href="https://blog.aibochinese.com/mooc">公开课</a> &raquo;
+            <a href="guide">Photoshop 教程</a> &raquo;
+            <strong>✍️ 文字与形状</strong>
+        </div>
+        <div class="chapter-header ch0">
+            <div class="chapter-num">第三章</div>
+            <h1>✍️ 文字与形状</h1>
+            <div class="chapter-desc">文字工具、形状绘制与路径操作</div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fa fa-font"></i> 文字工具</h2>
+            <p>按 <span class="kbd">T</span> 键激活文字工具。在画布上单击即可输入文字。</p>
+
+            <h3>两种文字模式</h3>
+            <table class="info-table">
+                <tr><th>模式</th><th>操作</th><th>适用场景</th></tr>
+                <tr><td>点文字</td><td>单击后输入</td><td>标题、短文本，不会自动换行</td></tr>
+                <tr><td>段落文字</td><td>拖出文本框后输入</td><td>正文、长文本，自动换行</td></tr>
+            </table>
+
+            <h3>字符面板设置</h3>
+            <table class="info-table">
+                <tr><th>属性</th><th>说明</th></tr>
+                <tr><td>字体</td><td>选择字体，建议安装思源黑体/阿里巴巴普惠体等免费商用字体</td></tr>
+                <tr><td>字号</td><td>常用：标题 24-72pt，正文 12-18pt</td></tr>
+                <tr><td>行距</td><td>行与行之间的距离，一般设为字号的 1.5-2 倍</td></tr>
+                <tr><td>字间距</td><td>字母/文字之间的距离</td></tr>
+                <tr><td>颜色</td><td>点击色块选择文字颜色</td></tr>
+            </table>
+            <div class="tip tip-warning">
+                <span class="tip-icon">⚠️</span>
+                <span><strong>商用注意：</strong>Windows 自带的「微软雅黑」字体用于商业设计可能涉及版权问题。推荐使用免费商用字体：思源黑体、阿里巴巴普惠体、站酷字体等。</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fa fa-text-height"></i> 文字特效</h2>
+            <p>双击文字图层缩略图右侧空白区域，打开<strong>图层样式</strong>面板：</p>
+            <table class="info-table">
+                <tr><th>效果</th><th>用途</th></tr>
+                <tr><td>投影</td><td>给文字添加阴影，增强立体感和可读性</td></tr>
+                <tr><td>描边</td><td>给文字添加外轮廓线</td></tr>
+                <tr><td>渐变叠加</td><td>给文字填充渐变色（比纯色更高级）</td></tr>
+                <tr><td>斜面和浮雕</td><td>创建 3D 立体文字效果</td></tr>
+                <tr><td>内发光/外发光</td><td>给文字添加光晕效果</td></tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2><i class="fa fa-shapes"></i> 形状工具</h2>
+            <p>按 <span class="kbd">U</span> 键激活形状工具组：</p>
+            <table class="info-table">
+                <tr><th>工具</th><th>用途</th></tr>
+                <tr><td>矩形工具</td><td>绘制矩形/正方形（按住 <span class="kbd">Shift</span>）</td></tr>
+                <tr><td>圆角矩形</td><td>绘制圆角矩形，可在属性面板调圆角半径</td></tr>
+                <tr><td>椭圆工具</td><td>绘制椭圆/正圆</td></tr>
+                <tr><td>多边形工具</td><td>绘制三角形、五边形等</td></tr>
+                <tr><td>直线工具</td><td>绘制直线或带箭头的线</td></tr>
+                <tr><td>自定形状</td><td>内置心形、箭头、星形等预设形状</td></tr>
+            </table>
+            <h3>形状属性</h3>
+            <ul>
+                <li><strong>填充：</strong>设置形状内部颜色（可用纯色、渐变、图案）</li>
+                <li><strong>描边：</strong>设置形状轮廓的颜色、粗细、样式（实线/虚线）</li>
+            </ul>
+            <div class="tip tip-info">
+                <span class="tip-icon">📐</span>
+                <span>形状是<strong>矢量</strong>的，放大缩小不会模糊。这在设计 Logo、图标时非常有用。</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fa fa-pen"></i> 钢笔工具与路径</h2>
+            <p>钢笔工具（<span class="kbd">P</span>）是 Photoshop 中最强大也最难掌握的工具之一，用于创建精确的<strong>路径</strong>。</p>
+            <ul>
+                <li><strong>单击：</strong>创建直线锚点</li>
+                <li><strong>单击并拖动：</strong>创建曲线锚点（贝塞尔曲线）</li>
+                <li><strong>按住 <span class="kbd">Alt</span> 点击锚点：</strong>转换为角点</li>
+                <li><strong><span class="kbd">Ctrl + Enter</span>：</strong>将路径转为选区</li>
+            </ul>
+            <div class="tip tip-success">
+                <span class="tip-icon">🎯</span>
+                <span>钢笔工具初学比较难，但它是精确抠图和矢量绘图的基石，值得花时间练习。下一章抠图会重点用到它。</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fa fa-clipboard-check"></i> 本章小结</h2>
+            <ul>
+                <li>✅ 掌握了点文字和段落文字两种输入方式</li>
+                <li>✅ 学会使用图层样式添加文字特效</li>
+                <li>✅ 熟练使用形状工具绘制矢量图形</li>
+                <li>✅ 初步了解了钢笔工具和路径操作</li>
+            </ul>
+        </div>
+        <div class="chapter-nav">
+            <a href="chapter2"><i class="fa fa-arrow-left"></i> 上一章</a>
+            <a href="guide"><i class="fa fa-list"></i> 回目录</a>
+            <a href="chapter4">下一章 <i class="fa fa-arrow-right"></i></a>
+        </div>
+</div></main>
+    <footer>
+        <div class="footer">
+            <p style="margin-bottom:10px;">
+                <a href="https://www.youtube.com/@blog.aibochinese" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/youtube%20logo%2030.png" style="width:30px;height:30px;display:inline-block;vertical-align:middle;margin:0 3px;"></a>
+                <a href="https://x.com/i/communities/1988635370549096727" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%E6%B1%89%E8%AF%AD%E5%AE%A2%E6%88%B7%E7%AB%AF/icons8-x-30.png" style="width:30px;height:30px;display:inline-block;vertical-align:middle;margin:0 3px;"></a>
+                <a href="https://www.facebook.com/blog.aibochinese" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/facebook%20log0%2030.png" style="width:30px;height:30px;display:inline-block;vertical-align:middle;margin:0 3px;"></a>
+                <a href="https://github.com/blogaibochinese" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/icons8-github-30.png" style="width:30px;height:30px;display:inline-block;vertical-align:middle;margin:0 3px;"></a>
+            </p>
+            <p style="font-size:13px;color:rgba(255,255,255,0.75);">&copy; 2025 <a href="https://blog.aibochinese.com/">爱博·客</a> - 所有权利保留</p>
+        </div>
+    </footer>
+    <div class="mobile-nav">
+        <div class="nav-container">
+            <a href="https://blog.aibochinese.com/" class="nav-item"><i class="fa fa-home icon"></i><span class="text">首页</span></a>
+            <a href="https://blog.aibochinese.com/Rescous/free%20rs" class="nav-item"><i class="fa fa-cloud-download icon"></i><span class="text">资源</span></a>
+            <a href="https://blog.aibochinese.com/newest" class="nav-item center"><i class="fa fa-refresh icon"></i><span class="text">最新</span></a>
+            <a href="https://blog.aibochinese.com/sitesbuild" class="nav-item"><i class="fa fa-code icon"></i><span class="text">建站</span></a>
+            <a href="https://blog.aibochinese.com/earn%20online" class="nav-item"><i class="fa fa-usd icon"></i><span class="text">淘金</span></a>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const h = document.querySelector('.hamburger'), m = document.querySelector('.nav-menu');
+            if(h){ h.addEventListener('click',()=>{ h.classList.toggle('active'); m.classList.toggle('active'); }); }
+            document.querySelectorAll('.copy-btn').forEach(b=>{
+                b.addEventListener('click',function(){
+                    const c=this.parentElement.textContent.replace('复制','').trim();
+                    navigator.clipboard.writeText(c).then(()=>{this.textContent='已复制!';setTimeout(()=>this.textContent='复制',2000);});
+                });
+            });
+        });
+    </script>
+</body>
+</html>
