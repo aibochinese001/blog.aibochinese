@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第四章：故障解决 - Hermes Agent 教程</title>
+    <meta name="description" content="Hermes Agent 故障解决：常见错误排查、日志查看、重置重装、获取帮助">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --gold: #FFC107; --gold-dark: #FFA000; --blue: #3B82F6;
+            --bg: #f8f9fa; --card-bg: #ffffff; --text: #333;
+            --text-light: #666; --border: #e5e7eb; --radius: 12px;
+            --shadow: 0 4px 15px rgba(0,0,0,0.08);
+            --code-bg: #1e293b; --code-text: #e2e8f0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: var(--bg); color: var(--text); line-height: 1.8;
+            padding-top: 70px;
+        }
+        .navbar {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: white; padding: 0; position: fixed; top: 0; left: 0; right: 0;
+            z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+        .nav-container {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.8rem 20px;
+        }
+        .logo img { height: 40px; width: auto; display: block; }
+        .nav-menu { display: flex; list-style: none; gap: 1.5rem; margin: 0; padding: 0; }
+        .nav-link { color: white; text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: 0.3s; }
+        .nav-link:hover { color: #333; }
+        .hamburger { display: none; flex-direction: column; cursor: pointer; }
+        .bar { width: 25px; height: 3px; background: white; margin: 3px 0; transition: 0.3s; }
+
+        .content-container { max-width: 860px; margin: 0 auto; padding: 30px 20px 100px; }
+        .breadcrumb { margin-bottom: 20px; color: var(--text-light); font-size: 0.9rem; }
+        .breadcrumb a { color: var(--blue); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .chapter-header {
+            text-align: center; padding: 40px 20px; border-radius: var(--radius);
+            color: white; margin-bottom: 30px;
+        }
+        .chapter-header.ch1 { background: linear-gradient(135deg, #2563eb, #7c3aed); }
+        .chapter-header.ch2 { background: linear-gradient(135deg, #059669, #10b981); }
+        .chapter-header.ch3 { background: linear-gradient(135deg, #d97706, #f59e0b); }
+        .chapter-header.ch4 { background: linear-gradient(135deg, #dc2626, #f87171); }
+        .chapter-header .chapter-num { font-size: 1rem; opacity: 0.85; margin-bottom: 5px; }
+        .chapter-header h1 { font-size: 2rem; margin-bottom: 8px; }
+        .chapter-header .chapter-desc { font-size: 1rem; opacity: 0.9; }
+
+        .section {
+            background: var(--card-bg); border-radius: var(--radius);
+            padding: 25px 30px; box-shadow: var(--shadow); margin-bottom: 25px;
+        }
+        .section h2 {
+            font-size: 1.3rem; color: var(--text); margin-bottom: 15px;
+            padding-bottom: 10px; border-bottom: 2px solid var(--border);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .section h3 {
+            font-size: 1.1rem; color: var(--text); margin: 20px 0 10px;
+        }
+        .section p { margin-bottom: 12px; color: var(--text-light); }
+        .section ul, .section ol { margin: 10px 0 10px 20px; color: var(--text-light); }
+        .section li { margin-bottom: 6px; }
+
+        .code-block {
+            background: var(--code-bg); color: var(--code-text);
+            padding: 16px 20px; border-radius: 8px; margin: 15px 0;
+            font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+            font-size: 0.9rem; line-height: 1.6; overflow-x: auto;
+            position: relative;
+        }
+        .code-block .copy-btn {
+            position: absolute; top: 8px; right: 12px;
+            background: rgba(255,255,255,0.15); border: none; color: #94a3b8;
+            padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75rem;
+        }
+        .code-block .copy-btn:hover { background: rgba(255,255,255,0.25); color: #fff; }
+        .code-block .prompt { color: #4ade80; }
+        .code-block .comment { color: #64748b; }
+
+        .tip {
+            padding: 14px 18px; border-radius: 8px; margin: 15px 0;
+            font-size: 0.95rem; display: flex; gap: 10px; align-items: flex-start;
+        }
+        .tip-info { background: #dbeafe; color: #1e40af; border-left: 4px solid #3b82f6; }
+        .tip-success { background: #d1fae5; color: #065f46; border-left: 4px solid #10b981; }
+        .tip-warning { background: #fef3c7; color: #92400e; border-left: 4px solid #f59e0b; }
+        .tip-danger { background: #fee2e2; color: #991b1b; border-left: 4px solid #ef4444; }
+        .tip .tip-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+
+        .step {
+            display: flex; gap: 15px; margin: 15px 0; align-items: flex-start;
+        }
+        .step-num {
+            width: 32px; height: 32px; background: var(--blue); color: white;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 0.9rem; flex-shrink: 0; margin-top: 2px;
+        }
+        .step-content { flex: 1; }
+        .step-content p { margin-bottom: 5px; }
+
+        .info-table {
+            width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.9rem;
+        }
+        .info-table th {
+            background: var(--bg); padding: 10px 14px; text-align: left;
+            font-weight: 600; border-bottom: 2px solid var(--border);
+        }
+        .info-table td {
+            padding: 10px 14px; border-bottom: 1px solid var(--border);
+        }
+        .info-table tr:hover { background: #f8fafc; }
+
+        .chapter-nav {
+            display: flex; justify-content: space-between; margin-top: 40px;
+            gap: 15px;
+        }
+        .chapter-nav a {
+            display: flex; align-items: center; gap: 8px; padding: 12px 20px;
+            background: var(--card-bg); border-radius: 8px; text-decoration: none;
+            color: var(--text); box-shadow: var(--shadow); transition: 0.3s;
+            font-size: 0.9rem;
+        }
+        .chapter-nav a:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+        .chapter-nav .prev { margin-right: auto; }
+        .chapter-nav .next { margin-left: auto; }
+        .chapter-nav .toc { margin: 0 auto; }
+
+        footer {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: white; padding: 20px 0; text-align: center;
+        }
+        .footer { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .footer a { color: white; }
+
+        .mobile-nav { display: none; }
+        @media (max-width: 768px) {
+            .chapter-header h1 { font-size: 1.5rem; }
+            .section { padding: 20px; }
+            .mobile-nav {
+                display: block; position: fixed; bottom: 0; left: 0; right: 0;
+                background: white; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000;
+            }
+            .mobile-nav .nav-container {
+                display: flex; justify-content: space-around; padding: 10px 0;
+            }
+            .mobile-nav .nav-item {
+                display: flex; flex-direction: column; align-items: center;
+                text-decoration: none; color: #666; padding: 6px 10px; font-size: 12px;
+            }
+            .mobile-nav .nav-item .icon { font-size: 16px; margin-bottom: 2px; }
+            .mobile-nav .nav-item.active { color: var(--gold); }
+            .mobile-nav .nav-item.center {
+                background: var(--gold); color: white; border-radius: 50%;
+                width: 46px; height: 46px; justify-content: center;
+                margin-top: -16px; box-shadow: 0 2px 10px rgba(255,193,7,0.4);
+            }
+        }
+        @media (max-width: 1024px) {
+            .nav-menu {
+                position: fixed; left: -100%; top: 60px; flex-direction: column;
+                background: rgba(255,193,7,0.97); width: 100%; text-align: center;
+                transition: left 0.3s; box-shadow: 0 10px 27px rgba(0,0,0,0.3);
+                padding: 20px 0; gap: 0.5rem;
+            }
+            .nav-menu.active { left: 0; }
+            .nav-menu li { padding: 10px 0; }
+            .hamburger { display: flex; }
+            .hamburger.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .hamburger.active .bar:nth-child(2) { opacity: 0; }
+            .hamburger.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="https://blog.aibochinese.com/"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/aibologo%20460%20100.png" alt="爱博·客"></a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="https://blog.aibochinese.com/mooc" class="nav-link active">公开课</a></li>
+                <li><a href="https://blog.aibochinese.com/Rescous/free%20rs" class="nav-link">免费资源</a></li>
+                <li><a href="https://blog.aibochinese.com/education/tutor%20guide" class="nav-link">汉语教学</a></li>
+                <li><a href="https://blog.aibochinese.com/sitesbuild" class="nav-link">建站</a></li>
+                <li><a href="https://blog.aibochinese.com/payment/pay" class="nav-link">跨境收付</a></li>
+                <li><a href="https://blog.aibochinese.com/SMC/sm%20maketing" class="nav-link">自媒体营销</a></li>
+                <li><a href="https://blog.aibochinese.com/earn%20online" class="nav-link">项目推荐</a></li>
+            </ul>
+            <div class="hamburger"><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
+        </div>
+    </nav>
+<main><div class="content-container">
+        <div class="breadcrumb">
+            <a href="https://blog.aibochinese.com/">首页</a> &raquo;
+            <a href="https://blog.aibochinese.com/mooc">公开课</a> &raquo;
+            <a href="guide">Hermes Agent 教程</a> &raquo;
+            <strong>🩺 故障解决</strong>
+        </div>
+        <div class="chapter-header ch4">
+            <div class="chapter-num">第四章</div>
+            <h1>🩺 故障解决</h1>
+            <div class="chapter-desc">常见问题排查与修复指南</div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fa fa-search"></i> 快速诊断</h2>
+            <p>遇到问题时，首先运行诊断命令：</p>
+            <div class="code-block"><button class="copy-btn">复制</button>
+<span class="prompt">$</span> hermes doctor              <span class="comment"># 全面诊断</span>
+<span class="prompt">$</span> hermes config check        <span class="comment"># 检查配置完整性</span></div>
+            <p>这两个命令能发现 80% 的常见问题。</p>
+        </div>
+
+        <div class="section">
+            <h2><i class="fa fa-bug"></i> 常见问题与解决</h2>
+
+            <h3>1. 安装后运行 hermes 提示"命令未找到"</h3>
+            <div class="tip tip-danger">
+                <span class="tip-icon">❌</span>
+                <span><strong>原因：</strong>安装脚本添加的路径没有生效。<br>
+                <strong>解决：</strong>重新打开终端，或手动执行 <code>source ~/.bashrc</code>（Linux）/<code>source ~/.zshrc</code>（macOS）。</span>
+            </div>
+
+            <h3>2. API 调用报错 401 Unauthorized</h3>
+            <div class="tip tip-danger">
+                <span class="tip-icon">❌</span>
+                <span><strong>原因：</strong>API Key 未配置或已过期。<br>
+                <strong>解决：</strong>检查 <code>~/.hermes/.env</code> 文件中的 API Key 是否正确，确认 Key 在服务商后台仍然有效。</span>
+            </div>
+
+            <h3>3. 模型返回空内容或报错</h3>
+            <div class="tip tip-danger">
+                <span class="tip-icon">❌</span>
+                <span><strong>原因：</strong>可能模型选择不正确或 API 配额用完。<br>
+                <strong>解决：</strong>运行 <code>hermes model</code> 检查当前模型，尝试切换到其他模型测试。检查 API 账户余额。</span>
+            </div>
+
+            <h3>4. Gateway 无法连接 Telegram/Discord</h3>
+            <div class="tip tip-danger">
+                <span class="tip-icon">❌</span>
+                <span><strong>解决步骤：</strong><br>
+                ① 检查 Token 是否正确配置在 <code>~/.hermes/.env</code> 中<br>
+                ② Discord 用户需在 Bot 设置中开启 <strong>Message Content Intent</strong><br>
+                ③ 查看日志：<code>grep -i "error" ~/.hermes/logs/gateway.log | tail -20</code></span>
+            </div>
+
+            <h3>5. 工具不可用（如无法执行命令、读取文件）</h3>
+            <div class="tip tip-danger">
+                <span class="tip-icon">❌</span>
+                <span><strong>解决：</strong>运行 <code>hermes tools</code> 进入交互界面，确保 <code>terminal</code>、<code>file</code> 等工具集已启用。启用后需要 <code>/reset</code> 刷新会话。</span>
+            </div>
+
+            <h3>6. Gateway 后台服务经常停止</h3>
+            <div class="tip tip-danger">
+                <span class="tip-icon">❌</span>
+                <span><strong>解决：</strong><br>
+                ① SSH 登出后停止：运行 <code>sudo loginctl enable-linger $USER</code><br>
+                ② WSL2 关闭后停止：在 <code>/etc/wsl.conf</code> 中添加 <code>[boot]
+systemd=true</code><br>
+                ③ 崩溃重启：<code>systemctl --user reset-failed hermes-gateway</code></span>
+            </div>
+
+            <h3>7. WebUI 容器启动失败</h3>
+            <div class="tip tip-danger">
+                <span class="tip-icon">❌</span>
+                <span><strong>常见原因：</strong><br>
+                ① 权限问题：确保 <code>WANTED_UID</code>/<code>WANTED_GID</code> 与主机用户一致<br>
+                ② 端口冲突：<code>ss -tlnp | grep 8787</code> 检查端口占用<br>
+                ③ 首次启动需等 2-5 分钟安装依赖：<code>docker logs hermes-webui --tail 20</code></span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fa fa-file-alt"></i> 日志查看</h2>
+            <p>日志是排查问题的关键：</p>
+            <div class="code-block"><button class="copy-btn">复制</button>
+<span class="comment"># Gateway 日志</span>
+<span class="prompt">$</span> grep -i "failed to send\|error" ~/.hermes/logs/gateway.log | tail -20
+
+<span class="comment"># Docker WebUI 日志</span>
+<span class="prompt">$</span> docker logs hermes-webui --tail 50
+
+<span class="comment"># 系统日志（如果使用 systemd 服务）</span>
+<span class="prompt">$</span> journalctl --user -u hermes-gateway -n 50</div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fa fa-undo"></i> 重置与重装</h2>
+            <p>如果问题无法解决，可以尝试以下操作：</p>
+
+            <h3>备份并重置配置</h3>
+            <div class="code-block"><button class="copy-btn">复制</button>
+<span class="prompt">$</span> cp -r ~/.hermes ~/.hermes.backup   <span class="comment"># 备份</span>
+<span class="prompt">$</span> rm -rf ~/.hermes/config.yaml       <span class="comment"># 删除配置</span>
+<span class="prompt">$</span> hermes setup                        <span class="comment"># 重新配置</span></div>
+
+            <h3>完全重装</h3>
+            <div class="code-block"><button class="copy-btn">复制</button>
+<span class="prompt">$</span> hermes uninstall                    <span class="comment"># 卸载</span>
+<span class="prompt">$</span> rm -rf ~/.hermes                    <span class="comment"># 删除配置目录</span>
+<span class="comment"># 重新运行安装脚本</span>
+<span class="prompt">$</span> curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</div>
+
+            <div class="tip tip-warning">
+                <span class="tip-icon">⚠️</span>
+                <span>重装前务必备份 <code>~/.hermes/skills/</code>（已安装技能）和 <code>~/.hermes/.env</code>（API 密钥），避免丢失重要数据。</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fa fa-question-circle"></i> 获取帮助</h2>
+            <ul>
+                <li><strong>官方文档：</strong><a href="https://hermes-agent.nousresearch.com/docs/" target="_blank">hermes-agent.nousresearch.com/docs</a></li>
+                <li><strong>GitHub 仓库：</strong><a href="https://github.com/NousResearch/hermes-agent" target="_blank">github.com/NousResearch/hermes-agent</a></li>
+                <li><strong>WebUI 项目：</strong><a href="https://github.com/nesquena/hermes-webui" target="_blank">github.com/nesquena/hermes-webui</a></li>
+                <li><strong>问题反馈：</strong>在 GitHub 仓库提交 Issue</li>
+                <li><strong>社区支持：</strong>加入 Discord/Telegram 社区（见官方文档）</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2><i class="fa fa-clipboard-check"></i> 本章小结</h2>
+            <ul>
+                <li>✅ 学会了使用 <code>hermes doctor</code> 快速诊断</li>
+                <li>✅ 掌握了 7 大类常见问题的解决方案</li>
+                <li>✅ 知道了如何查看日志排查问题</li>
+                <li>✅ 了解了重置和重装的正确步骤</li>
+                <li>✅ 记住了官方获取帮助的渠道</li>
+            </ul>
+        </div>
+        <div class="chapter-nav">
+            <a href="advanced" class="prev"><i class="fa fa-arrow-left"></i> 上一章</a>
+            <a href="guide" class="toc"><i class="fa fa-list"></i> 回目录</a>
+            <a href="guide" class="next">下一章 <i class="fa fa-arrow-right"></i></a>
+        </div>
+</div></main>
+    <footer>
+        <div class="footer">
+            <p style="margin-bottom:10px;">
+                <a href="https://www.youtube.com/@blog.aibochinese" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/youtube%20logo%2030.png" style="width:30px;height:30px;display:inline-block;vertical-align:middle;margin:0 3px;"></a>
+                <a href="https://x.com/i/communities/1988635370549096727" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%E6%B1%89%E8%AF%AD%E5%AE%A2%E6%88%B7%E7%AB%AF/icons8-x-30.png" style="width:30px;height:30px;display:inline-block;vertical-align:middle;margin:0 3px;"></a>
+                <a href="https://www.facebook.com/blog.aibochinese" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/facebook%20log0%2030.png" style="width:30px;height:30px;display:inline-block;vertical-align:middle;margin:0 3px;"></a>
+                <a href="https://github.com/blogaibochinese" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/icons8-github-30.png" style="width:30px;height:30px;display:inline-block;vertical-align:middle;margin:0 3px;"></a>
+            </p>
+            <p style="font-size:13px;color:hsla(0,0%,100%,0.8);">&copy; 2025 <a href="https://blog.aibochinese.com/" style="color:#fff;">爱博·客</a> - 所有权利保留</p>
+        </div>
+    </footer>
+    <div class="mobile-nav">
+        <div class="nav-container">
+            <a href="https://blog.aibochinese.com/" class="nav-item"><i class="fa fa-home icon"></i><span class="text">首页</span></a>
+            <a href="https://blog.aibochinese.com/Rescous/free%20rs" class="nav-item"><i class="fa fa-cloud-download icon"></i><span class="text">资源</span></a>
+            <a href="https://blog.aibochinese.com/newest" class="nav-item center"><i class="fa fa-refresh icon"></i><span class="text">最新</span></a>
+            <a href="https://blog.aibochinese.com/sitesbuild" class="nav-item"><i class="fa fa-code icon"></i><span class="text">建站</span></a>
+            <a href="https://blog.aibochinese.com/earn%20online" class="nav-item"><i class="fa fa-usd icon"></i><span class="text">淘金</span></a>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            if (hamburger) {
+                hamburger.addEventListener('click', () => {
+                    hamburger.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                });
+            }
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const code = this.parentElement.textContent.replace('复制', '').trim();
+                    navigator.clipboard.writeText(code).then(() => {
+                        this.textContent = '已复制!';
+                        setTimeout(() => this.textContent = '复制', 2000);
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
