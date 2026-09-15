@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>永久免费建站2026·Cloudflare Workers建站方案 — 一次部署，无服务器续费，永久免费有效</title>
+<meta name="description" content="采用Cloudflare Workers无服务器建站方案，一次部署、无需续费、永久免费有效。聚合筑梦.opcgrow(值得人人部署的业务系统)的文章、模板建站、业务系统定制、VIP会员等全部内容，涵盖在线客服、支付网关、AI客服、自动收银等功能。">
+<meta name="keywords" content="Cloudflare Workers建站,永久免费建站,一次部署,无服务器续费,无续费,永久免费,业务系统,模板建站,opcgrow,筑梦">
+    <!-- 引入Font Awesome图标 -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
+            padding-top: 70px;
+        }
+
+        /* 文本样式类 */
+        .text-white {
+            color: white;
+        }
+
+        .text-2xl {
+            font-size: 1.5rem;
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;  /* 使用 left 和 right 代替 width: 100% */
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 20px;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+            display: block;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 0.3rem;
+            margin: 0;
+            padding: 0;  /* 添加 padding: 0 以移除默认内边距 */
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 12px 20px;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-link:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .nav-link:hover::before {
+            left: 100%;
+        }
+
+        /* 为每个菜单项设置不同的渐变颜色 */
+        .nav-menu li:nth-child(1) .nav-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .nav-menu li:nth-child(2) .nav-link {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .nav-menu li:nth-child(3) .nav-link {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .nav-menu li:nth-child(4) .nav-link {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .nav-menu li:nth-child(5) .nav-link {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .nav-menu li:nth-child(6) .nav-link {
+            background: linear-gradient(135deg, #ffa751 0%, #ffe259 100%);
+        }
+
+        .nav-menu li:nth-child(7) .nav-link {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+
+        .nav-menu li:nth-child(8) .nav-link {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        }
+
+        .nav-menu li:nth-child(9) .nav-link {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+
+        /* 为每个菜单项添加悬停渐变效果 */
+        .nav-menu li:nth-child(1) .nav-link:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .nav-menu li:nth-child(2) .nav-link:hover {
+            background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+        }
+
+        .nav-menu li:nth-child(3) .nav-link:hover {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+        }
+
+        .nav-menu li:nth-child(4) .nav-link:hover {
+            background: linear-gradient(135deg, #38f9d7 0%, #43e97b 100%);
+        }
+
+        .nav-menu li:nth-child(5) .nav-link:hover {
+            background: linear-gradient(135deg, #fee140 0%, #fa709a 100%);
+        }
+
+        .nav-menu li:nth-child(6) .nav-link:hover {
+            background: linear-gradient(135deg, #ffe259 0%, #ffa751 100%);
+        }
+
+        .nav-menu li:nth-child(7) .nav-link:hover {
+            background: linear-gradient(135deg, #fed6e3 0%, #a8edea 100%);
+        }
+
+        .nav-menu li:nth-child(8) .nav-link:hover {
+            background: linear-gradient(135deg, #fecfef 0%, #ff9a9e 100%);
+        }
+
+        .nav-menu li:nth-child(9) .nav-link:hover {
+            background: linear-gradient(135deg, #fcb69f 0%, #ffecd2 100%);
+        }
+
+        /* 汉堡菜单样式 */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .bar {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* ==================== 全新 Pagefind 搜索样式（搜索框水平居中版） ==================== */
+.search-container {
+    position: relative;
+    /* 删除 margin-right，改为自动左右 margin 实现居中 */
+    margin: 0 auto;           /* 关键：水平居中 */
+    z-index: 1001;
+    min-width: 200px;
+    max-width: 380px;         /* 建议加上最大宽度，和下拉结果保持一致 */
+    width: 100%;
+    display: flex;
+    justify-content: center;  /* 内部元素水平居中 */
+    align-items: center;
+}
+
+/* 输入框：去掉宽度 100% + focus 扩展的左右晃动问题 */
+#pagefind-search .pagefind-ui__search-input {
+    padding: 10px 16px;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    font-size: 16px;
+    /* 固定宽度，或者使用 min-width + max-width 防止晃动 */
+    width: 300px;                     /* 固定一个舒适的宽度 */
+    max-width: 100%;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background: white;
+    color: #333;
+    box-sizing: border-box;
+    outline: none;
+}
+
+#pagefind-search .pagefind-ui__search-input:focus {
+    border-color: #4a6fa5;
+    box-shadow: 0 0 0 4px rgba(74, 111, 165, 0.2);
+    /* focus 时不再改变宽度，避免整个搜索框左右晃动 */
+}
+
+/* 下拉结果：从右对齐改为居中对齐 */
+#pagefind-search .pagefind-ui__results {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    position: absolute;
+    top: calc(100% + 8px);            /* 确保与搜索框有间距 */
+    left: 50%;                        /* 关键：左边 50% */
+    transform: translateX(-50%);      /* 关键：向左偏移自身宽度的一半 → 完全居中 */
+    right: auto;                      /* 取消原来的 right: 0 */
+    width: 380px;
+    max-height: 70vh;                 /* 限制最大高度为视口高度的70%，提供更多搜索结果可见空间 */
+    overflow-y: auto;
+    z-index: 1000;
+    padding: 8px 0;
+    margin-top: 0;
+}
+
+/* 其余样式保持不变 */
+        #pagefind-search .pagefind-ui__result { padding: 12px 16px; border-bottom: 1px solid #eee; transition: background-color 0.2s; }
+        #pagefind-search .pagefind-ui__result:last-child { border-bottom: none; }
+        #pagefind-search .pagefind-ui__result:hover { background-color: #f8f9ff; }
+        #pagefind-search .pagefind-ui__result-title { font-size: 15px; font-weight: 600; color: #1f2937; margin-bottom: 4px; }
+        #pagefind-search .pagefind-ui__result-link { 
+            color: #3B82F6; 
+            text-decoration: none; 
+            display: inline-block;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+        #pagefind-search .pagefind-ui__result-link:hover { text-decoration: underline; }
+        #pagefind-search .pagefind-ui__result-excerpt { font-size: 13.5px; color: #666; line-height: 1.5; margin-top: 4px; }
+        .pagefind-ui__result-excerpt mark { background: #dbeafe; color: #1e40af; padding: 1px 3px; border-radius: 3px; }
+        #pagefind-search .pagefind-ui__message { padding: 20px; text-align: center; color: #666; font-size: 14px; }
+        
+        /* 弹窗搜索结果样式优化 */
+        #pagefind-search-popup .pagefind-ui__search-input {
+            padding: 10px 16px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 100%;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background: white;
+            color: #333;
+            box-sizing: border-box;
+            outline: none;
+        }
+        
+        #pagefind-search-popup .pagefind-ui__search-input:focus {
+            border-color: #4a6fa5;
+            box-shadow: 0 0 0 4px rgba(74, 111, 165, 0.2);
+        }
+        
+        /* 关键：为弹窗搜索结果添加高度限制和滚动 */
+        #pagefind-search-popup .pagefind-ui__results {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            margin-top: 8px;
+            max-height: 400px; /* 限制最大高度，避免延伸到导航栏 */
+            overflow-y: auto; /* 添加垂直滚动 */
+            padding: 8px 0;
+        }
+        
+        #pagefind-search-popup .pagefind-ui__result {
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s;
+        }
+        
+        #pagefind-search-popup .pagefind-ui__result:last-child {
+            border-bottom: none;
+        }
+        
+        #pagefind-search-popup .pagefind-ui__result:hover {
+            background-color: #f8f9ff;
+        }
+        
+        #pagefind-search-popup .pagefind-ui__result-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+        
+        #pagefind-search-popup .pagefind-ui__result-link {
+            color: #3B82F6;
+            text-decoration: none;
+            display: inline-block;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+        
+        #pagefind-search-popup .pagefind-ui__result-link:hover {
+            text-decoration: underline;
+        }
+        
+        #pagefind-search-popup .pagefind-ui__result-excerpt {
+            font-size: 13.5px;
+            color: #666;
+            line-height: 1.5;
+            margin-top: 4px;
+        }
+        
+        #pagefind-search-popup .pagefind-ui__message {
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        /* ============ 重构新增：Cloudflare Workers 建站方案 ============ */
+        .hero {
+            background: linear-gradient(135deg, #f38020 0%, #ff8c42 40%, #f59e0b 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(243, 128, 32, 0.35);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -60%;
+            right: -20%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -80%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 50%;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.97;
+            margin-bottom: 1.8rem;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        .hero .badges {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero .badge {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.5);
+            padding: 0.5rem 1.4rem;
+            border-radius: 30px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            backdrop-filter: blur(4px);
+        }
+
+        .hero .cta-btn {
+            display: inline-block;
+            margin-top: 2rem;
+            background: white;
+            color: #f38020;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 0.8rem 2.4rem;
+            border-radius: 30px;
+            text-decoration: none;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(0,0,0,0.25);
+        }
+
+        /* 三大卖点 */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.3s;
+            border-top: 5px solid #f38020;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+        }
+
+        .feature-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            color: #166088;
+            margin-bottom: 0.8rem;
+            font-size: 1.3rem;
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 0.98rem;
+        }
+
+        /* Cloudflare 免费额度 */
+        .quota-section {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 3rem;
+            border-left: 5px solid #f38020;
+        }
+
+        .quota-section h2 {
+            color: #f38020;
+            margin-bottom: 1.5rem;
+            font-size: 1.9rem;
+            font-weight: 600;
+        }
+
+        .quota-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.2rem;
+        }
+
+        .quota-item {
+            background: #fff8f0;
+            border-radius: 10px;
+            padding: 1.2rem 1.5rem;
+            border: 1px solid #ffe3c2;
+        }
+
+        .quota-item .q-title {
+            font-weight: 700;
+            color: #166088;
+            margin-bottom: 0.4rem;
+            font-size: 1.05rem;
+        }
+
+        .quota-item .q-desc {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .quota-note {
+            margin-top: 1.2rem;
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        /* 关于 opcgrow */
+        .intro {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 3rem;
+            border-left: 5px solid #f38020;
+        }
+
+        .intro h2 {
+            color: #f38020;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .intro p {
+            font-size: 1.1rem;
+            margin-bottom: 1.2rem;
+            line-height: 1.9;
+            color: #555;
+        }
+
+        .intro .intro-features {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .intro .intro-feature {
+            background: #f4f9ff;
+            border: 1px solid #cfe3ff;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #166088;
+            font-weight: 500;
+        }
+
+        /* 区块标题 */
+        .section-title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title h2 {
+            color: #166088;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title p {
+            color: #888;
+            font-size: 1rem;
+        }
+
+        /* 文章卡片 */
+        .article-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .article-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+
+        .article-card .ac-body {
+            padding: 1.5rem;
+        }
+
+        .article-card .ac-cat {
+            display: inline-block;
+            background: linear-gradient(135deg, #f38020, #ff9a44);
+            color: white;
+            font-size: 0.8rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            margin-bottom: 0.8rem;
+        }
+
+        .article-card .ac-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #1f2937;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+
+        .article-card .ac-meta {
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        /* 商品卡片 */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.8rem;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            text-align: center;
+            border-top: 5px solid #4facfe;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+
+        .product-card .pc-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-card .pc-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-card .pc-cat {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .product-card .pc-price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #f38020;
+            margin-bottom: 1rem;
+        }
+
+        .product-card .pc-price .free {
+            color: #4caf50;
+        }
+
+        .product-card .pc-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+            padding: 0.5rem 1.6rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .product-card .pc-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(79, 172, 254, 0.4);
+        }
+
+        /* VIP 方案 */
+        .vip-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .vip-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2.2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border: 2px solid #e5e7eb;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .vip-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+
+        .vip-card.hot {
+            border-color: #f38020;
+            box-shadow: 0 8px 30px rgba(243, 128, 32, 0.15);
+        }
+
+        .vip-card .vip-tag {
+            position: absolute;
+            top: -14px;
+            right: 20px;
+            background: linear-gradient(135deg, #f38020, #ff9a44);
+            color: white;
+            font-size: 0.8rem;
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .vip-card .vip-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #166088;
+            margin-bottom: 0.5rem;
+        }
+
+        .vip-card .vip-price {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #f38020;
+            margin-bottom: 1rem;
+        }
+
+        .vip-card .vip-price span {
+            font-size: 0.95rem;
+            color: #888;
+            font-weight: 400;
+        }
+
+        .vip-card ul {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .vip-card li {
+            padding: 0.3rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #555;
+        }
+
+        .vip-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .vip-card .vip-btn {
+            display: block;
+            text-align: center;
+            background: linear-gradient(135deg, #f38020, #ff9a44);
+            color: white;
+            padding: 0.7rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .vip-card .vip-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 18px rgba(243, 128, 32, 0.4);
+        }
+
+        /* 关联站点 */
+        .related-sites {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .related-sites h2 {
+            text-align: center;
+            font-size: 1.9rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+        }
+
+        .related-item {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 1.3rem;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .related-item:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-3px);
+        }
+
+        .related-item .ri-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .related-item .ri-desc {
+            font-size: 0.85rem;
+            opacity: 0.85;
+        }
+
+        .toc {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffe082 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .toc h2 {
+            color: #f38020;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .toc ul {
+            columns: 2;
+            column-gap: 3rem;
+            list-style: none;
+        }
+
+        .toc li {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .toc li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #f38020;
+            font-weight: bold;
+        }
+
+        .toc a {
+            color: #166088;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .toc a:hover {
+            color: #f38020;
+            padding-left: 5px;
+        }
+
+        .tutorial-section {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 3rem;
+            transition: transform 0.3s;
+        }
+
+        .tutorial-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .tutorial-section h2 {
+            color: #f38020;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #ffcc2f;
+            font-weight: 600;
+        }
+
+        .tutorial-section h3 {
+            color: #166088;
+            margin: 2rem 0 1.2rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .tutorial-section p {
+            margin-bottom: 1.2rem;
+            line-height: 1.9;
+            color: #555;
+        }
+
+        .tutorial-section ul, .tutorial-section ol {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tutorial-section li {
+            margin-bottom: 0.8rem;
+            line-height: 1.8;
+        }
+
+        .note, .tip, .warning {
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .note {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-left: 5px solid #2196f3;
+        }
+
+        .tip {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left: 5px solid #4caf50;
+        }
+
+        .warning {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-left: 5px solid #f44336;
+        }
+
+        .note strong, .tip strong, .warning strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1.5rem;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        footer {
+            background: linear-gradient(135deg, hsl(210, 87%, 57%), #34495e);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 15px;
+            margin-top: 3rem;
+        }
+
+        .footer p {
+            margin-bottom: 1rem;
+        }
+
+        .footer a {
+            color: #ffcc2f;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer a:hover {
+            color: #f38020;
+        }
+
+        .footer img {
+            margin: 0 5px;
+            vertical-align: middle;
+        }
+
+        /* 响应式设计 - 汉堡菜单 */
+        @media (max-width: 1024px) {
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 60px;
+                flex-direction: column;
+                background: rgba(0, 0, 0, 0.9);
+                width: 100%;
+                text-align: center;
+                transition: left 0.3s ease-in-out;
+                box-shadow: 0 10px 27px rgba(0, 0, 0, 0.3);
+                padding: 20px 0;
+                z-index: 999;
+                gap: 0rem;
+            }
+
+            .nav-menu li {
+                padding: 5px 0;
+            }
+
+            .nav-link {
+                display: inline-block;
+                width: auto;
+                min-width: 120px;
+                margin: 0 auto;
+                padding: 12px 24px;
+                border-radius: 25px;
+                font-size: 1rem;
+                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+                text-align: center;
+            }
+
+            .nav-link:hover {
+                transform: scale(1.05);
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hamburger.active .bar:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+
+            .hamburger.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active .bar:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 70px;
+            }
+
+            .nav-container {
+                padding: 0 20px;
+                height: 60px;
+            }
+
+            .main-content {
+                padding: 30px 20px 50px;
+            }
+        }
+
+        @media (max-width: 968px) {
+            .toc ul {
+                columns: 1;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .tutorial-section h2 {
+                font-size: 1.6rem;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+
+            .features,
+            .article-grid,
+            .product-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .quota-grid,
+            .vip-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .intro .intro-features,
+            .related-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .features,
+            .article-grid,
+            .product-grid,
+            .intro .intro-features,
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .intro, .tutorial-section {
+                padding: 1.5rem;
+            }
+
+            .tutorial-section h2 {
+                font-size: 1.4rem;
+            }
+        }
+        
+        /* 移动端底部导航按钮样式 */
+        .mobile-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 50;
+            display: none;
+        }
+        
+        .mobile-nav .nav-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 12px 0;
+        }
+        
+        .mobile-nav .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            color: #333;
+        }
+        
+        .mobile-nav .nav-item.nav-item-active {
+            color: #3B82F6;
+            transform: scale(1.1);
+        }
+        
+        .mobile-nav .nav-item.center {
+            background: #3B82F6;
+            color: white;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: -20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mobile-nav .nav-item.center:hover {
+            background: #2563eb;
+        }
+        
+        .mobile-nav .nav-item .icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .mobile-nav .nav-item .text {
+            font-size: 12px;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-nav {
+                display: block;
+            }
+        }
+                button {
+            background-color: yellow; /* 黄色背景 */
+            color: black; /* 黑色文字 */
+            font-weight: bold; /* 粗体 */
+            font-size: 18px; /* 字体大小，可调整 */
+            padding: 15px 30px; /* 内边距，调整按钮大小 */
+            border: none;
+            border-radius: 5px; /* 圆角，可选 */
+            cursor: pointer;
+            text-align: center;
+        }
+        button:hover {
+            background-color: #ffd700; /* 鼠标悬停时稍深黄色，可选 */
+        }
+                      /* 悬浮微信图标样式 */
+        .wechat-float {
+            width: 60px;
+            height: 60px;
+            background-color: hsl(148, 45%, 88%); /* 微信绿色 */
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .wechat-float:hover {
+            transform: scale(1.1);
+        }
+
+        .wechat-icon {
+            width: 40px;
+            height: 40px;
+            background-image: url('https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/wechaticon.png'); /* 用户提供的微信图标URL */
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* 弹出窗样式 */
+        /* 悬浮图标容器 */
+        .float-icons-container {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .wechat-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 悬浮搜索按钮 */
+        .search-float {
+            width: 60px;
+            height: 60px;
+            background-color: #3B82F6; /* 蓝色 */
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .search-float:hover {
+            transform: scale(1.1);
+        }
+
+        /* 搜索弹出窗 */
+        .search-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-popup {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .search-popup h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .wechat-popup {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+            width: 90%;
+        }
+
+        .wechat-qr {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 10px;
+            display: block; /* 二维码图片，用户替换src */
+        }
+
+        .close-btn {
+            background-color: #ff4d4f;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .close-btn:hover {
+            background-color: #ff7875;
+        }
+    </style>
+</head>
+<body>
+<!-- 标准导航菜单 -->
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="logo">
+            <h2><a href="https://blog.aibochinese.com/" target="_blank"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/aibologo%20460%20100.png" alt="网站Logo"></a></h2>
+        </div>
+        <ul class="nav-menu">
+              <li class="nav-item"><a href="https://blog.aibochinese.com/mooc" class="nav-link">公开课</a></li>   
+             <li class="nav-item">
+                <a href="https://blog.aibochinese.com/Rescous/free_rs" class="nav-link">免费资源</a>
+            </li>
+            <li class="nav-item">
+                <a href="https://blog.aibochinese.com/education/tutor_guide" class="nav-link">汉语教学</a>
+            </li>
+            <li class="nav-item">
+                <a href="https://blog.aibochinese.com/sitesbuild" class="nav-link">建站</a>
+            </li>
+            <li class="nav-item">
+                <a href="https://blog.aibochinese.com/payment/pay" class="nav-link">跨境收付</a>
+            </li>
+            <li class="nav-item">
+                <a href="https://blog.aibochinese.com/SMC/sm_maketing" class="nav-link">自媒体营销</a>
+            </li>
+             <li class="nav-item">
+                <a href="https://blog.aibochinese.com/earn_online" class="nav-link">项目推荐</a>
+            </li>
+             <li class="nav-item">
+                <a href="https://blog.aibochinese.com/tools/drive" class="nav-link">商务网盘</a>
+            </li>
+            <li class="nav-item">
+                <a href="https://blog.aibochinese.com/client" class="nav-link">客户端</a>
+            </li>
+        </ul>
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </div>
+</nav>
+
+    <div class="container">
+        <!-- 主视觉 Hero -->
+        <section class="hero">
+            <h1>Cloudflare Workers 无服务器建站方案</h1>
+            <p class="subtitle">一次部署 · 无服务器续费 · 永久免费有效</p>
+            <div class="badges">
+                <span class="badge">⚡ 零服务器</span>
+                <span class="badge">💰 零续费</span>
+                <span class="badge">🌍 全球CDN</span>
+                <span class="badge">🔒 自动HTTPS</span>
+            </div>
+            <a href="https://m.opcgrow.org" class="cta-btn" target="_blank" rel="noopener noreferrer">立即开始搭建 →</a>
+        </section>
+
+        <!-- 三大卖点 -->
+        <section class="features">
+            <div class="feature-card">
+                <div class="icon">⚡</div>
+                <h3>一次部署</h3>
+                <p>基于 Cloudflare Workers 无服务器架构，一次部署上线，无需购买或维护任何云服务器。</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">💰</div>
+                <h3>无服务器续费</h3>
+                <p>没有 VPS 租金、没有域名解析烦恼，免费额度对绝大多数项目绰绰有余，长期零成本运行。</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🔄</div>
+                <h3>永久免费有效</h3>
+                <p>模板建站仅需一次 $15 成本，一次搭建，网站永久有效，解锁全部付费文章、课程与虚拟商品。</p>
+            </div>
+        </section>
+
+        <!-- Cloudflare Workers 免费额度 -->
+        <section class="quota-section">
+            <h2>☁️ Cloudflare Workers 免费额度（截至 2026）</h2>
+            <div class="quota-grid">
+                <div class="quota-item">
+                    <div class="q-title">Workers 每日请求</div>
+                    <div class="q-desc">100,000 次/日（含 HTTP、预检、Cron Trigger 等所有调用）</div>
+                </div>
+                <div class="quota-item">
+                    <div class="q-title">CPU / 执行时长</div>
+                    <div class="q-desc">每次 CPU 上限 10ms，墙钟时间最长 30 秒（I/O 等待不消耗 CPU）</div>
+                </div>
+                <div class="quota-item">
+                    <div class="q-title">D1 数据库</div>
+                    <div class="q-desc">最多 10 个库，每库 500MB，每日写入 10 万次、读取 100 万行（账户共享）</div>
+                </div>
+                <div class="quota-item">
+                    <div class="q-title">Pages / KV</div>
+                    <div class="q-desc">Pages 无限带宽 + 自动 CI/CD；KV 免费键值存储，适合配置、缓存等场景</div>
+                </div>
+            </div>
+            <div class="quota-note">
+                💡 这些额度对小型业务网站绰绰有余，只要合理设计（缓存复用、批量读写），即可长期"零成本"稳定运行。→ <a href="https://m.opcgrow.org/article/5" target="_blank" rel="noopener noreferrer">查看完整免费额度说明</a>
+            </div>
+        </section>
+
+        <!-- 关于 opcgrow -->
+        <section class="intro">
+            <h2>🚀 筑梦.opcgrow · 值得人人部署的业务系统</h2>
+            <p>您的<b>线上IT部门</b>。使命：做 AI 时代的互联网基建，提供极致性价比的技术支持！</p>
+            <p>仅一次性 <b>$15</b> 的成本，搭建适配度极高的业务系统，<b>无续费，网站永久有效</b>。一次部署，永久免费有效，极致性价比，为梦铺垫！</p>
+            <div class="intro-features">
+                <div class="intro-feature">📝 文章发布</div>
+                <div class="intro-feature">🛍️ 商品/课程发布</div>
+                <div class="intro-feature">💳 自动收银</div>
+                <div class="intro-feature">🎁 邀请返佣</div>
+                <div class="intro-feature">📧 邮件通知</div>
+                <div class="intro-feature">🖼️ 媒体库</div>
+                <div class="intro-feature">🤖 AI客服</div>
+                <div class="intro-feature">🔍 全站搜索</div>
+            </div>
+        </section>
+
+        <!-- 教程目录 -->
+        <section class="toc">
+            <h2>📋 建站教程目录</h2>
+            <ul>
+                <li><a href="https://m.opcgrow.org/article/1" target="_blank" rel="noopener noreferrer">部署永久免费的业务系统前的准备工作</a></li>
+                <li><a href="https://m.opcgrow.org/article/5" target="_blank" rel="noopener noreferrer">Cloudflare Workers 的免费额度</a></li>
+                <li><a href="https://m.opcgrow.org/article/2" target="_blank" rel="noopener noreferrer">如何配置网站的在线客服？</a></li>
+                <li><a href="https://m.opcgrow.org/article/6" target="_blank" rel="noopener noreferrer">如何开通支付网关商户并接入站点实现自动化？</a></li>
+                <li><a href="https://m.opcgrow.org/article/3" target="_blank" rel="noopener noreferrer">AI时代的搜索引擎优化——MCP「建站必备」</a></li>
+                <li><a href="https://blog.aibochinese.com/buildsites/cloudflare_pages" target="_blank" rel="noopener noreferrer">Cloudflare Pages 基础设置</a></li>
+                <li><a href="https://blog.aibochinese.com/buildsites/cloudflare_r2" target="_blank" rel="noopener noreferrer">Cloudflare R2 对象存储使用</a></li>
+                <li><a href="https://blog.aibochinese.com/buildsites/free_ocs" target="_blank" rel="noopener noreferrer">免费右侧悬浮客服</a></li>
+                <li><a href="https://blog.aibochinese.com/buildsites/jingtai-wangzhan-SEO-youhua" target="_blank" rel="noopener noreferrer">SEO优化技巧完整指南</a></li>
+                <li><a href="https://blog.aibochinese.com/buildsites/host_ssh" target="_blank" rel="noopener noreferrer">云服务器SSH连接</a></li>
+                <li><a href="https://blog.aibochinese.com/post/search_frame" target="_blank" rel="noopener noreferrer">搜索框🔍功能配置教程</a></li>
+                <li><a href="https://m.opcgrow.org/vip" target="_blank" rel="noopener noreferrer">VIP 会员方案（一次部署永久有效）</a></li>
+            </ul>
+        </section>
+
+        <!-- 最新文章 -->
+        <div class="section-title">
+            <h2>📰 最新文章</h2>
+            <p>来自筑梦.opcgrow · 帮助中心 / 知识学习 / 经营点子</p>
+        </div>
+        <section class="article-grid">
+            <a href="https://m.opcgrow.org/article/1" class="article-card" target="_blank" rel="noopener noreferrer">
+                <div class="ac-body">
+                    <span class="ac-cat">帮助中心</span>
+                    <div class="ac-title">部署永久免费的业务系统前的准备工作</div>
+                    <div class="ac-meta">2026-09-01 · 52 阅读</div>
+                </div>
+            </a>
+            <a href="https://m.opcgrow.org/article/6" class="article-card" target="_blank" rel="noopener noreferrer">
+                <div class="ac-body">
+                    <span class="ac-cat">帮助中心</span>
+                    <div class="ac-title">如何开通支付网关商户并接入站点实现自动化？</div>
+                    <div class="ac-meta">2026-08-31 · 16 阅读</div>
+                </div>
+            </a>
+            <a href="https://m.opcgrow.org/article/2" class="article-card" target="_blank" rel="noopener noreferrer">
+                <div class="ac-body">
+                    <span class="ac-cat">帮助中心</span>
+                    <div class="ac-title">如何配置网站的在线客服？</div>
+                    <div class="ac-meta">2026-08-30 · 20 阅读</div>
+                </div>
+            </a>
+            <a href="https://m.opcgrow.org/article/5" class="article-card" target="_blank" rel="noopener noreferrer">
+                <div class="ac-body">
+                    <span class="ac-cat">知识学习</span>
+                    <div class="ac-title">Cloudflare Workers 的免费额度</div>
+                    <div class="ac-meta">2026-08-25 · 98 阅读</div>
+                </div>
+            </a>
+            <a href="https://m.opcgrow.org/article/4" class="article-card" target="_blank" rel="noopener noreferrer">
+                <div class="ac-body">
+                    <span class="ac-cat">经营点子</span>
+                    <div class="ac-title">无自营产品或服务时，如何做业务赚钱？KOL</div>
+                    <div class="ac-meta">2026-08-22 · 39 阅读</div>
+                </div>
+            </a>
+            <a href="https://m.opcgrow.org/article/3" class="article-card" target="_blank" rel="noopener noreferrer">
+                <div class="ac-body">
+                    <span class="ac-cat">知识学习</span>
+                    <div class="ac-title">AI时代的搜索引擎优化——MCP「建站必备」</div>
+                    <div class="ac-meta">2026-08-22 · 46 阅读</div>
+                </div>
+            </a>
+        </section>
+
+        <!-- 精选业务系统 -->
+        <div class="section-title">
+            <h2>🛍️ 精选业务系统</h2>
+            <p>一次部署，永久免费有效 · 无续费</p>
+        </div>
+        <section class="product-grid">
+            <div class="product-card">
+                <div class="pc-icon">📦</div>
+                <div class="pc-title">系统定制</div>
+                <div class="pc-cat">100％适配业务场景</div>
+                <div class="pc-price">$5.00</div>
+                <a href="https://m.opcgrow.org/product/2" class="pc-btn" target="_blank" rel="noopener noreferrer">查看详情</a>
+            </div>
+            <div class="product-card">
+                <div class="pc-icon">🔤</div>
+                <div class="pc-title">艾宾浩斯记词系统</div>
+                <div class="pc-cat">单词卡片 · 复习进度 · 记忆战</div>
+                <div class="pc-price">$5.00</div>
+                <a href="https://m.opcgrow.org/product/9" class="pc-btn" target="_blank" rel="noopener noreferrer">查看详情</a>
+            </div>
+            <div class="product-card">
+                <div class="pc-icon">🔔</div>
+                <div class="pc-title">客户跟进提醒系统</div>
+                <div class="pc-cat">客户管理 · 时间提醒 · 沟通跟进</div>
+                <div class="pc-price">$8.00</div>
+                <a href="https://m.opcgrow.org/product/8" class="pc-btn" target="_blank" rel="noopener noreferrer">查看详情</a>
+            </div>
+            <div class="product-card">
+                <div class="pc-icon">✍️</div>
+                <div class="pc-title">博客｜自媒体人 专属</div>
+                <div class="pc-cat">模板建站 · 内容创作</div>
+                <div class="pc-price">$15.00</div>
+                <a href="https://m.opcgrow.org/product/7" class="pc-btn" target="_blank" rel="noopener noreferrer">查看详情</a>
+            </div>
+            <div class="product-card">
+                <div class="pc-icon">🎓</div>
+                <div class="pc-title">教培｜独立老师 专属</div>
+                <div class="pc-cat">学员管理 · 课程管理 · 缴费统计</div>
+                <div class="pc-price">$15.00</div>
+                <a href="https://m.opcgrow.org/product/6" class="pc-btn" target="_blank" rel="noopener noreferrer">查看详情</a>
+            </div>
+            <div class="product-card">
+                <div class="pc-icon">🛒</div>
+                <div class="pc-title">电商独立站·部署方案</div>
+                <div class="pc-cat">模板建站 · 独立站部署</div>
+                <div class="pc-price">$15.00</div>
+                <a href="https://m.opcgrow.org/product/5" class="pc-btn" target="_blank" rel="noopener noreferrer">查看详情</a>
+            </div>
+        </section>
+
+        <!-- 热门课程 -->
+        <div class="section-title">
+            <h2>🎓 热门课程</h2>
+            <p>免费课程与付费课程，从模板结构到系统落地</p>
+        </div>
+        <section class="product-grid">
+            <div class="product-card">
+                <div class="pc-icon">⚙️</div>
+                <div class="pc-title">业务管理后台使用教程</div>
+                <div class="pc-cat">界面导航 · 内容维护 · 安全设置</div>
+                <div class="pc-price"><span class="free">免费</span></div>
+                <a href="https://m.opcgrow.org/course/1" class="pc-btn" target="_blank" rel="noopener noreferrer">开始学习</a>
+            </div>
+            <div class="product-card">
+                <div class="pc-icon">💳</div>
+                <div class="pc-title">业务网站全球收款解决方案</div>
+                <div class="pc-cat">跨境收款 · 支付接入</div>
+                <div class="pc-price"><span class="free">免费</span></div>
+                <a href="https://m.opcgrow.org/course/4" class="pc-btn" target="_blank" rel="noopener noreferrer">开始学习</a>
+            </div>
+            <div class="product-card">
+                <div class="pc-icon">🧩</div>
+                <div class="pc-title">业务系统｜模板精讲</div>
+                <div class="pc-cat">业务拆解 · 系统化搭建</div>
+                <div class="pc-price"><span class="free">免费</span></div>
+                <a href="https://m.opcgrow.org/course/3" class="pc-btn" target="_blank" rel="noopener noreferrer">开始学习</a>
+            </div>
+            <div class="product-card">
+                <div class="pc-icon">📈</div>
+                <div class="pc-title">业务认知＋自媒体营销技能</div>
+                <div class="pc-cat">理解商业底层 · 掌握内容增长逻辑</div>
+                <div class="pc-price">$10.00</div>
+                <a href="https://m.opcgrow.org/course/2" class="pc-btn" target="_blank" rel="noopener noreferrer">查看课程</a>
+            </div>
+        </section>
+
+        <!-- VIP 会员方案 -->
+        <div class="section-title">
+            <h2>👑 VIP 会员方案</h2>
+            <p>一次搭建永久免费有效，极致性价比，为梦铺垫！</p>
+        </div>
+        <section class="vip-grid">
+            <div class="vip-card hot">
+                <span class="vip-tag">🔥 最受欢迎</span>
+                <div class="vip-name">模板建站</div>
+                <div class="vip-price">USD 15 <span>/ 永久</span></div>
+                <ul>
+                    <li>基于已有模板建站</li>
+                    <li>一次部署，永久有效</li>
+                    <li>无续费</li>
+                    <li>解锁全部付费文章和课程</li>
+                </ul>
+                <a href="https://m.opcgrow.org/vip" class="vip-btn" target="_blank" rel="noopener noreferrer">立即订阅</a>
+            </div>
+            <div class="vip-card">
+                <div class="vip-name">支付网关</div>
+                <div class="vip-price">USD 19 <span>/ 1 年</span></div>
+                <ul>
+                    <li>搭建子系统，到账私人钱包</li>
+                    <li>支持个人微信 | 支付宝 | Stripe | USDT</li>
+                    <li>赠永久有效免费的在线客服系统</li>
+                    <li>解锁全部付费文章和视频课程</li>
+                </ul>
+                <a href="https://m.opcgrow.org/vip" class="vip-btn" target="_blank" rel="noopener noreferrer">立即订阅</a>
+            </div>
+        </section>
+
+        <!-- 关联站点 -->
+        <section class="related-sites">
+            <h2>🌐 关联站点</h2>
+            <div class="related-grid">
+                <a href="https://api.payone.uk/" class="related-item" target="_blank" rel="noopener noreferrer">
+                    <div class="ri-name">💳 支付网关</div>
+                    <div class="ri-desc">开通支付网关商户，资金直达个人钱包</div>
+                </a>
+                <a href="https://opcgrow.org/" class="related-item" target="_blank" rel="noopener noreferrer">
+                    <div class="ri-name">🌱 一人公司成长</div>
+                    <div class="ri-desc">独立开发者 / 一人公司成长社区</div>
+                </a>
+                <a href="https://wp.aibomart.com/" class="related-item" target="_blank" rel="noopener noreferrer">
+                    <div class="ri-name">🧱 WordPress支持</div>
+                    <div class="ri-desc">易支付插件，兼容 WooCommerce</div>
+                </a>
+                <a href="https://site.opcgrow.org/" class="related-item" target="_blank" rel="noopener noreferrer">
+                    <div class="ri-name">🛠️ 业务系统定制</div>
+                    <div class="ri-desc">100% 适配特定场景的系统定制</div>
+                </a>
+                <a href="https://d.opcgrow.org/" class="related-item" target="_blank" rel="noopener noreferrer">
+                    <div class="ri-name">📁 商务网盘</div>
+                    <div class="ri-desc">文件存储与共享</div>
+                </a>
+                <a href="https://m.opcgrow.org" class="related-item" target="_blank" rel="noopener noreferrer">
+                    <div class="ri-name">🚀 筑梦.opcgrow</div>
+                    <div class="ri-desc">值得人人部署的业务系统 · 主页</div>
+                </a>
+            </div>
+        </section>
+    </div>
+
+<footer>
+<div class="footer">
+        <p style="margin-bottom: 10px;">🙏感谢关注:<a href="https://www.youtube.com/@blog.aibochinese" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/youtube%20logo%2030.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://x.com/i/communities/1988635370549096727" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%E6%B1%89%E8%AF%AD%E5%AE%A2%E6%88%B7%E7%AB%AF/icons8-x-30.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://www.facebook.com/blog.aibochinese" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/facebook%20log0%2030.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://wa.me/message/QXYAFEGTDWIBE1" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/whatsapp-48.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://space.bilibili.com/3690971141245681?spm_id_from=333.788.0.0" style="color:white; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/icons8-%E8%83%86%E6%B1%81-30.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://github.com/blogaibochinese" style="color:white; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/icons8-github-30.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://xhslink.com/m/5it26wH34Zd" style="color:white; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/rednote.png" 
+         style="width: 30px; height: 30px; display:block;" /></a>
+        </p>
+        <p style="font-size: 14px; color: hsl(0, 9%, 98%);">© 2025 <a href="https://blog.aibochinese.com/" style="color:red " target="_blank" rel="noopener noreferrer">爱博·客</a> - 所有权利保留 | <a href="https://m.opcgrow.org" style="color:#ffcc2f" target="_blank" rel="noopener noreferrer">筑梦.opcgrow</a> - 一次部署，永久免费有效</p>
+    </div>
+    </footer>
+
+    <!-- 移动端底部导航按钮 - 仅在移动端显示 -->
+    <div class="mobile-nav">
+        <div class="nav-container">
+            <!-- 首页按钮 -->
+            <a href="https://blog.aibochinese.com/" class="nav-item nav-item-active">
+                <i class="fa fa-home icon"></i>
+                <span class="text">首页</span>
+            </a>
+            
+            <!-- 资源按钮 -->
+            <a href="https://blog.aibochinese.com/Rescous/free_rs" class="nav-item nav-item-active">
+                <i class="fa fa-cloud-download icon"></i>
+                <span class="text">资源</span>
+            </a>
+
+            <!-- 最新 - 突出显示 -->
+            <a href="https://blog.aibochinese.com/newest" class="nav-item center">
+                <i class="fa fa-refresh icon"></i>
+                <span class="text">最新</span>
+            </a>
+
+            <!-- 建站按钮 -->
+            <a href="https://blog.aibochinese.com/sitesbuild" class="nav-item nav-item-active">
+                <i class="fa fa-code icon"></i>
+                <span class="text">建站</span>
+            </a>
+
+            <!-- 淘金按钮 -->
+            <a href="https://blog.aibochinese.com/earn_online" class="nav-item nav-item-active">
+                <i class="fa fa-usd icon"></i>
+                <span class="text">淘金</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- 移动端底部导航按钮交互 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加导航交互效果
+            const navItems = document.querySelectorAll('.mobile-nav .nav-item:not(.center)');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    // 移除所有激活状态
+                    navItems.forEach(i => i.classList.remove('nav-item-active'));
+                    // 给当前点击项添加激活状态
+                    this.classList.add('nav-item-active');
+                });
+            });
+        });
+    </script>
+
+    <script>
+        function toggleWechatModal() {
+            const modal = document.getElementById('wechatModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function closeWechatModal(event) {
+            document.getElementById('wechatModal').style.display = 'none';
+        }
+
+        // 点击模态背景关闭
+        window.onclick = function(event) {
+            const modal = document.getElementById('wechatModal');
+            if (event.target === modal) {
+                closeWechatModal();
+            }
+        };
+    </script>    
+
+   <!-- 悬浮图标容器 -->
+    <div class="float-icons-container">
+        <!-- 悬浮微信客服图标 -->
+        <div class="wechat-float" onclick="toggleWechatModal()">
+            <div class="wechat-icon"></div>
+        </div>
+        
+        <!-- 悬浮搜索按钮 -->
+        <div class="search-float" onclick="toggleSearchModal()">
+            <i class="fa fa-search text-white text-2xl"></i>
+        </div>
+    </div>
+
+    <!-- 搜索弹出窗 -->
+    <div id="searchModal" class="search-modal" onclick="closeSearchModal(event)">
+        <div class="search-popup" onclick="event.stopPropagation()">
+            <h3>搜索内容</h3>
+            <div id="pagefind-search-popup"></div>
+            <button class="close-btn" onclick="closeSearchModal()">关闭</button>
+        </div>
+    </div>
+
+    <!-- 微信弹出窗 -->
+    <div id="wechatModal" class="wechat-modal" onclick="closeWechatModal(event)">
+        <div class="wechat-popup" onclick="event.stopPropagation()">
+            <h3>微信客服</h3>
+            <img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E6%B7%BB%E5%8A%A0%E5%BE%AE%E4%BF%A1.png" alt="微信二维码" class="wechat-qr">
+            <p>扫描添加客服微信</p>
+            <button class="close-btn" onclick="closeWechatModal()">关闭</button>
+        </div>
+    </div>
+
+    <script>
+        // 搜索弹窗控制函数
+        function toggleSearchModal() {
+            const modal = document.getElementById('searchModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function closeSearchModal(event) {
+            document.getElementById('searchModal').style.display = 'none';
+        }
+
+        // 微信弹窗控制函数
+        function toggleWechatModal() {
+            const modal = document.getElementById('wechatModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function closeWechatModal(event) {
+            document.getElementById('wechatModal').style.display = 'none';
+        }
+
+        // 点击模态背景关闭
+        window.onclick = function(event) {
+            const searchModal = document.getElementById('searchModal');
+            const wechatModal = document.getElementById('wechatModal');
+            
+            if (event.target === searchModal) {
+                closeSearchModal();
+            } else if (event.target === wechatModal) {
+                closeWechatModal();
+            }
+        };
+    </script>
+       <!-- Pagefind 搜索（已完美修复） -->
+    <script src="/post/pagefind/pagefind-ui.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            console.log("Initializing Pagefind search...");
+            try {
+    
+                // 初始化右侧悬浮搜索弹窗
+                new PagefindUI({
+                    element: "#pagefind-search-popup",
+                    showImages: false,
+                    showSubResults: true,
+                    resetStyles: false,
+                    translations: {
+                        placeholder: "🔍资源、教程、工具..."
+                    }
+                });
+                
+                console.log("Pagefind search initialized successfully");
+            } catch (error) {
+                console.error("Pagefind search initialization failed:", error);
+            }
+                        // 初始化汉堡菜单
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (hamburger && navMenu) {
+                hamburger.addEventListener('click', function() {
+                    // 切换导航菜单的显示/隐藏
+                    navMenu.classList.toggle('active');
+                    // 切换汉堡图标的样式
+                    hamburger.classList.toggle('active');
+                });
+            }
+        });
+    </script>
+ <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "name": "永久免费建站2026·Cloudflare Workers建站方案 — 一次部署，无服务器续费，永久免费有效",
+  "keywords": "Cloudflare Workers建站,永久免费建站,一次部署,无服务器续费,永久免费,业务系统,模板建站",
+  "description": "采用Cloudflare Workers无服务器建站方案，一次部署、无需续费、永久免费有效。聚合筑梦.opcgrow(值得人人部署的业务系统)的文章、模板建站、业务系统定制、VIP会员等全部内容。",
+  "url": "https://blog.aibochinese.com/sitesbuild",
+  "datePublished": "2025-11-2",
+  "dateModified": "2026-09-02",
+  "author": {"@type": "Person", "name": "AbelZou"},
+  "publisher": {
+    "@type": "Organization",
+    "name": "爱博·客",
+    "logo": {"@type": "ImageObject", "url": "https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/50-50%20%E7%88%B1%E5%8D%9A%E5%AE%A2logo.png"}
+  }
+}
+</script>   
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6203499194676961"
+     crossorigin="anonymous"></script>
+</body>
+</html>
