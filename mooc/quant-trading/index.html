@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>量化交易实战教程 - 爱博·客公开课</title>
+    <meta name="description" content="从零开始学习量化交易，掌握MT5编程、交易所机器人配置实战">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* 量化交易主题样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e17 0%, #1a1f2e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .quant-header {
+            background: linear-gradient(135deg, #00f0ff 0%, #a855f7 50%, #00f0ff 100%);
+            background-size: 200% 200%;
+            animation: gradient-shift 6s ease infinite;
+            text-align: center;
+            padding: 100px 20px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .quant-header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #ffffff, #e0e0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .quant-header p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin: 60px 0 40px;
+            background: linear-gradient(45deg, #00f0ff, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+        
+        .course-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .course-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #00f0ff, #a855f7);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 40px rgba(0, 240, 255, 0.2);
+        }
+        
+        .course-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .course-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #00f0ff;
+        }
+        
+        .course-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+        
+        .course-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .module-list {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+        
+        .module-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+        }
+        
+        .module-list li::before {
+            content: "▸";
+            color: #00f0ff;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #00f0ff, #a855f7);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            min-width: 140px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(168, 85, 247, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #00f0ff;
+            color: #00f0ff;
+            margin-left: 15px;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(0, 240, 255, 0.1);
+        }
+        
+        .footer {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 80px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .quant-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .quant-header p {
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .courses-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .course-card {
+                padding: 20px;
+            }
+        }
+        
+        .nav-back {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-back:hover {
+            color: #00f0ff;
+        }
+        
+        .exchange-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+        
+        .exchange-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .exchange-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: #00f0ff;
+            transform: translateY(-5px);
+        }
+        
+        .exchange-logo {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #00f0ff;
+        }
+        
+        .exchange-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回导航 -->
+    <a href="../../mooc.html" class="nav-back">
+        <i class="fas fa-arrow-left"></i>
+        <span>返回公开课主页</span>
+    </a>
+    
+    <!-- 主标题区域 -->
+    <header class="quant-header">
+        <div class="container">
+            <h1>🚀 量化交易实战教程</h1>
+            <p>从零开始掌握自动化交易策略，学习MT5编程与主流交易所机器人配置</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- MT5量化交易教程 -->
+        <section>
+            <h2 class="section-title">📈 MT5编程教程</h2>
+            <div class="courses-grid">
+                <div class="course-card">
+                    <div class="course-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="course-title">MT5量化交易入门</h3>
+                    <p class="course-description">
+                        学习MT5平台基础操作，了解MetaQuotes Language (MQL5)编程基础，
+                        掌握EA智能交易系统构建原理。
+                    </p>
+                    <ul class="module-list">
+                        <li>MT5平台安装与配置</li>
+                        <li>MQL5编程语言基础</li>
+                        <li>技术指标与图表分析</li>
+                        <li>简单的EA策略开发</li>
+                        <li>历史数据回测分析</li>
+                    </ul>
+                    <div>
+                        <a href="https://opcgrow.org/article.php?id=19" target="_blank" class="btn">
+                            学习教程
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="course-card">
+                    <div class="course-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="course-title">MT5高级EA开发</h3>
+                    <p class="course-description">
+                        深入MT5高级特性，学习复杂的交易逻辑，
+                        掌握风险管理与多策略融合开发技巧。
+                    </p>
+                    <ul class="module-list">
+                        <li>高级MQL5编程技巧</li>
+                        <li>多时间框架策略</li>
+                        <li>风险管理模块设计</li>
+                        <li>优化器与参数调优</li>
+                        <li>EA性能分析</li>
+                    </ul>
+                    <div>
+                        <a href="https://opcgrow.org/article.php?id=20" target="_blank" class="btn">
+                            学习教程
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 交易所机器人教程 -->
+        <section>
+            <h2 class="section-title">🤖 交易所量化机器人</h2>
+            <p style="text-align: center; margin-bottom: 40px; color: rgba(255,255,255,0.8);">
+                主流交易平台内置机器人实战教程
+            </p>
+            
+            <div class="exchange-grid">
+                <!-- Binance -->
+                <div class="exchange-card">
+                    <div class="exchange-logo">
+                        <i class="fab fa-bitcoin"></i>
+                    </div>
+                    <h4 class="exchange-name">Binance 币安</h4>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">
+                        网格交易、智能持仓等多策略机器人
+                    </p>
+                    <a href="binance-quant/index.html" class="btn btn-secondary">
+                        开始学习
+                    </a>
+                </div>
+                
+                <!-- OKX -->
+                <div class="exchange-card">
+                    <div class="exchange-logo">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h4 class="exchange-name">OKX</h4>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">
+                        合约网格、现货网格等多功能机器人
+                    </p>
+                    <a href="okx-quant/index.html" class="btn btn-secondary">
+                        开始学习
+                    </a>
+                </div>
+                
+                <!-- Bybit -->
+                <div class="exchange-card">
+                    <div class="exchange-logo">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h4 class="exchange-name">Bybit</h4>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">
+                        复制交易、DCA定投策略机器人
+                    </p>
+                    <a href="bybit-quant/index.html" class="btn btn-secondary">
+                        开始学习
+                    </a>
+                </div>
+                
+                <!-- Bitmart -->
+                <div class="exchange-card">
+                    <div class="exchange-logo">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <h4 class="exchange-name">Bitmart</h4>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">
+                        现货量化、套利交易机器人
+                    </p>
+                    <a href="bitmart-quant/index.html" class="btn btn-secondary">
+                        开始学习
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 实战策略 -->
+        <section>
+            <h2 class="section-title">🎯 实战策略指南</h2>
+            <div class="courses-grid">
+                <div class="course-card">
+                    <div class="course-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="course-title">网格交易策略</h3>
+                    <p class="course-description">
+                        学习如何在震荡行情中通过网格交易策略获取稳定收益，
+                        掌握参数优化与风险控制方法。
+                    </p>
+                    <ul class="module-list">
+                        <li>网格策略原理与应用</li>
+                        <li>参数设置与优化</li>
+                        <li>风险管理要点</li>
+                        <li>实战案例分析</li>
+                        <li>策略回测验证</li>
+                    </ul>
+                    <div>
+                        <a href="grid-trading-guide.html" class="btn">阅读指南</a>
+                        <a href="grid-trading-example.html" class="btn btn-secondary">实战案例</a>
+                    </div>
+                </div>
+                
+                <div class="course-card">
+                    <div class="course-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="course-title">量化风险管理</h3>
+                    <p class="course-description">
+                        深入了解量化交易中的风险管理技巧，
+                        学习仓位管理、止损策略和资金分配方法。
+                    </p>
+                    <ul class="module-list">
+                        <li>仓位管理原则</li>
+                        <li>止损策略设计</li>
+                        <li>资金分配模型</li>
+                        <li>风险评估指标</li>
+                        <li>应急预案制定</li>
+                    </ul>
+                    <div>
+                        <a href="risk-management.html" class="btn">学习风险</a>
+                        <a href="risk-calculator.html" class="btn btn-secondary">风险计算器</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 爱博·客 - 量化交易实战教程</p>
+            <p>学习量化交易，开启智能化投资新时代</p>
+        </div>
+    </footer>
+
+    <script>
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.course-card, .exchange-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 150 * index);
+            });
+        });
+    </script>
+</body>
+</html>
