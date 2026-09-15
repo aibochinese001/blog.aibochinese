@@ -15,10 +15,8 @@
 │   ├── index.html              # OKX教程主页
 │   └── bot-tutorials/
 │       └── contract-grid.html  # 合约网格教程
-├── bybit-quant/                # Bybit交易所教程
-│   └── index.html              # Bybit教程主页
-└── bitmart-quant/              # Bitmart交易所教程
-    └── index.html              # Bitmart教程主页
+└── bybit-quant/                # Bybit交易所教程
+    └── index.html              # Bybit教程主页
 ```
 
 ## 🎯 课程内容概述
@@ -44,11 +42,6 @@
 - **复制交易机器人**: 跟随顶尖交易员策略
 - **DCA定投机器人**: 美元成本平均法定投策略
 - **智能策略机器人**: 技术指标触发交易
-
-#### Bitmart
-- **现货量化机器人**: 网格交易、均值回归算法
-- **套利交易机器人**: 跨交易所套利策略
-- **智能交易策略**: AI优化的智能交易系统
 
 ## 🎨 设计特色
 
@@ -92,12 +85,11 @@
 
 ## 🚀 部署状态
 
-### 已完成的文件 (14个)
+### 已完成的文件 (13个)
 - ✅ 量化交易主页 (`index.html`)
-- ✅ 四大交易所教程主页 (Binance、OKX、Bybit、Bitmart)
+- ✅ 三大交易所教程主页 (Binance、OKX、Bybit)
 - ✅ Binance详细教程 (网格交易、智能持仓、现货策略)
 - ✅ OKX详细教程 (合约网格、现货网格)
-- ✅ Bitmart详细教程 (现货量化、套利交易)
 - ✅ Bybit详细教程 (复制交易)
 - ✅ mooc.html课程卡片集成
 - ✅ 部署验证页面 (`demo.html`)
@@ -115,9 +107,6 @@
 - 🌟 `/mooc/quant-trading/okx-quant/bot-tutorials/spot-grid.html` (现货网格)
 - 🌟 `/mooc/quant-trading/bybit-quant/index.html` (Bybit教程主页)
 - 🌟 `/mooc/quant-trading/bybit-quant/bot-tutorials/copy-trading.html` (复制交易)
-- 🌟 `/mooc/quant-trading/bitmart-quant/index.html` (Bitmart教程主页)
-- 🌟 `/mooc/quant-trading/bitmart-quant/bot-tutorials/spot-quant.html` (现货量化)
-- 🌟 `/mooc/quant-trading/bitmart-quant/bot-tutorials/arbitrage-bot.html` (套利交易)
 
 ### 待完善内容 (已创建占位页面的教程)
 以下是已经创建占位页面，需要进一步完善的教程页面：
@@ -139,12 +128,6 @@
 - 🚧 交易员选择教程 (`trader-selection.html`)
 - 🚧 DCA优化教程 (`dca-optimization.html`)
 - 🚧 风险管理教程 (`bybit-risk.html`)
-
-*Bitmart:*
-- 🚧 智能交易教程 (`smart-trading.html`)
-- 🚧 套利优化教程 (`arbitrage-optimization.html`)
-- 🚧 风险管理教程 (`bitmart-risk.html`)
-- 🚧 监控系统教程 (`monitoring-system.html`)
 
 ## 💡 扩展建议
 
