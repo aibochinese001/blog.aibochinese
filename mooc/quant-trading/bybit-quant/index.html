@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bybit量化机器人教程 - 爱博·客公开课</title>
+    <meta name="description" content="Bybit交易所机器人完整教程：复制交易、DCA定投策略配置">
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e17 0%, #1a1f2e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+            text-align: center;
+            padding: 100px 20px 60px;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(124, 58, 237, 0.5);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .nav-back {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-back:hover {
+            color: #c084fc;
+        }
+        
+        .section-title {
+            font-size: 2.2rem;
+            margin: 60px 0 30px;
+            text-align: center;
+            background: linear-gradient(45deg, #7c3aed, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .tutorial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+        
+        .tutorial-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tutorial-card:hover {
+            transform: translateY(-5px);
+            border-color: #7c3aed;
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            color: #7c3aed;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+        
+        .card-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .features-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        
+        .features-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+        }
+        
+        .features-list li::before {
+            content: "✅";
+            margin-right: 10px;
+            color: #7c3aed;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #7c3aed, #a855f7);
+            color: #ffffff;
+            padding: 12px 25px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(124, 58, 237, 0.4);
+        }
+        
+        .api-section {
+            background: rgba(124, 58, 237, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 60px 0;
+            border-left: 4px solid #7c3aed;
+        }
+        
+        .api-title {
+            font-size: 1.8rem;
+            color: #7c3aed;
+            margin-bottom: 20px;
+        }
+        
+        .api-steps {
+            list-style: none;
+            counter-reset: step;
+        }
+        
+        .api-steps li {
+            counter-increment: step;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        .api-steps li::before {
+            content: counter(step);
+            background: #7c3aed;
+            color: #ffffff;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+        }
+        
+        .footer {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 80px;
+            border-top: 1px solid rgba(124, 58, 237, 0.3);
+        }
+        
+        .footer p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .copy-trading-section {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(168, 85, 247, 0.1));
+            border-radius: 15px;
+            padding: 40px;
+            margin: 60px 0;
+            border: 2px dashed #7c3aed;
+        }
+        
+        .copy-trading-title {
+            font-size: 1.8rem;
+            color: #7c3aed;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .tutorial-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .api-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回导航 -->
+    <a href="index.html" class="nav-back">
+        <i class="fas fa-arrow-left"></i>
+        <span>返回量化交易主页</span>
+    </a>
+    
+    <!-- 主标题区域 -->
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-chart-bar"></i> Bybit量化机器人教程</h1>
+            <p>专业的衍生品交易平台，以复制交易和DCA定投策略著称</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 机器人功能介绍 -->
+        <section>
+            <h2 class="section-title">🤖 Bybit机器人功能</h2>
+            <div class="tutorial-grid">
+                <div class="tutorial-card">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="card-title">复制交易机器人</h3>
+                    <p class="card-description">
+                        自动复制顶尖交易员的策略，
+                        让专业交易经验为你所用。
+                    </p>
+                    <ul class="features-list">
+                        <li>顶尖交易员策略复制</li>
+                        <li>多策略组合配置</li>
+                        <li>风险等级筛选</li>
+                        <li>实时跟随调整</li>
+                    </ul>
+                    <a href="bot-tutorials/copy-trading.html" class="btn">学习配置</a>
+                </div>
+                
+                <div class="tutorial-card">
+                    <div class="card-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3 class="card-title">DCA定投机器人</h3>
+                    <p class="card-description">
+                        智能美元成本平均法策略，
+                        在波动市场中实现长期稳健收益。
+                    </p>
+                    <ul class="features-list">
+                        <li>定期定额投资</li>
+                        <li>价格触发机制</li>
+                        <li>自动成本摊平</li>
+                        <li>复利增长效应</li>
+                    </ul>
+                    <a href="bot-tutorials/dca-bot.html" class="btn">学习配置</a>
+                </div>
+                
+                <div class="tutorial-card">
+                    <div class="card-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="card-title">智能策略机器人</h3>
+                    <p class="card-description">
+                        基于技术指标的智能交易系统，
+                        支持多种高级交易策略。
+                    </p>
+                    <ul class="features-list">
+                        <li>技术指标触发交易</li>
+                        <li>多时间框架分析</li>
+                        <li>自定义策略逻辑</li>
+                        <li>实时信号监控</li>
+                    </ul>
+                    <a href="bot-tutorials/smart-strategy.html" class="btn">学习配置</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- API配置教程 -->
+        <section class="api-section">
+            <h3 class="api-title">🔑 API配置指南</h3>
+            <ul class="api-steps">
+                <li>
+                    <strong>创建API密钥</strong>
+                    <p>登录Bybit账户 → 账户设置 → API管理 → 创建API密钥</p>
+                    <small style="color: rgba(255,255,255,0.6);">
+                        建议设置IP白名单增强安全性
+                    </small>
+                </li>
+                <li>
+                    <strong>权限配置</strong>
+                    <p>选择"交易"权限，可根据需要开启特定市场权限</p>
+                    <small style="color: rgba(255,255,255,0.6);">
+                        机器人运行需要完整的交易权限
+                    </small>
+                </li>
+                <li>
+                    <strong>测试网络使用</strong>
+                    <p>Bybit提供测试网络，可先用模拟资金进行策略测试</p>
+                    <small style="color: rgba(255,255,255,0.6);">
+                        降低学习成本和实盘风险
+                    </small>
+                </li>
+                <li>
+                    <strong>安全建议</strong>
+                    <p>定期更换API密钥，启用二次验证，监控API使用情况</p>
+                    <small style="color: rgba(255,255,255,0.6);">
+                        保护账户资金安全
+                    </small>
+                </li>
+            </ul>
+        </section>
+
+        <!-- 复制交易特色 -->
+        <section class="copy-trading-section">
+            <h3 class="copy-trading-title">📊 Bybit复制交易特色</h3>
+            <div class="tutorial-grid">
+                <div style="text-align: center;">
+                    <div class="card-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4 style="color: #7c3aed; margin-bottom: 10px;">精英交易员筛选</h4>
+                    <p style="color: rgba(255,255,255,0.8);">
+                        基于多种指标筛选优秀交易员
+                    </p>
+                    <ul style="text-align: left; color: rgba(255,255,255,0.7); margin-top: 10px;">
+                        <li>历史收益率</li>
+                        <li>最大回撤控制</li>
+                        <li>交易频次统计</li>
+                        <li>风险管理能力</li>
+                    </ul>
+                </div>
+                
+                <div style="text-align: center;">
+                    <div class="card-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h4 style="color: #7c3aed; margin-bottom: 10px;">智能跟随设置</h4>
+                    <p style="color: rgba(255,255,255,0.8);">
+                        灵活的跟随参数配置
+                    </p>
+                    <ul style="text-align: left; color: rgba(255,255,255,0.7); margin-top: 10px;">
+                        <li>杠杆倍数选择</li>
+                        <li>持仓比例控制</li>
+                        <li>止损止盈设置</li>
+                        <li>跟随延迟调整</li>
+                    </ul>
+                </div>
+                
+                <div style="text-align: center;">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4 style="color: #7c3aed; margin-bottom: 10px;">实时绩效监控</h4>
+                    <p style="color: rgba(255,255,255,0.8);">
+                        全方位的交易表现跟踪
+                    </p>
+                    <ul style="text-align: left; color: rgba(255,255,255,0.7); margin-top: 10px;">
+                        <li>实时盈亏统计</li>
+                        <li>持仓状态监控</li>
+                        <li>风险指标预警</li>
+                        <li>收益曲线分析</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 实战教程 -->
+        <section>
+            <h2 class="section-title">🎯 实战配置指南</h2>
+            <div class="tutorial-grid">
+                <div class="tutorial-card">
+                    <div class="card-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <h3 class="card-title">交易员选择策略</h3>
+                    <p class="card-description">
+                        学习如何筛选高质量的交易员，
+                        规避风险，优化复制效果。
+                    </p>
+                    <ul class="features-list">
+                        <li>业绩稳定性评估</li>
+                        <li>风险控制能力分析</li>
+                        <li>交易风格匹配</li>
+                        <li>历史表现验证</li>
+                    </ul>
+                    <a href="bot-tutorials/trader-selection.html" class="btn">选择指南</a>
+                </div>
+                
+                <div class="tutorial-card">
+                    <div class="card-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h3 class="card-title">DCA策略优化</h3>
+                    <p class="card-description">
+                        掌握DCA定投策略的参数优化，
+                        提高长期投资回报率。
+                    </p>
+                    <ul class="features-list">
+                        <li>定投频率设置</li>
+                        <li>金额分配策略</li>
+                        <li>市场时机判断</li>
+                        <li>收益再投资策略</li>
+                    </ul>
+                    <a href="bot-tutorials/dca-optimization.html" class="btn">优化指南</a>
+                </div>
+                
+                <div class="tutorial-card">
+                    <div class="card-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3 class="card-title">风险管理重点</h3>
+                    <p class="card-description">
+                        了解Bybit特有的风险控制要点，
+                        确保交易安全稳定。
+                    </p>
+                    <ul class="features-list">
+                        <li>强平风险预防</li>
+                        <li>资金安全措施</li>
+                        <li>系统故障应对</li>
+                        <li>极端行情处理</li>
+                    </ul>
+                    <a href="bot-tutorials/bybit-risk.html" class="btn">风险指南</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 常见问题 -->
+        <section>
+            <h2 class="section-title">❓ 常见问题解答</h2>
+            <div style="background: rgba(255,255,255,0.05); border-radius: 15px; padding: 30px;">
+                <div style="margin-bottom: 25px;">
+                    <h4 style="color: #7c3aed; margin-bottom: 10px;">Q: 复制交易需要支付额外费用吗？</h4>
+                    <p style="color: rgba(255,255,255,0.8);">
+                        A: 跟随者需要支付业绩分成给交易员，比例通常在5%-20%。
+                    </p>
+                </div>
+                <div style="margin-bottom: 25px;">
+                    <h4 style="color: #7c3aed; margin-bottom: 10px;">Q: DCA策略适合什么样的投资者？</h4>
+                    <p style="color: rgba(255,255,255,0.8);">
+                        A: 适合长期投资者，不追求短期暴利，注重稳健增值。
+                    </p>
+                </div>
+                <div>
+                    <h4 style="color: #7c3aed; margin-bottom: 10px;">Q: Bybit测试网和实盘有什么区别？</h4>
+                    <p style="color: rgba(255,255,255,0.8);">
+                        A: 测试网使用虚拟资金，交易环境和实盘一致，适合新手练习。
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 爱博·客 - Bybit量化机器人教程</p>
+            <p>跟随精英，稳健投资，长期收益</p>
+        </div>
+    </footer>
+
+    <script>
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.tutorial-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+    </script>
+</body>
+</html>

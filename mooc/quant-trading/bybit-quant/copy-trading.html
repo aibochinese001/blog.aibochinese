@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bybit复制交易配置 - 爱博·客公开课</title>
+    <meta name="description" content="Bybit交易所复制交易机器人完整配置教程">
+    <link rel="stylesheet" href="../../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e17 0%, #1a1f2e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+            text-align: center;
+            padding: 100px 20px 60px;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(124, 58, 237, 0.5);
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .nav-back {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-back:hover {
+            color: #c084fc;
+        }
+        
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+            border-left: 4px solid #7c3aed;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            color: #7c3aed;
+            margin-bottom: 20px;
+        }
+        
+        .step {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+        }
+        
+        .step-number {
+            background: #7c3aed;
+            color: #ffffff;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        
+        .step-title {
+            font-size: 1.3rem;
+            display: inline-block;
+            color: #ffffff;
+        }
+        
+        .step-content {
+            margin-top: 15px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.8;
+        }
+        
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            border-left: 3px solid #7c3aed;
+        }
+        
+        .tip {
+            background: rgba(124, 58, 237, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #7c3aed;
+        }
+        
+        .parameter-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .parameter-table th {
+            background: #7c3aed;
+            color: #ffffff;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .parameter-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .parameter-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #7c3aed, #a855f7);
+            color: #ffffff;
+            padding: 12px 25px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(124, 58, 237, 0.4);
+        }
+        
+        .footer {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 80px;
+            border-top: 1px solid rgba(124, 58, 237, 0.3);
+        }
+        
+        .trader-criteria {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .criteria-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 3px solid #7c3aed;
+        }
+        
+        .criteria-card h4 {
+            color: #7c3aed;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回导航 -->
+    <a href="../index.html" class="nav-back">
+        <i class="fas fa-arrow-left"></i>
+        <span>返回Bybit教程</span>
+    </a>
+    
+    <!-- 主标题区域 -->
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-users"></i> Bybit复制交易配置教程</h1>
+            <p>自动复制顶尖交易员的策略，让专业交易经验为你所用</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 步骤1：复制交易概述 -->
+        <section class="section">
+            <div class="step">
+                <span class="step-number">1</span>
+                <h3 class="step-title">复制交易特点</h3>
+                <div class="step-content">
+                    <p>Bybit复制交易的核心优势：</p>
+                    
+                    <ul style="margin-left: 20px; color: rgba(255,255,255,0.8);">
+                        <li><strong>跟随精英：</strong>复制顶尖交易员的成功策略</li>
+                        <li><strong>风险可控：</strong>设置跟单比例和风险参数</li>
+                        <li><strong>实时跟随：</strong>交易员下单后立即自动跟随</li>
+                        <li><strong>多策略组合：</strong>同时跟随多个交易员分散风险</li>
+                        <li><strong>业绩透明：</strong>交易员的业绩数据完全公开</li>
+                    </ul>
+                    
+                    <div class="tip">
+                        <strong>💡 适用人群：</strong>
+                        <p>适合缺乏交易经验或时间，但希望获得专业投资回报的用户。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 步骤2：创建复制交易 -->
+        <section class="section">
+            <div class="step">
+                <span class="step-number">2</span>
+                <h3 class="step-title">创建复制交易机器人</h3>
+                <div class="step-content">
+                    <p>进入Bybit交易界面，找到复制交易功能：</p>
+                    
+                    <div class="code-block">
+                        交易 → 复制交易 → 跟随交易员 → 创建跟随
+                    </div>
+                    
+                    <p>浏览交易员列表，选择适合的交易员开始跟随。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 步骤3：交易员选择标准 -->
+        <section class="section">
+            <div class="step">
+                <span class="step-number">3</span>
+                <h3 class="step-title">交易员选择标准</h3>
+                <div class="step-content">
+                    <p>选择优质交易员的关键指标：</p>
+                    
+                    <div class="trader-criteria">
+                        <div class="criteria-card">
+                            <h4>收益率表现</h4>
+                            <ul style="color: rgba(255,255,255,0.8);">
+                                <li>历史收益率</li>
+                                <li>收益率稳定性</li>
+                                <li>最大回撤控制</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="criteria-card">
+                            <h4>风险指标</h4>
+                            <ul style="color: rgba(255,255,255,0.8);">
+                                <li>夏普比率</li>
+                                <li>波动率控制</li>
+                                <li>风险收益比</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="criteria-card">
+                            <h4>交易行为</h4>
+                            <ul style="color: rgba(255,255,255,0.8);">
+                                <li>交易频率</li>
+                                <li>持仓时间</li>
+                                <li>成功率</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="criteria-card">
+                            <h4>风险管理</h4>
+                            <ul style="color: rgba(255,255,255,0.8);">
+                                <li>止损设置</li>
+                                <li>仓位控制</li>
+                                <li>风险偏好</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="tip">
+                        <strong>🔍 筛选技巧：</strong>
+                        <p>不要只看短期高收益，要关注长期稳定性和风险控制能力。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 步骤4：跟随参数配置 -->
+        <section class="section">
+            <div class="step">
+                <span class="step-number">4</span>
+                <h3 class="step-title">跟随参数配置</h3>
+                <div class="step-content">
+                    <p>跟随交易员的关键参数配置：</p>
+                    
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>说明</th>
+                                <th>配置建议</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>跟单比例</strong></td>
+                                <td>跟随交易员仓位的比例</td>
+                                <td>建议10-50%，根据风险承受能力</td>
+                            </tr>
+                            <tr>
+                                <td><strong>最大仓位</strong></td>
+                                <td>单笔跟单的最大资金量</td>
+                                <td>设置合理的上限</td>
+                            </tr>
+                            <tr>
+                                <td><strong>杠杆设置</strong></td>
+                                <td>跟随交易的杠杆倍数</td>
+                                <td>可选择相同或调整杠杆</td>
+                            </tr>
+                            <tr>
+                                <td><strong>止损设置</strong></td>
+                                <td>自动止损比例</td>
+                                <td>建议设置跟单止损</td>
+                            </tr>
+                            <tr>
+                                <td><strong>延迟跟随</strong></td>
+                                <td>跟随交易的延迟时间</td>
+                                <td>尽可能设置为0延迟</td>
+                            </tr>
+                            <tr>
+                                <td><strong>多重跟随</strong></td>
+                                <td>同时跟多少交易员</td>
+                                <td>建议2-4个，分散风险</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 步骤5：风险控制设置 -->
+        <section class="section">
+            <div class="step">
+                <span class="step-number">5</span>
+                <h3 class="step-title">风险控制设置</h3>
+                <div class="step-content">
+                    <p>复制交易的关键风险控制：</p>
+                    
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>风险参数</th>
+                                <th>功能</th>
+                                <th>配置说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>整体止损</strong></td>
+                                <td>整体跟单的最大亏损</td>
+                                <td>设置总资金的止损比例</td>
+                            </tr>
+                            <tr>
+                                <td><strong>单交易员止损</strong></td>
+                                <td>单个交易员的亏损限制</td>
+                                <td>防止单个交易员大幅亏损</td>
+                            </tr>
+                            <tr>
+                                <td><strong>暂停跟单</strong></td>
+                                <td>交易员亏损时的暂停机制</td>
+                                <td>设置亏损阈值自动暂停</td>
+                            </tr>
+                            <tr>
+                                <td><strong>资金分配</strong></td>
+                                <td>多个交易员的资金分配</td>
+                                <td>均衡分配，不集中投资</td>
+                            </tr>
+                            <tr>
+                                <td><strong>紧急停止</strong></td>
+                                <td>极端情况的自动停止</td>
+                                <td>保护资金安全</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="tip">
+                        <strong>⚠️ 重要提醒：</strong>
+                        <p>即使跟随顶尖交易员，也不能保证稳赚不赔，必须设置严格的风险控制。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 步骤6：绩效监控 -->
+        <section class="section">
+            <div class="step">
+                <span class="step-number">6</span>
+                <h3 class="step-title">绩效监控与优化</h3>
+                <div class="step-content">
+                    <p>复制交易的重要监控指标：</p>
+                    
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>监控指标</th>
+                                <th>意义</th>
+                                <th>优化方向</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>收益率对比</strong></td>
+                                <td>与交易员收益的对比</td>
+                                <td>评估跟单效果</td>
+                            </tr>
+                            <tr>
+                                <td><strong>滑点影响</strong></td>
+                                <td>延迟跟单导致的收益差异</td>
+                                <td>优化跟单延迟</td>
+                            </tr>
+                            <tr>
+                                <td><strong>资金利用率</strong></td>
+                                <td>资金的使用效率</td>
+                                <td>调整跟单比例</td>
+                            </tr>
+                            <tr>
+                                <td><strong>风险暴露</strong></td>
+                                <td>整体风险水平</td>
+                                <td>优化风险控制</td>
+                            </tr>
+                            <tr>
+                                <td><strong>交易员表现</strong></td>
+                                <td>交易员的持续表现</td>
+                                <td>定期评估交易员</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 优化策略 -->
+        <section class="section">
+            <h2 class="section-title">⚡ 优化策略建议</h2>
+            
+            <div class="step">
+                <h3 class="step-title">跟单策略优化</h3>
+                <div class="step-content">
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>优化方向</th>
+                                <th>具体措施</th>
+                                <th>预期效果</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>交易员选择</strong></td>
+                                <td>定期评估交易员表现</td>
+                                <td>提高跟单质量</td>
+                            </tr>
+                            <tr>
+                                <td><strong>跟单比例</strong></td>
+                                <td>根据风险调整比例</td>
+                                <td>优化风险收益比</td>
+                            </tr>
+                            <tr>
+                                <td><strong>多策略组合</strong></td>
+                                <td>跟随不同风格交易员</td>
+                                <td>分散风险</td>
+                            </tr>
+                            <tr>
+                                <td><strong>退出机制</strong></td>
+                                <td>设置智能退出条件</td>
+                                <td>及时止损止盈</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 常见问题 -->
+        <section class="section">
+            <h2 class="section-title">❓ 常见问题与解决</h2>
+            
+            <div class="step">
+                <h3 class="step-title">常见问题解答</h3>
+                <div class="step-content">
+                    <p><strong>Q: 复制交易需要支付额外费用吗？</strong></p>
+                    <p>A: 跟随者需要支付业绩分成给交易员，比例通常在5%-20%。</p>
+                    
+                    <p><strong>Q: 如何选择最佳的交易员？</strong></p>
+                    <p>A: 综合考虑收益率、稳定性、风险控制等多个指标。</p>
+                    
+                    <p><strong>Q: 复制交易的风险在哪里？</strong></p>
+                    <p>A: 主要风险是交易员策略失效和市场系统性风险。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 下一步 -->
+        <section style="text-align: center; padding: 40px 0;">
+            <h2 class="section-title">🚀 下一步学习</h2>
+            <p style="color: rgba(255,255,255,0.8); margin-bottom: 30px;">
+                掌握复制交易后，可以继续学习DCA定投策略
+            </p>
+            <a href="../index.html" class="btn">返回Bybit教程主页</a>
+            <a href="../bot-tutorials/dca-bot.html" class="btn" style="background: transparent; border: 2px solid #7c3aed; color: #7c3aed; margin-left: 15px;">学习DCA定投</a>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 爱博·客 - Bybit复制交易教程</p>
+            <p>跟随精英，稳健投资，长期收益</p>
+        </div>
+    </footer>
+
+    <script>
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            const steps = document.querySelectorAll('.step');
+            steps.forEach((step, index) => {
+                step.style.opacity = '0';
+                step.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                    step.style.transition = 'all 0.6s ease';
+                    step.style.opacity = '1';
+                    step.style.transform = 'translateX(0)';
+                }, 200 * index);
+            });
+        });
+    </script>
+</body>
+</html>
