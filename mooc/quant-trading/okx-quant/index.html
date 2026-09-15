@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OKX量化机器人教程 - 爱博·客公开课</title>
+    <meta name="description" content="OKX交易所机器人完整教程：合约网格、现货网格、策略交易配置">
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e17 0%, #1a1f2e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #002c7c 0%, #0066cc 100%);
+            text-align: center;
+            padding: 100px 20px 60px;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0, 102, 204, 0.5);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .nav-back {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-back:hover {
+            color: #00a3ff;
+        }
+        
+        .section-title {
+            font-size: 2.2rem;
+            margin: 60px 0 30px;
+            text-align: center;
+            background: linear-gradient(45deg, #0066cc, #00a3ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .tutorial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+        
+        .tutorial-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(0, 102, 204, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tutorial-card:hover {
+            transform: translateY(-5px);
+            border-color: #0066cc;
+            box-shadow: 0 10px 30px rgba(0, 102, 204, 0.2);
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            color: #0066cc;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+        
+        .card-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .features-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        
+        .features-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+        }
+        
+        .features-list li::before {
+            content: "✅";
+            margin-right: 10px;
+            color: #0066cc;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #0066cc, #00a3ff);
+            color: #ffffff;
+            padding: 12px 25px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 102, 204, 0.4);
+        }
+        
+        .api-section {
+            background: rgba(0, 102, 204, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 60px 0;
+            border-left: 4px solid #0066cc;
+        }
+        
+        .api-title {
+            font-size: 1.8rem;
+            color: #0066cc;
+            margin-bottom: 20px;
+        }
+        
+        .api-steps {
+            list-style: none;
+            counter-reset: step;
+        }
+        
+        .api-steps li {
+            counter-increment: step;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        .api-steps li::before {
+            content: counter(step);
+            background: #0066cc;
+            color: #ffffff;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+        }
+        
+        .footer {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 80px;
+            border-top: 1px solid rgba(0, 102, 204, 0.3);
+        }
+        
+        .footer p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .tutorial-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .api-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回导航 -->
+    <a href="index.html" class="nav-back">
+        <i class="fas fa-arrow-left"></i>
+        <span>返回量化交易主页</span>
+    </a>
+    
+    <!-- 主标题区域 -->
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-exchange-alt"></i> OKX量化机器人教程</h1>
+            <p>专业的数字资产交易平台，提供强大的量化交易工具和策略执行</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 机器人功能介绍 -->
+        <section>
+            <h2 class="section-title">🤖 OKX机器人功能</h2>
+            <div class="tutorial-grid">
+                <div class="tutorial-card">
+                    <div class="card-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h3 class="card-title">合约网格机器人</h3>
+                    <p class="card-description">
+                        专为永续合约设计的网格交易策略，
+                        在波动市场中自动化执行买卖操作。
+                    </p>
+                    <ul class="features-list">
+                        <li>支持U本位和币本位合约</li>
+                        <li>杠杆倍数自定义调节</li>
+                        <li>保证金风险管理</li>
+                        <li>实时盈亏统计</li>
+                    </ul>
+                    <a href="bot-tutorials/contract-grid.html" class="btn">学习配置</a>
+                </div>
+                
+                <div class="tutorial-card">
+                    <div class="card-icon">
+                        <i class="fas fa-th-large"></i>
+                    </div>
+                    <h3 class="card-title">现货网格机器人</h3>
+                    <p class="card-description">
+                        现货市场的自动化网格交易工具，
+                        适合长期持有的资产增值策略。
+                    </p>
+                    <ul class="features-list">
+                        <li>多币种组合策略</li>
+                        <li>智能再平衡机制</li>
+                        <li>费率优化功能</li>
+                        <li>历史表现分析</li>
+                    </ul>
+                    <a href="bot-tutorials/spot-grid.html" class="btn">学习配置</a>
+                </div>
+                
+                <div class="tutorial-card">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3 class="card-title">策略交易机器人</h3>
+                    <p class="card-description">
+                        基于技术指标的智能交易策略，
+                        包括趋势跟踪、反转策略等。
+                    </p>
+                    <ul class="features-list">
+                        <li>多种技术指标支持</li>
+                        <li>自定义策略参数</li>
+                        <li>回测数据验证</li>
+                        <li>实时信号监控</li>
+                    </ul>
+                    <a href="bot-tutorials/strategy-trading.html" class="btn">学习配置</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- API配置教程 -->
+        <section class="api-section">
+            <h3 class="api-title">🔑 API配置指南</h3>
+            <ul class="api-steps">
+                <li>
+                    <strong>创建API密钥</strong>
+                    <p>登录OKX账户 → 资产 → API管理 → 创建API密钥</p>
+                    <small style="color: rgba(255,255,255,0.6);">
+                        建议设置IP白名单和交易权限限制
+                    </small>
+                </li>
+                <li>
+                    <strong>权限类型选择</strong>
+                    <p>选择"只读"或"交易"权限，根据实际需求配置</p>
+                    <small style="color: rgba(255,255,255,0.6);">
+                        机器人运行需要"交易"权限支持
+                    </small>
+                </li>
+                <li>
+                    <strong>API安全性设置</strong>
+                    <p>启用二次验证，设置交易密码，定期更换密钥</p>
+                    <small style="color: rgba(255,255,255,0.6);">
+                        增强账户安全防护
+                    </small>
+                </li>
+                <li>
+                    <strong>测试网配置</strong>
+                    <p>可先在OKX测试网进行策略测试，熟悉功能后再上线</p>
+                    <small style="color: rgba(255,255,255,0.6);">
+                        降低实盘操作风险
+                    </small>
+                </li>
+            </ul>
+        </section>
+
+        <!-- 实战教程 -->
+        <section>
+            <h2 class="section-title">🎯 实战配置指南</h2>
+            <div class="tutorial-grid">
+                <div class="tutorial-card">
+                    <div class="card-icon">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+                    <h3 class="card-title">参数优化技巧</h3>
+                    <p class="card-description">
+                        学习如何根据市场特性优化机器人参数，
+                        提高策略的适应性和收益表现。
+                    </p>
+                    <ul class="features-list">
+                        <li>网格密度优化方法</li>
+                        <li>杠杆倍数选择策略</li>
+                        <li>止损止盈参数设置</li>
+                        <li>资金分配比例</li>
+                    </ul>
+                    <a href="bot-tutorials/parameter-optimization.html" class="btn">优化指南</a>
+                </div>
+                
+                <div class="tutorial-card">
+                    <div class="card-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="card-title">风险管理策略</h3>
+                    <p class="card-description">
+                        掌握OKX平台的风险管理工具，
+                        有效控制量化交易的风险暴露。
+                    </p>
+                    <ul class="features-list">
+                        <li>保证金监控机制</li>
+                        <li>强平风险预防</li>
+                        <li>仓位规模控制</li>
+                        <li>市场波动应对</li>
+                    </ul>
+                    <a href="bot-tutorials/risk-control.html" class="btn">风险指南</a>
+                </div>
+                
+                <div class="tutorial-card">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3 class="card-title">绩效分析工具</h3>
+                    <p class="card-description">
+                        学习使用OKX提供的分析工具，
+                        评估机器人的运行效果和优化方向。
+                    </p>
+                    <ul class="features-list">
+                        <li>收益曲线分析</li>
+                        <li>交易行为统计</li>
+                        <li>风险收益比计算</li>
+                        <li>对比基准指标</li>
+                    </ul>
+                    <a href="bot-tutorials/performance-analysis.html" class="btn">分析工具</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 特色功能 -->
+        <section>
+            <h2 class="section-title">✨ 特色功能介绍</h2>
+            <div style="background: rgba(255,255,255,0.05); border-radius: 15px; padding: 30px;">
+                <div class="tutorial-grid" style="margin-bottom: 0;">
+                    <div style="text-align: center;">
+                        <div class="card-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h4 style="color: #0066cc; margin-bottom: 10px;">闪电交易</h4>
+                        <p style="color: rgba(255,255,255,0.8);">
+                            OKX独有的一键式快速交易功能，提升执行效率
+                        </p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="card-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h4 style="color: #0066cc; margin-bottom: 10px;">多平台套利</h4>
+                        <p style="color: rgba(255,255,255,0.8);">
+                            支持跨交易所套利策略，捕捉价格差异
+                        </p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="card-icon">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <h4 style="color: #0066cc; margin-bottom: 10px;">实时监控</h4>
+                        <p style="color: rgba(255,255,255,0.8);">
+                            全方位的实时监控系统，及时发现问题
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 常见问题 -->
+        <section>
+            <h2 class="section-title">❓ 常见问题解答</h2>
+            <div style="background: rgba(255,255,255,0.05); border-radius: 15px; padding: 30px;">
+                <div style="margin-bottom: 25px;">
+                    <h4 style="color: #0066cc; margin-bottom: 10px;">Q: OKX网格交易的手续费如何计算？</h4>
+                    <p style="color: rgba(255,255,255,0.8);">
+                        A: 按实际成交收取手续费，Maker费率通常为0.08%，Taker费率0.1%。
+                    </p>
+                </div>
+                <div style="margin-bottom: 25px;">
+                    <h4 style="color: #0066cc; margin-bottom: 10px;">Q: 合约网格的杠杆倍数如何选择？</h4>
+                    <p style="color: rgba(255,255,255,0.8);">
+                        A: 建议根据风险承受能力选择，新手建议使用低杠杆（1-3倍）。
+                    </p>
+                </div>
+                <div>
+                    <h4 style="color: #0066cc; margin-bottom: 10px;">Q: 机器人运行中断如何处理？</h4>
+                    <p style="color: rgba(255,255,255,0.8);">
+                        A: 检查网络连接和API状态，重启机器人前确认持仓情况。
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 爱博·客 - OKX量化机器人教程</p>
+            <p>理性投资，合理配置，稳健收益</p>
+        </div>
+    </footer>
+
+    <script>
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.tutorial-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+    </script>
+</body>
+</html>
