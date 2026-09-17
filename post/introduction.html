@@ -2,10 +2,10 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <link rel="canonical" href="https://blog.aibochinese.com/tools/openclaw/advanced.html">
+    <link rel="canonical" href="https://blog.aibochinese.com/tools/openclaw/introduction.html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenClaw 高级功能 - 二次开发与优化</title>
-    <meta name="description" content="OpenClaw 高级功能教程，系统架构、API 接口、性能优化、二次开发完整指南">
+    <title>OpenClaw 介绍 - 您的数字员工</title>
+    <meta name="description" content="OpenClaw 介绍，了解什么是 OpenClaw、核心功能、系统架构和应用场景">
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../../post/pagefind/pagefind-ui.css">
@@ -757,138 +757,54 @@
 
     <main>
         <div class="content">
-            <h1>OpenClaw 高级功能</h1>
+            <h1>OpenClaw 介绍</h1>
 
-            <h2>1. 系统架构</h2>
-            <p>OpenClaw 采用模块化架构，主要组件包括：</p>
+            <h2>1. 什么是 OpenClaw</h2>
+            <p>OpenClaw（曾用名 Clawdbot、Moltbot）是一款开源的个人 AI 助手平台，由奥地利开发者创建。它不再是"只提建议不做事"的聊天机器人，而是一款可本地运行、可自托管、能直接执行现实任务的轻量"数字员工"。</p>
+
+            <h2>2. 核心功能</h2>
             <ul>
-                <li><strong>CLI 工具</strong>：命令行交互界面</li>
-                <li><strong>Gateway 网关</strong>：API 服务和 WebUI</li>
-                <li><strong>Skills 系统</strong>：插件化功能扩展</li>
+                <li><strong>智能对话</strong>：与 AI 模型进行自然语言交互</li>
+                <li><strong>技能系统</strong>：通过 Skills 扩展功能，如浏览器搜索、文件操作等</li>
+                <li><strong>定时任务</strong>：支持 Cron 配置，实现自动化工作流</li>
+                <li><strong>WebUI 界面</strong>：提供友好的 Web 管理界面</li>
+                <li><strong>多模型支持</strong>：可配置多种 AI 模型（Claude、GPT、DeepSeek 等）</li>
+            </ul>
+
+            <h2>3. 系统架构</h2>
+            <p>OpenClaw 采用模块化架构设计：</p>
+            <ul>
+                <li><strong>CLI 命令行工具</strong>：核心控制界面</li>
+                <li><strong>Gateway 网关</strong>：处理 API 请求和 Web 服务</li>
+                <li><strong>Skills 系统</strong>：插件化的功能扩展</li>
                 <li><strong>配置系统</strong>：灵活的配置管理</li>
             </ul>
 
-            <h2>2. API 接口调用</h2>
-            <p>OpenClaw 提供 RESTful API，便于集成到其他应用。</p>
-            <h3>2.1 基础 API 端点</h3>
-            <pre><code>http://localhost:9876/api/v1</code></pre>
+            <h2>4. 系统要求</h2>
+            <ul>
+                <li><strong>操作系统</strong>：macOS、Linux 或 Windows（需要 WSL2）</li>
+                <li><strong>Node.js</strong>：v18 或更高版本</li>
+                <li><strong>AI 模型 API Key</strong>：Claude、GPT 或 DeepSeek 等模型的 API 密钥</li>
+                <li><strong>网络连接</strong>：用于下载安装包和调用 AI 服务</li>
+            </ul>
 
-            <h3>2.2 发送消息</h3>
-            <pre><code>curl -X POST http://localhost:9876/api/v1/chat \
-  -H "Content-Type: application/json" \
-  -d '{
-    "message": "你好，请介绍一下自己"
-  }'</code></pre>
+            <h2>5. 应用场景</h2>
+            <ul>
+                <li><strong>个人助理</strong>：日程管理、邮件处理、信息检索</li>
+                <li><strong>开发者辅助</strong>：代码生成、文档编写、自动化测试</li>
+                <li><strong>内容创作</strong>：文章写作、视频脚本、社交媒体内容</li>
+                <li><strong>数据处理</strong>：Excel 处理、数据分析、报告生成</li>
+                <li><strong>自动化运维</strong>：系统监控、任务调度、日志分析</li>
+            </ul>
 
-            <h2>3. 性能优化</h2>
-            <h3>3.1 内存优化</h3>
-            <pre><code>openclaw configure --section performance</code></pre>
-
-            <h3>3.2 配置示例</h3>
-            <pre><code>{
-  "performance": {
-    "max_concurrent_tasks": 5,
-    "task_timeout": 300,
-    "log_level": "info",
-    "cache_enabled": true,
-    "cache_ttl": 3600
-  }
-}</code></pre>
-
-            <h2>4. 多模型配置</h2>
-            <h3>4.1 查看可用模型</h3>
-            <pre><code>openclaw models list</code></pre>
-
-            <h3>4.2 设置默认模型</h3>
-            <pre><code>openclaw models set &lt;model-name&gt;</code></pre>
-
-            <h3>4.3 添加自定义模型</h3>
-            <pre><code>openclaw models add \
-  --name my-custom-model \
-  --type openai-compatible \
-  --base-url https://api.example.com/v1 \
-  --api-key your-api-key</code></pre>
-
-            <h2>5. 二次开发</h2>
-            <h3>5.1 开发环境搭建</h3>
-            <pre><code>git clone https://github.com/openclaw/openclaw.git
-cd openclaw
-npm install</code></pre>
-
-            <h3>5.2 自定义 Skill 开发</h3>
-            <p>创建自定义 Skill 的基本结构：</p>
-            <pre><code>const skill = {
-  name: 'my-skill',
-  description: '我的自定义技能',
-  version: '1.0.0',
-  tools: [
-    {
-      name: 'my-tool',
-      description: '我的工具',
-      parameters: {
-        type: 'object',
-        properties: {
-          input: { type: 'string' }
-        },
-        required: ['input']
-      },
-      handler: async (params) => {
-        return { result: '处理结果' };
-      }
-    }
-  ]
-};
-
-module.exports = skill;</code></pre>
-
-            <h2>6. 部署到云服务器</h2>
-            <h3>6.1 Docker 部署</h3>
-            <pre><code>docker run -d \
-  --name openclaw \
-  -p 9876:9876 \
-  -v ~/.openclaw:/root/.openclaw \
-  openclaw/openclaw:latest</code></pre>
-
-            <h3>6.2 系统服务配置</h3>
-            <pre><code>sudo nano /etc/systemd/system/openclaw.service</code></pre>
-            <pre><code>[Unit]
-Description=OpenClaw Service
-After=network.target
-
-[Service]
-Type=simple
-User=your-user
-ExecStart=/usr/local/bin/openclaw gateway start
-Restart=always
-
-[Install]
-WantedBy=multi-user.target</code></pre>
-
-            <h2>7. 安全设置</h2>
-            <h3>7.1 启用认证</h3>
-            <pre><code>openclaw configure --section security</code></pre>
-
-            <h3>7.2 配置 HTTPS</h3>
-            <pre><code>{
-  "security": {
-    "enabled": true,
-    "https": {
-      "cert": "/path/to/cert.pem",
-      "key": "/path/to/key.pem"
-    },
-    "auth": {
-      "enabled": true,
-      "api_key": "your-secure-api-key"
-    }
-  }
-}</code></pre>
-
-            <h2>8. 备份与恢复</h2>
-            <h3>8.1 备份配置</h3>
-            <pre><code>tar -czf openclaw-backup-$(date +%Y%m%d).tar.gz ~/.openclaw</code></pre>
-
-            <h3>8.2 恢复配置</h3>
-            <pre><code>tar -xzf openclaw-backup-20260302.tar.gz -C ~/</code></pre>
+            <h2>6. 为什么选择 OpenClaw</h2>
+            <ul>
+                <li><strong>开源自由</strong>：完全开源，可自由定制和二次开发</li>
+                <li><strong>本地运行</strong>：保护隐私，数据不离开本地</li>
+                <li><strong>轻量高效</strong>：资源消耗低，性能出色</li>
+                <li><strong>生态丰富</strong>：活跃的社区和丰富的 Skills 资源</li>
+                <li><strong>持续更新</strong>：GitHub 星标破 10 万，社区活跃</li>
+            </ul>
         </div>
     </main>
 
@@ -1155,10 +1071,10 @@ WantedBy=multi-user.target</code></pre>
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "OpenClaw 高级功能 - 二次开发与优化",
-  "keywords": "OpenClaw,高级功能,系统架构,API,二次开发,性能优化",
-  "description": "OpenClaw 高级功能教程，系统架构、API 接口、性能优化、二次开发完整指南",
-  "url": "https://blog.aibochinese.com/tools/openclaw/advanced.html",
+  "name": "OpenClaw 介绍 - 您的数字员工",
+  "keywords": "OpenClaw,介绍,数字员工,AI助手,系统架构",
+  "description": "OpenClaw 介绍，了解什么是 OpenClaw、核心功能、系统架构和应用场景",
+  "url": "https://blog.aibochinese.com/tools/openclaw/introduction.html",
   "datePublished": "2026-03-02",
   "dateModified": "2026-03-02",
   "author": {"@type": "Person", "name": "AbelZou"},

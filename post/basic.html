@@ -2,13 +2,13 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <link rel="canonical" href="https://blog.aibochinese.com/index.html">
+    <link rel="canonical" href="https://blog.aibochinese.com/tools/openclaw/basic.html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>爱博·客 - 分享知识付费项目的开发,网站搭建,维运和优化</title>
-    <meta name="description" content="终身学习，持续分享如何开发适合自己的网络赚钱项目，包括免费的网站搭建、维护和设计优化，解决整个项目从始至终的各类问题，提供最优最具性价比的方案">
-    <link rel="stylesheet" href="css/style.css">
+    <title>OpenClaw的安装和调试 - 爱博·客</title>
+    <meta name="description" content="OpenClaw的安装和调试指南，包括Ubuntu安装、OpenClaw安装、技能配置、模型设置等详细步骤">
+    <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="/post/pagefind/pagefind-ui.css">
+    <link rel="stylesheet" href="../../post/pagefind/pagefind-ui.css">
 
     <style>
 
@@ -37,7 +37,7 @@
             background-position: center;
         }
 
-        /* 悬浮微信图标样式 */
+             /* 悬浮微信图标样式 */
         .wechat-float {
             width: 60px;
             height: 60px;
@@ -665,77 +665,74 @@
                 margin-top: 2px;
             }
         }
-    
-/* 四大功能板块、文章网格、三图广告等原有样式全部保留（略微精简但功能完整） */
-        .features { margin: 80px 0 40px; /* 增加顶部margin，避免被固定导航栏遮挡 */ }
-        .features .blocks-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 30px;
-            padding: 40px;
-            max-width: 680px;
-            margin: 0 auto;
-        }
-        .features .block {
-            width: 300px; height: 200px; border-radius: 15px;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 36px; color: white; font-weight: bolder;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.3s ease;
-        }
-        .features .block:hover { transform: translateY(-5px); }
-        .features .block a { color: white; text-decoration: none; }
-        .features .block1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .features .block2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        .features .block3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-        .features .block4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-        @media (max-width: 768px) {
-            .features .blocks-container { gap: 15px; padding: 20px; }
-            .features .block { width: 140px; height: 140px; font-size: 16px; }
-        }
-
-        .article-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+        
+        /* 内容区域样式 */
+        .content {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 100px 20px 50px;
         }
-        .article-item {
+        
+        .content h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 2rem;
             text-align: center;
-            padding: 10px;
-            border: 1px solid #ddd;
+        }
+        
+        .content h2 {
+            font-size: 1.8rem;
+            color: #444;
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .content h3 {
+            font-size: 1.4rem;
+            color: #555;
+            margin: 1.5rem 0 0.8rem;
+        }
+        
+        .content p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 1.2rem;
+        }
+        
+        .content code {
+            background-color: #f8f9fa;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+        }
+        
+        .content pre {
+            background-color: #f8f9fa;
+            padding: 1rem;
             border-radius: 8px;
-            transition: background-color 0.3s;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #3498db;
         }
-        .article-item:hover { background-color: #f9f9f9; }
-        .article-link { text-decoration: none; color: #333; font-size: 16px; font-weight: bold; display: block; }
-        .article-link:hover { color: #007bff; }
-        @media (max-width: 768px) { .article-grid { grid-template-columns: 1fr; } }
-
-        .three-up {
-            display: grid;
-            grid-template-columns: repeat(3, 300px);
-            gap: 16px;
-            justify-content: center;
-            max-width: 1000px;
-            margin: 0 auto 22px auto;
-            padding: 8px 0;
+        
+        .content pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.9rem;
         }
-        .three-up .item img {
-            width: 300px;
-            height: 50px;
-            border-radius: 6px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-            object-fit: cover;
-            transition: all 0.2s;
+        
+        .content ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
         }
-        .three-up .item img:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        
+        .content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
         }
-        @media (max-width: 980px) { .three-up { grid-template-columns: repeat(2, 300px); } }
-        @media (max-width: 660px) { .three-up { grid-template-columns: 1fr; max-width: 300px; } } 
     </style>
 </head>
 <body>
@@ -768,49 +765,66 @@
     </nav>
 
     <main>
-        <section class="features">
-            <div class="container">
-                <div class="blocks-container">
-                    <div class="block block1"><h3><a href="https://blog.aibochinese.com/Rescous/free_rs" target="_blank">免费资源</a></h3></div>
-                    <div class="block block2"><h3><a href="https://blog.aibochinese.com/SMC/sm_maketing" target="_blank">自媒体营销</a></h3></div>
-                    <div class="block block3"><h3><a href="https://blog.aibochinese.com/payment/pay" target="_blank">跨境收付</a></h3></div>
-                    <div class="block block4"><h3><a href="https://blog.aibochinese.com/earn_online" target="_blank">线上淘金</a></h3></div>
-                </div>
-            </div>
-        </section>
+        <div class="content">
+            <h1>OpenClaw的安装和调试</h1>
 
-        <div class="article-grid">
-            <div class="article-item"><a href="https://blog.aibochinese.com/newest" class="article-link">最新文章</a></div>
-            <div class="article-item"><a href="https://blog.aibochinese.com/payment/wise" class="article-link">同时开通境外10个左右的国家和地区的银行账户，实现0手续费全球收付款</a></div>
-            <div class="article-item"><a href="https://blog.aibochinese.com/payment/krak" class="article-link">Paypal小额提现，节省$35手续费</a></div>
-            <div class="article-item"><a href="https://blog.aibochinese.com/tools/vodafoneesim-0cost" class="article-link">德国手机号，免费申请，无合约，0.01欧/季度保号</a></div>
-            <div class="article-item"><a href="https://blog.aibochinese.com/payment/N26" class="article-link">N26银行，欧盟27国收付款最优解</a></div>
+            <h2>1. 安装Ubuntu</h2>
+            <p>对于普通电脑，通常需要先安装Ubuntu的WSL（Windows Subsystem for Linux）。<br>
+            运行以下命令：</p>
+            <pre><code>wsl --install</code></pre>
+
+            <h2>2. 安装OpenClaw</h2>
+            <p>使用以下命令安装OpenClaw：</p>
+            <pre><code>curl -fsSL `https://openclaw.ai/install.sh`  | bash</code></pre>
+
+            <h2>3. 安装Brave Search技能</h2>
+            <p>安装Brave Search技能的步骤如下：</p>
+            <pre><code>clawhub install brave-search</code></pre>
+
+            <h2>4. 配置Web部分</h2>
+            <p>运行以下命令配置Web部分：</p>
+            <pre><code>openclaw configure --section web</code></pre>
+
+            <h2>5. 端口占用的解决方法</h2>
+            <p>如果遇到端口占用问题，可以停止OpenClaw网关：</p>
+            <pre><code>openclaw gateway stop</code></pre>
+
+            <h2>6. 配置模型</h2>
+            <p>选择已配置的模型（例如DeepSeek-V3）：</p>
+            <pre><code>openclaw models set openai-compatible/deepseek-ai/DeepSeek-V3</code></pre>
+
+            <h2>7. 查看模型列表</h2>
+            <p>查看已安装的DeepSeek模型：</p>
+            <pre><code>openclaw models list | grep deepseek</code></pre>
+
+            <h2>8. 重新配置</h2>
+            <p>如果需要重新配置OpenClaw，运行：</p>
+            <pre><code>openclaw onboard</code></pre>
+
+            <h2>9. 修改参数</h2>
+            <p>手动编辑OpenClaw的配置文件：</p>
+            <pre><code>nano ~/.openclaw/openclaw.json</code></pre>
+
+            <h3>调试技巧</h3>
+            <ol>
+                <li><strong>日志查看</strong>：检查日志文件以排查问题：
+                    <pre><code>tail -f ~/.openclaw/logs/openclaw.log</code></pre>
+                </li>
+                <li><strong>检查服务状态</strong>：
+                    <pre><code>openclaw gateway status</code></pre>
+                </li>
+                <li><strong>更新OpenClaw</strong>：
+                    <pre><code>openclaw update</code></pre>
+                </li>
+            </ol>
+
+            <h3>常见问题</h3>
+            <ul>
+                <li><strong>权限问题</strong>：确保命令以管理员权限运行。</li>
+                <li><strong>网络问题</strong>：检查网络连接是否正常。</li>
+                <li><strong>端口冲突</strong>：使用<code>netstat</code>检查占用端口的进程。</li>
+            </ul>
         </div>
-
-        <p style="text-align: center; font-weight: bold; margin: 16px 0;">————广告位招租————</p>
-
-        <div class="three-up">
-            <div class="item"><a href="https://blog.aibochinese.com/payment/pinkwallet" target="_blank" rel="noopener"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/pinkwalletadscraft.png" alt="SafePal" loading="lazy"></a></div>
-            <div class="item"><a href="./roogoo.html" target="_blank" rel="noopener"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B9%BF%E5%91%8A%E8%81%94%E7%9B%9F/oogoo%20ads%202.png" alt="Roogoo Mastercard" loading="lazy"></a></div>
-            <div class="item"><a href="./drive.html" target="_blank" rel="noopener"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B9%BF%E5%91%8A%E8%81%94%E7%9B%9F/aiboDrive%20ads-3.png" alt="商务网盘" loading="lazy"></a></div>
-        </div>
-
-        <div class="three-up">
-            <div class="item"><a href="sitesbuild.html" target="_blank" rel="noopener"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B9%BF%E5%91%8A%E8%81%94%E7%9B%9F/Cloudflare%20Page%20ads-4.png" alt="永久免费建站" loading="lazy"></a></div>
-            <div class="item"><a href="https://blog.aibochinese.com/web3/binance" target="_blank" rel="noopener"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B9%BF%E5%91%8A%E8%81%94%E7%9B%9F/%E5%B8%81%E5%AE%89%20ads-5.png" alt="Binance" loading="lazy"></a></div>
-            <div class="item"><a href="https://payone.uk" target="_blank" rel="noopener"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/%E8%B7%A8%E5%A2%83%E6%94%B6%E4%BB%98%E6%AC%BE/web-pay-index.png" alt="AiboPay" loading="lazy"></a></div>
-        </div>
-
-        <div class="three-up">
-            <div class="item"><a href="https://blog.aibochinese.com/web3/kvb" target="_blank" rel="noopener"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B9%BF%E5%91%8A%E8%81%94%E7%9B%9F/KVB%20ads-1.png" alt="KVB ads" loading="lazy"></a></div>
-            <div class="item"><a href="https://blog.aibochinese.com/buildsites/RackNerd-Host" target="_blank" rel="noopener"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%9B%BE/RackNerd%20%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BF%83%E9%94%801.png" alt="RackNerd" loading="lazy"></a></div>
-             <div class="item"><a href="./SafePal.html" target="_blank" rel="noopener"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B9%BF%E5%91%8A%E8%81%94%E7%9B%9F/SafePal%20ads-1.png" alt="SafePal" loading="lazy"></a></div>
-        </div>
-
-        <p style="text-align: center; margin: 16px 0;">欢迎来与我们洽谈合作!</p>
-        <p style="text-align: center; margin: 8px 0; font-size: 0.9em; color: #666;">
-            按推广效果付费(佣金)|指定文章或页面嵌入广告，按天数计费，商务热线：19179215243
-        </p>
     </main>
 
     <!-- 页脚（完整保留） -->
@@ -820,7 +834,7 @@
              style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://x.com/i/communities/1988635370549096727" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%E6%B1%89%E8%AF%AD%E5%AE%A2%E6%88%B7%E7%AB%AF/icons8-x-30.png" 
              style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://www.facebook.com/blog.aibochinese" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/facebook%20log0%2030.png" 
              style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://wa.me/message/QXYAFEGTDWIBE1" style="color:white; display:inline-block; vertical-align:middle;" target="_blank" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/whatsapp-48.png" 
-             style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://space.bilibili.com/3690971141245681?spm_id_from=333.788.0.0" style="color:white; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/icons8-%E8%83%86%E6%B1%81-30.png" 
+             style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://space.bilibili.com/3690971141245681?spm_id_from=333.788.0.0" style="color:white; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/icons8-%E8%83%86%E6%B1%89-30.png" 
              style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://github.com/blogaibochinese" style="color:white; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%9B%BE%E7%89%87/icons8-github-30.png" 
              style="width: 30px; height: 30px; display:block;" /></a>  <a href="https://xhslink.com/m/5it26wH34Zd" style="color:white; display:inline-block; vertical-align:middle;" rel="noopener noreferrer"><img src="https://cf.aibochinese.com/%E7%B4%A0%E6%9D%90%E7%AB%99/rednote.png" 
              style="width: 30px; height: 30px; display:block;" /></a>
@@ -922,7 +936,7 @@
     <div id="wechatModal" class="wechat-modal" onclick="closeWechatModal(event)">
         <div class="wechat-popup" onclick="event.stopPropagation()">
             <h3>微信客服</h3>
-            <img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/%E6%B7%BB%E5%8A%A0%E5%BE%AE%E4%BF%A1.png" alt="微信二维码" class="wechat-qr">
+            <img src="https://cf.aibochinese.com/%E7%88%B1%E5%8D%9A%C2%B7%E5%AE%A2%E5%9B%BE%E7%89%87%E5%BA%93/AIBOBLOG%20WECHAT.png" alt="微信二维码" class="wechat-qr">
             <button class="close-btn" onclick="closeWechatModal()">关闭</button>
         </div>
     </div>
@@ -984,7 +998,7 @@
         };
     </script>
        <!-- Pagefind 搜索（已完美修复） -->
-    <script src="/post/pagefind/pagefind-ui.js"></script>
+    <script src="../../post/pagefind/pagefind-ui.js"></script>
     <script>
         window.addEventListener('DOMContentLoaded', function () {
             console.log("Initializing Pagefind search...");
@@ -1117,12 +1131,12 @@
 {
   "@context": "https://schema.org",
   "@type": "WebPage",           // 或 WebPage、Article、FAQPage、Product等
-  "name": "爱博·客 - 分享知识付费项目的开发,网站搭建,维运和优化",
-  "keywords": "爱博·客,知识付费,2026项目开发,网站搭建,维运,优化",
-  "description": "终身学习，持续分享如何开发适合自己的网络赚钱项目，包括免费的网站搭建、维护和设计优化，解决整个项目从始至终的各类问题，提供最优最具性价比的方案",
-  "url": "https://blog.aibochinese.com/",
-  "datePublished": "2025-11-2",
-  "dateModified": "2025-11-29",
+  "name": "OpenClaw的安装和调试 - 爱博·客",
+  "keywords": "OpenClaw,安装,调试,Ubuntu,WSL,Brave Search,模型配置",
+  "description": "OpenClaw的安装和调试指南，包括Ubuntu安装、OpenClaw安装、技能配置、模型设置等详细步骤",
+  "url": "https://blog.aibochinese.com/tools/openclaw/basic.html",
+  "datePublished": "2026-02-21",
+  "dateModified": "2026-02-21",
   "author": {"@type": "Person", "name": "AbelZou"},
   "publisher": {
     "@type": "Organization",

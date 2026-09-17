@@ -2,10 +2,10 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <link rel="canonical" href="https://blog.aibochinese.com/tools/openclaw/advanced.html">
+    <link rel="canonical" href="https://blog.aibochinese.com/tools/openclaw/automation.html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenClaw 高级功能 - 二次开发与优化</title>
-    <meta name="description" content="OpenClaw 高级功能教程，系统架构、API 接口、性能优化、二次开发完整指南">
+    <title>OpenClaw 定时任务与自动化 - Cron 配置</title>
+    <meta name="description" content="OpenClaw 定时任务配置教程，Cron 表达式、Heartbeat 心跳机制、自动化工作流完整指南">
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../../post/pagefind/pagefind-ui.css">
@@ -725,6 +725,28 @@
             margin-bottom: 0.5rem;
             line-height: 1.6;
         }
+        
+        /* Cron 表格样式 */
+        .cron-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        
+        .cron-table th, .cron-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .cron-table th {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .cron-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
     </style>
 </head>
 <body>
@@ -757,138 +779,125 @@
 
     <main>
         <div class="content">
-            <h1>OpenClaw 高级功能</h1>
+            <h1>OpenClaw 定时任务与自动化</h1>
 
-            <h2>1. 系统架构</h2>
-            <p>OpenClaw 采用模块化架构，主要组件包括：</p>
-            <ul>
-                <li><strong>CLI 工具</strong>：命令行交互界面</li>
-                <li><strong>Gateway 网关</strong>：API 服务和 WebUI</li>
-                <li><strong>Skills 系统</strong>：插件化功能扩展</li>
-                <li><strong>配置系统</strong>：灵活的配置管理</li>
-            </ul>
+            <h2>1. 概述</h2>
+            <p>OpenClaw 提供强大的定时任务功能，可以自动化执行各种重复性任务，如日报整理、文件备份、数据同步等。</p>
 
-            <h2>2. API 接口调用</h2>
-            <p>OpenClaw 提供 RESTful API，便于集成到其他应用。</p>
-            <h3>2.1 基础 API 端点</h3>
-            <pre><code>http://localhost:9876/api/v1</code></pre>
+            <h2>2. Cron 表达式基础</h2>
+            <p>Cron 表达式由 5 个部分组成：</p>
+            <pre><code>┌───────────── minute (0 - 59)
+│ ┌───────────── hour (0 - 23)
+│ │ ┌───────────── day of month (1 - 31)
+│ │ │ ┌───────────── month (1 - 12)
+│ │ │ │ ┌───────────── day of week (0 - 6) (Sunday to Saturday)
+│ │ │ │ │
+* * * * *</code></pre>
 
-            <h3>2.2 发送消息</h3>
-            <pre><code>curl -X POST http://localhost:9876/api/v1/chat \
-  -H "Content-Type: application/json" \
-  -d '{
-    "message": "你好，请介绍一下自己"
-  }'</code></pre>
+            <h3>2.1 Cron 表达式示例</h3>
+            <table class="cron-table">
+                <thead>
+                    <tr>
+                        <th>表达式</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>* * * * *</code></td>
+                        <td>每分钟执行一次</td>
+                    </tr>
+                    <tr>
+                        <td><code>0 * * * *</code></td>
+                        <td>每小时执行一次</td>
+                    </tr>
+                    <tr>
+                        <td><code>0 9 * * *</code></td>
+                        <td>每天上午 9 点执行</td>
+                    </tr>
+                    <tr>
+                        <td><code>0 9 * * 1-5</code></td>
+                        <td>工作日（周一到周五）上午 9 点执行</td>
+                    </tr>
+                    <tr>
+                        <td><code>0 0 1 * *</code></td>
+                        <td>每月 1 号零点执行</td>
+                    </tr>
+                    <tr>
+                        <td><code>0 */6 * * *</code></td>
+                        <td>每 6 小时执行一次</td>
+                    </tr>
+                </tbody>
+            </table>
 
-            <h2>3. 性能优化</h2>
-            <h3>3.1 内存优化</h3>
-            <pre><code>openclaw configure --section performance</code></pre>
+            <h2>3. 配置定时任务</h2>
+            <p>编辑 OpenClaw 配置文件：</p>
+            <pre><code>nano ~/.openclaw/openclaw.json</code></pre>
 
-            <h3>3.2 配置示例</h3>
+            <h3>3.1 任务配置示例</h3>
             <pre><code>{
-  "performance": {
-    "max_concurrent_tasks": 5,
-    "task_timeout": 300,
-    "log_level": "info",
-    "cache_enabled": true,
-    "cache_ttl": 3600
-  }
-}</code></pre>
-
-            <h2>4. 多模型配置</h2>
-            <h3>4.1 查看可用模型</h3>
-            <pre><code>openclaw models list</code></pre>
-
-            <h3>4.2 设置默认模型</h3>
-            <pre><code>openclaw models set &lt;model-name&gt;</code></pre>
-
-            <h3>4.3 添加自定义模型</h3>
-            <pre><code>openclaw models add \
-  --name my-custom-model \
-  --type openai-compatible \
-  --base-url https://api.example.com/v1 \
-  --api-key your-api-key</code></pre>
-
-            <h2>5. 二次开发</h2>
-            <h3>5.1 开发环境搭建</h3>
-            <pre><code>git clone https://github.com/openclaw/openclaw.git
-cd openclaw
-npm install</code></pre>
-
-            <h3>5.2 自定义 Skill 开发</h3>
-            <p>创建自定义 Skill 的基本结构：</p>
-            <pre><code>const skill = {
-  name: 'my-skill',
-  description: '我的自定义技能',
-  version: '1.0.0',
-  tools: [
+  "tasks": [
     {
-      name: 'my-tool',
-      description: '我的工具',
-      parameters: {
-        type: 'object',
-        properties: {
-          input: { type: 'string' }
-        },
-        required: ['input']
-      },
-      handler: async (params) => {
-        return { result: '处理结果' };
-      }
+      "id": "daily-report",
+      "schedule": "0 9 * * 1-5",
+      "description": "工作日早报整理",
+      "prompt": "帮我整理今天的工作早报，包括：\n1. 昨日工作总结\n2. 今日工作计划\n3. 重点关注事项"
+    },
+    {
+      "id": "backup-files",
+      "schedule": "0 2 * * *",
+      "description": "每日文件备份",
+      "prompt": "将 ~/Documents 目录下的重要文件备份到 ~/backup 目录"
     }
   ]
-};
+}</code></pre>
 
-module.exports = skill;</code></pre>
+            <h2>4. Heartbeat 心跳机制</h2>
+            <p>Heartbeat 用于监控服务健康状态，确保 OpenClaw 正常运行。</p>
+            <h3>4.1 启用 Heartbeat</h3>
+            <pre><code>openclaw configure --section heartbeat</code></pre>
 
-            <h2>6. 部署到云服务器</h2>
-            <h3>6.1 Docker 部署</h3>
-            <pre><code>docker run -d \
-  --name openclaw \
-  -p 9876:9876 \
-  -v ~/.openclaw:/root/.openclaw \
-  openclaw/openclaw:latest</code></pre>
-
-            <h3>6.2 系统服务配置</h3>
-            <pre><code>sudo nano /etc/systemd/system/openclaw.service</code></pre>
-            <pre><code>[Unit]
-Description=OpenClaw Service
-After=network.target
-
-[Service]
-Type=simple
-User=your-user
-ExecStart=/usr/local/bin/openclaw gateway start
-Restart=always
-
-[Install]
-WantedBy=multi-user.target</code></pre>
-
-            <h2>7. 安全设置</h2>
-            <h3>7.1 启用认证</h3>
-            <pre><code>openclaw configure --section security</code></pre>
-
-            <h3>7.2 配置 HTTPS</h3>
+            <h3>4.2 Heartbeat 配置</h3>
             <pre><code>{
-  "security": {
+  "heartbeat": {
     "enabled": true,
-    "https": {
-      "cert": "/path/to/cert.pem",
-      "key": "/path/to/key.pem"
-    },
-    "auth": {
-      "enabled": true,
-      "api_key": "your-secure-api-key"
-    }
+    "interval": 300,
+    "url": "https://your-monitoring-service.com/heartbeat"
   }
 }</code></pre>
 
-            <h2>8. 备份与恢复</h2>
-            <h3>8.1 备份配置</h3>
-            <pre><code>tar -czf openclaw-backup-$(date +%Y%m%d).tar.gz ~/.openclaw</code></pre>
+            <h2>5. 自动化工作流设计</h2>
+            <p>通过组合多个任务和 Skills，可以构建复杂的自动化工作流。</p>
+            <h3>5.1 工作流示例：周报生成</h3>
+            <ol>
+                <li>每周五下午 5 点自动触发</li>
+                <li>搜索本周相关信息</li>
+                <li>读取工作记录文件</li>
+                <li>生成周报并保存</li>
+                <li>发送邮件通知</li>
+            </ol>
 
-            <h3>8.2 恢复配置</h3>
-            <pre><code>tar -xzf openclaw-backup-20260302.tar.gz -C ~/</code></pre>
+            <h2>6. 任务管理命令</h2>
+            <h3>6.1 查看任务列表</h3>
+            <pre><code>openclaw tasks list</code></pre>
+            <h3>6.2 手动执行任务</h3>
+            <pre><code>openclaw tasks run &lt;task-id&gt;</code></pre>
+            <h3>6.3 暂停/恢复任务</h3>
+            <pre><code>openclaw tasks pause &lt;task-id&gt;
+openclaw tasks resume &lt;task-id&gt;</code></pre>
+
+            <h2>7. 日志与监控</h2>
+            <h3>7.1 查看任务执行日志</h3>
+            <pre><code>tail -f ~/.openclaw/logs/tasks.log</code></pre>
+            <h3>7.2 检查任务状态</h3>
+            <pre><code>openclaw tasks status</code></pre>
+
+            <h2>8. 常见问题</h2>
+            <ul>
+                <li><strong>任务不执行？</strong>检查 Cron 表达式是否正确，确认网关服务在运行</li>
+                <li><strong>时区问题？</strong>确保系统时区设置正确</li>
+                <li><strong>权限不足？</strong>确保任务所需操作有相应权限</li>
+            </ul>
         </div>
     </main>
 
@@ -1155,10 +1164,10 @@ WantedBy=multi-user.target</code></pre>
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "OpenClaw 高级功能 - 二次开发与优化",
-  "keywords": "OpenClaw,高级功能,系统架构,API,二次开发,性能优化",
-  "description": "OpenClaw 高级功能教程，系统架构、API 接口、性能优化、二次开发完整指南",
-  "url": "https://blog.aibochinese.com/tools/openclaw/advanced.html",
+  "name": "OpenClaw 定时任务与自动化 - Cron 配置",
+  "keywords": "OpenClaw,Cron,定时任务,Heartbeat,自动化,工作流",
+  "description": "OpenClaw 定时任务配置教程，Cron 表达式、Heartbeat 心跳机制、自动化工作流完整指南",
+  "url": "https://blog.aibochinese.com/tools/openclaw/automation.html",
   "datePublished": "2026-03-02",
   "dateModified": "2026-03-02",
   "author": {"@type": "Person", "name": "AbelZou"},
